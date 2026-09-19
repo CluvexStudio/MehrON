@@ -60,6 +60,10 @@ public sealed class SniSpoofingManager
             return false;
         }
 
+        var targetPort = !setting.ConnectIp.IsNullOrEmpty() && setting.ConnectPort is > 0 and <= 65535
+            ? setting.ConnectPort
+            : (node.Port > 0 ? node.Port : (setting.ConnectPort > 0 ? setting.ConnectPort : 443));
+
         var folder = GetEngineDirectory();
         var configPath = Path.Combine(folder, "config.json");
         var content = JsonSerializer.Serialize(new Dictionary<string, object>
@@ -67,7 +71,7 @@ public sealed class SniSpoofingManager
             ["LISTEN_HOST"] = setting.ListenHost,
             ["LISTEN_PORT"] = setting.ListenPort,
             ["CONNECT_IP"] = targetIp,
-            ["CONNECT_PORT"] = setting.ConnectPort,
+            ["CONNECT_PORT"] = targetPort,
             ["FAKE_SNI"] = setting.FakeSni,
         }, new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(configPath, content);
@@ -79,14 +83,18 @@ public sealed class SniSpoofingManager
         try
         {
             await _process.StartAsync();
-            await Task.Delay(150);
-            if (_process.HasExited)
+            for (var i = 0; i < 10; i++)
             {
-                throw new InvalidOperationException("The SNI Spoofing engine exited immediately.");
+                await Task.Delay(100);
+                if (_process.HasExited)
+                {
+                    throw new InvalidOperationException("The SNI Spoofing engine exited immediately. Ensure MehrN is running as Administrator and Python with pydivert is installed.");
+                }
             }
+
             _isRunning = true;
             _activeProfileId = node.IndexId;
-            await updateFunc?.Invoke(false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{setting.ConnectPort}");
+            await updateFunc?.Invoke(false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
             return true;
         }
         catch (Exception ex)
@@ -134,16 +142,32 @@ public sealed class SniSpoofingManager
     {
         if (Utils.IsWindows())
         {
-            var pythonRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Python");
-            if (Directory.Exists(pythonRoot))
+            var localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var progFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            var searchPaths = new List<string>
             {
-                var python = Directory.GetDirectories(pythonRoot, "Python3*", SearchOption.TopDirectoryOnly)
-                    .OrderByDescending(path => path, StringComparer.OrdinalIgnoreCase)
-                    .Select(path => Path.Combine(path, "python.exe"))
-                    .FirstOrDefault(File.Exists);
-                if (!string.IsNullOrEmpty(python))
+                Path.Combine(progFiles, "PyManager", "python.exe"),
+                Path.Combine(localApp, "Programs", "Python"),
+                Path.Combine(localApp, "Python"),
+                Path.Combine(progFiles, "Python")
+            };
+
+            foreach (var path in searchPaths)
+            {
+                if (File.Exists(path))
                 {
-                    return python;
+                    return path;
+                }
+                if (Directory.Exists(path))
+                {
+                    var py = Directory.GetDirectories(path, "*python*", SearchOption.TopDirectoryOnly)
+                        .OrderByDescending(d => d, StringComparer.OrdinalIgnoreCase)
+                        .Select(d => Path.Combine(d, "python.exe"))
+                        .FirstOrDefault(File.Exists);
+                    if (!string.IsNullOrEmpty(py))
+                    {
+                        return py;
+                    }
                 }
             }
         }
