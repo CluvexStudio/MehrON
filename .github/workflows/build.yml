@@ -80,6 +80,8 @@ jobs:
           $binDir = "$outDir/bin"
           New-Item -ItemType Directory -Path "$binDir/xray" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sing_box" -Force | Out-Null
+          New-Item -ItemType Directory -Path "$binDir/sni-spoofing" -Force | Out-Null
+          Copy-Item -Path "_upstream_sni_spoofing/*" -Destination "$binDir/sni-spoofing/" -Recurse -Force
 
           # Download v2rayN-core-bin bundle
           Write-Host "Downloading core binaries bundle..."
