@@ -8,7 +8,8 @@ namespace ServiceLib.Manager;
 public sealed class SniSpoofingManager
 {
     private const string EngineFolder = "sni-spoofing";
-    private const string EngineFile = "main.py";
+    private const string EngineExe = "sni-spoofing.exe";
+    private const string EngineScript = "main.py";
     private static readonly Lazy<SniSpoofingManager> _instance = new(() => new());
     public static SniSpoofingManager Instance => _instance.Value;
 
@@ -30,7 +31,7 @@ public sealed class SniSpoofingManager
                && setting.Enabled
                && node.ConfigType is EConfigType.VMess or EConfigType.VLESS or EConfigType.Trojan
                && node.StreamSecurity == Global.StreamSecurity
-               && File.Exists(GetEnginePath());
+               && (File.Exists(GetExePath()) || File.Exists(GetScriptPath()));
     }
 
     public static string GetOutboundAddress(ProfileItem node) => CanUse(node) ? Global.Loopback : node.Address;
@@ -76,10 +77,23 @@ public sealed class SniSpoofingManager
         }, new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(configPath, content);
 
-        // The upstream PyInstaller executable crashes on Windows consoles that
-        // use CP1252 because it prints Persian text. Running the official source
-        // under Python with UTF-8 enabled avoids that crash.
-        _process = new ProcessService(GetPythonExecutable(), "-X utf8 main.py", folder, true, false, null, updateFunc);
+        var exePath = GetExePath();
+        var scriptPath = GetScriptPath();
+
+        if (File.Exists(exePath))
+        {
+            _process = new ProcessService(exePath, string.Empty, folder, true, false, null, updateFunc);
+        }
+        else if (File.Exists(scriptPath))
+        {
+            _process = new ProcessService(GetPythonExecutable(), "-X utf8 main.py", folder, true, false, null, updateFunc);
+        }
+        else
+        {
+            await updateFunc?.Invoke(true, "SNI Spoofing engine binary or script was not found in bin/sni-spoofing.");
+            return false;
+        }
+
         try
         {
             await _process.StartAsync();
@@ -88,7 +102,7 @@ public sealed class SniSpoofingManager
                 await Task.Delay(100);
                 if (_process.HasExited)
                 {
-                    throw new InvalidOperationException("The SNI Spoofing engine exited immediately. Ensure MehrN is running as Administrator and Python with pydivert is installed.");
+                    throw new InvalidOperationException("The SNI Spoofing engine exited immediately. Ensure MehrN is running as Administrator.");
                 }
             }
 
@@ -137,7 +151,8 @@ public sealed class SniSpoofingManager
     }
 
     private static string GetEngineDirectory() => Utils.GetBinPath(EngineFolder);
-    private static string GetEnginePath() => Path.Combine(GetEngineDirectory(), EngineFile);
+    private static string GetExePath() => Path.Combine(GetEngineDirectory(), EngineExe);
+    private static string GetScriptPath() => Path.Combine(GetEngineDirectory(), EngineScript);
     private static string GetPythonExecutable()
     {
         if (Utils.IsWindows())

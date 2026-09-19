@@ -6,6 +6,15 @@ import traceback
 import threading
 import json
 
+if sys.platform == "win32":
+    try:
+        if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # from utils.proxy_protocols import parse_vless_protocol
 from utils.network_tools import get_default_interface_ipv4
 from utils.packet_templates import ClientHelloMaker
