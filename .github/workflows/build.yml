@@ -81,7 +81,16 @@ jobs:
           New-Item -ItemType Directory -Path "$binDir/xray" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sing_box" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sni-spoofing" -Force | Out-Null
-          Copy-Item -Path "_upstream_sni_spoofing/*" -Destination "$binDir/sni-spoofing/" -Recurse -Force
+
+          # Build standalone SNI Spoofing engine
+          Write-Host "Building standalone SNI Spoofing engine..."
+          pip install --upgrade pydivert pyinstaller
+          Push-Location "./_upstream_sni_spoofing"
+          pyinstaller --noconfirm --onedir --name sni-spoofing --collect-all pydivert main.py
+          Copy-Item -Path "config.json" -Destination "dist/sni-spoofing/" -Force
+          Copy-Item -Path "dist/sni-spoofing/_internal/pydivert/windivert_dll/WinDivert64.*" -Destination "dist/sni-spoofing/" -Force
+          Pop-Location
+          Copy-Item -Path "_upstream_sni_spoofing/dist/sni-spoofing/*" -Destination "$binDir/sni-spoofing/" -Recurse -Force
 
           # Download v2rayN-core-bin bundle
           Write-Host "Downloading core binaries bundle..."
