@@ -98,11 +98,23 @@ jobs:
           Expand-Archive -Path $coreZip -DestinationPath "core-extracted" -Force
 
           # Copy runtime cores and wintun
-          if (Test-Path "core-extracted/bin/xray") {
-            Copy-Item -Path "core-extracted/bin/xray/*" -Destination "$binDir/xray/" -Recurse -Force
+          $coreRoot = if (Test-Path "core-extracted/v2rayN-windows-64/bin") { "core-extracted/v2rayN-windows-64/bin" } else { "core-extracted/bin" }
+          if (Test-Path "$coreRoot/xray") {
+            Copy-Item -Path "$coreRoot/xray/*" -Destination "$binDir/xray/" -Recurse -Force
           }
-          if (Test-Path "core-extracted/bin/sing_box") {
-            Copy-Item -Path "core-extracted/bin/sing_box/*" -Destination "$binDir/sing_box/" -Recurse -Force
+          if (Test-Path "$coreRoot/sing_box") {
+            Copy-Item -Path "$coreRoot/sing_box/*" -Destination "$binDir/sing_box/" -Recurse -Force
+          }
+          if (Test-Path "$coreRoot/EnableLoopback.exe") {
+            Copy-Item -Path "$coreRoot/EnableLoopback.exe" -Destination "$binDir/" -Force
+          }
+
+          # Verify core binaries exist
+          if (-not (Test-Path "$binDir/xray/xray.exe")) {
+            throw "xray.exe was not found or copied into bin/xray/"
+          }
+          if (-not (Test-Path "$binDir/sni-spoofing/sni-spoofing.exe")) {
+            throw "sni-spoofing.exe was not found in bin/sni-spoofing/"
           }
 
           # Download latest Chocolate4U Iran geo rules
