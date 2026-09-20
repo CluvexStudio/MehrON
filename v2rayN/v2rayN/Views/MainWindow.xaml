@@ -136,22 +136,6 @@
                             </MenuItem>
                         </Menu>
                         <Separator />
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}"><MenuItem x:Name="menuMhrSetting" Padding="{StaticResource MarginLeftRight8}" AutomationProperties.Name="MHR Settings"><MenuItem.Header><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Margin="{StaticResource MarginRight8}" VerticalAlignment="Center" Kind="CloudOutline" /><TextBlock Text="MHR Settings" /></StackPanel></MenuItem.Header></MenuItem></Menu>
-                        <Separator />
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <MenuItem
-                                x:Name="menuSniSpoofingSetting"
-                                Padding="{StaticResource MarginLeftRight8}"
-                                AutomationProperties.Name="SNI Spoofing Settings">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="{StaticResource MarginRight8}" VerticalAlignment="Center" Kind="ShieldOutline" />
-                                        <TextBlock Text="SNI Spoofing Settings" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                        </Menu>
-                        <Separator />
                         <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                             <MenuItem Padding="{StaticResource MarginLeftRight8}" AutomationProperties.Name="{x:Static resx:ResUI.menuSubscription}">
                                 <MenuItem.Header>
@@ -258,6 +242,32 @@
                                     x:Name="menuOpenTheFileLocation"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuOpenTheFileLocation}" />
+                            </MenuItem>
+                        </Menu>
+                        <Separator />
+                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+                            <MenuItem Padding="{StaticResource MarginLeftRight8}" AutomationProperties.Name="Super Restrictive Settings">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="{StaticResource MarginRight8}"
+                                            VerticalAlignment="Center"
+                                            Kind="ShieldOutline" />
+                                        <TextBlock Text="Super Restrictive Settings" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                                <MenuItem
+                                    x:Name="menuSniSpoofingSetting"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="SNI Spoofing Settings" />
+                                <MenuItem
+                                    x:Name="menuMhrSetting"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="MHR Settings" />
+                                <MenuItem
+                                    x:Name="menuStopMhr"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Stop MHR" />
                             </MenuItem>
                         </Menu>
                         <Separator />
