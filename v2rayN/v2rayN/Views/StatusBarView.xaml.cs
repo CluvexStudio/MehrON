@@ -108,9 +108,9 @@ public partial class StatusBarView
                 StartPoint = new System.Windows.Point(0, 0),
                 EndPoint = new System.Windows.Point(0, 1)
             };
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xB8, 0xFF, 0xFF, 0xFF), 0.0));
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xA6, 0xED, 0xF2, 0xF9), 0.5));
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x94, 0xDF, 0xE8, 0xF4), 1.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xF2, 0xFF, 0xFF, 0xFF), 0.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xE6, 0xED, 0xF2, 0xF9), 0.5));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xDC, 0xE0, 0xE8, 0xF2), 1.0));
             borderGlass.Background = bg;
 
             var border = new LinearGradientBrush
@@ -118,8 +118,8 @@ public partial class StatusBarView
                 StartPoint = new System.Windows.Point(0, 0),
                 EndPoint = new System.Windows.Point(0, 1)
             };
-            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xBF, 0xFF, 0xFF, 0xFF), 0.0));
-            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x59, 0x70, 0x80, 0x90), 1.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xE6, 0xFF, 0xFF, 0xFF), 0.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x80, 0x70, 0x80, 0x90), 1.0));
             borderGlass.BorderBrush = border;
         }
         else
@@ -129,9 +129,9 @@ public partial class StatusBarView
                 StartPoint = new System.Windows.Point(0, 0),
                 EndPoint = new System.Windows.Point(0, 1)
             };
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xA6, 0x2B, 0x30, 0x40), 0.0));
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x94, 0x1E, 0x22, 0x2E), 0.5));
-            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x85, 0x15, 0x18, 0x21), 1.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xEB, 0x26, 0x2B, 0x3A), 0.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xE0, 0x1E, 0x21, 0x2D), 0.5));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0xD9, 0x16, 0x18, 0x22), 1.0));
             borderGlass.Background = bg;
 
             var border = new LinearGradientBrush
@@ -139,8 +139,8 @@ public partial class StatusBarView
                 StartPoint = new System.Windows.Point(0, 0),
                 EndPoint = new System.Windows.Point(0, 1)
             };
-            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x73, 0xFF, 0xFF, 0xFF), 0.0));
-            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x2E, 0xFF, 0xFF, 0xFF), 1.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x8C, 0xFF, 0xFF, 0xFF), 0.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x38, 0xFF, 0xFF, 0xFF), 1.0));
             borderGlass.BorderBrush = border;
         }
     }
