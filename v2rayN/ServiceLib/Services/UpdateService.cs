@@ -214,7 +214,7 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
         }
         else
         {
-            var url = Path.Combine(coreInfo.Url, "latest");
+            var url = $"{coreInfo.Url.TrimEnd('/')}/latest";
             var lastUrl = await downloadHandle.UrlRedirectAsync(url, blProxy, cancellationToken);
             if (lastUrl == null)
             {
@@ -341,7 +341,10 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
             //Check for avalonia desktop windows version
             if (File.Exists(Path.Combine(Utils.GetBaseDirectory(), "libHarfBuzzSharp.dll")))
             {
-                return url?.Replace(".zip", "-desktop.zip");
+                if (url != null && !url.Contains("MehrN"))
+                {
+                    return url.Replace(".zip", "-desktop.zip");
+                }
             }
 
             return url;

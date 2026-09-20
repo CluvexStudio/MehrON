@@ -286,6 +286,7 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                                 <MenuItem x:Name="menuCheckUpdate" Header="{x:Static resx:ResUI.menuCheckUpdate}" />
+                                <MenuItem x:Name="menuDownloadRelease" Header="Download Latest Release (GitHub)" />
                                 <Separator Margin="-40,5" />
                             </MenuItem>
                         </Menu>

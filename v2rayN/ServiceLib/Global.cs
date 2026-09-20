@@ -683,7 +683,7 @@ public class Global
         { ECoreType.overtls, "ShadowsocksR-Live/overtls" },
         { ECoreType.shadowquic, "spongebob888/shadowquic" },
         { ECoreType.mieru, "enfein/mieru" },
-        { ECoreType.v2rayN, "patterniha/MehrN" },
+        { ECoreType.v2rayN, "yastorovsky/MehrN" },
     };
 
     public static readonly List<string> OtherGeoUrls =

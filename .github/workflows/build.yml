@@ -70,6 +70,15 @@ jobs:
             -p:DebugSymbols=false `
             -o $outDir
 
+          dotnet publish ./v2rayN/AmazTool/AmazTool.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:DebugType=none `
+            -p:DebugSymbols=false `
+            -o $outDir
+
           # Remove debug symbols if any
           Get-ChildItem -Path $outDir -Filter "*.pdb" -Recurse | Remove-Item -Force
 
@@ -208,12 +217,15 @@ jobs:
           Compress-Archive -Path "$outDir/*" -DestinationPath $zipPath -Force
           $size = (Get-Item $zipPath).Length / 1MB
           Write-Host ("Created archive: {0} ({1:N2} MB)" -f $zipPath, $size)
+          Copy-Item $zipPath "./MehrN-windows-64-desktop.zip" -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MehrN-windows-64
-          path: MehrN-windows-64.zip
+          path: |
+            MehrN-windows-64.zip
+            MehrN-windows-64-desktop.zip
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
@@ -228,6 +240,8 @@ jobs:
             Automated build produced by GitHub Actions.
             - Platform: Windows x64 (Self-Contained Portable)
             - Includes Xray v26.9.13, sing-box v1.14.1, mihomo v1.19.31, and optimized routing rules.
-          files: MehrN-windows-64.zip
+          files: |
+            MehrN-windows-64.zip
+            MehrN-windows-64-desktop.zip
           draft: false
           prerelease: false
