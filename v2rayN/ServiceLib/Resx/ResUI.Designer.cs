@@ -5513,5 +5513,119 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("DoubleTunnelSelectBothWarning", resourceCulture);
             }
         }
+
+        public static string menuCloudflareScanner {
+            get {
+                return ResourceManager.GetString("menuCloudflareScanner", resourceCulture);
+            }
+        }
+
+        public static string CloudflareScannerTitle {
+            get {
+                return ResourceManager.GetString("CloudflareScannerTitle", resourceCulture);
+            }
+        }
+
+        public static string CloudflareScannerDesc {
+            get {
+                return ResourceManager.GetString("CloudflareScannerDesc", resourceCulture);
+            }
+        }
+
+        public static string TbStartScan {
+            get {
+                return ResourceManager.GetString("TbStartScan", resourceCulture);
+            }
+        }
+
+        public static string TbStopScan {
+            get {
+                return ResourceManager.GetString("TbStopScan", resourceCulture);
+            }
+        }
+
+        public static string TbScanning {
+            get {
+                return ResourceManager.GetString("TbScanning", resourceCulture);
+            }
+        }
+
+        public static string TbScanCompleted {
+            get {
+                return ResourceManager.GetString("TbScanCompleted", resourceCulture);
+            }
+        }
+
+        public static string TbThreads {
+            get {
+                return ResourceManager.GetString("TbThreads", resourceCulture);
+            }
+        }
+
+        public static string TbSampleCount {
+            get {
+                return ResourceManager.GetString("TbSampleCount", resourceCulture);
+            }
+        }
+
+        public static string TbSubnetRange {
+            get {
+                return ResourceManager.GetString("TbSubnetRange", resourceCulture);
+            }
+        }
+
+        public static string TbTestHost {
+            get {
+                return ResourceManager.GetString("TbTestHost", resourceCulture);
+            }
+        }
+
+        public static string TbEnableSpeedTest {
+            get {
+                return ResourceManager.GetString("TbEnableSpeedTest", resourceCulture);
+            }
+        }
+
+        public static string TbDataCenter {
+            get {
+                return ResourceManager.GetString("TbDataCenter", resourceCulture);
+            }
+        }
+
+        public static string TbCopySelected {
+            get {
+                return ResourceManager.GetString("TbCopySelected", resourceCulture);
+            }
+        }
+
+        public static string TbCopyAllWorking {
+            get {
+                return ResourceManager.GetString("TbCopyAllWorking", resourceCulture);
+            }
+        }
+
+        public static string TbApplyToProfile {
+            get {
+                return ResourceManager.GetString("TbApplyToProfile", resourceCulture);
+            }
+        }
+
+        public static string TbApplySuccess {
+            get {
+                return ResourceManager.GetString("TbApplySuccess", resourceCulture);
+            }
+        }
+
+        public static string TbPleaseSelectIp {
+            get {
+                return ResourceManager.GetString("TbPleaseSelectIp", resourceCulture);
+            }
+        }
+
+        public static string TbPleaseSelectProfile {
+            get {
+                return ResourceManager.GetString("TbPleaseSelectProfile", resourceCulture);
+            }
+        }
     }
 }
