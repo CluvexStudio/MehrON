@@ -31,7 +31,7 @@
                 <Button
                     x:Name="btnClose"
                     Width="90"
-                    Content="{x:Static resx:ResUI.TbClose}"
+                    Content="{x:Static resx:ResUI.TbCancel}"
                     DockPanel.Dock="Right"
                     IsCancel="True"
                     Style="{StaticResource DefButton}" />
