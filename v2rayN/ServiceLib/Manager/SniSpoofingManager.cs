@@ -70,7 +70,11 @@ public sealed class SniSpoofingManager
 
         if (!Utils.IsAdministrator())
         {
-            await updateFunc?.Invoke(true, "SNI Spoofing requires MehrN to be run as administrator.");
+            await SafeNotifyAsync(updateFunc, true, "SNI Spoofing requires MehrN to run as administrator. Approve the Windows prompt to continue.");
+            if (ProcUtils.RebootAsAdmin())
+            {
+                await AppManager.Instance.AppExitAsync(true);
+            }
             return false;
         }
 
@@ -97,7 +101,8 @@ public sealed class SniSpoofingManager
         }
 
         await StopAsync();
-        await CleanupWinDivertAsync();
+        KillLingeringProcesses();
+        EnsureDriverInstalled();
 
         var folder = GetEngineDirectory();
         var configPath = Path.Combine(folder, "config.json");
@@ -124,19 +129,19 @@ public sealed class SniSpoofingManager
         }
         else
         {
-            await updateFunc?.Invoke(true, "SNI Spoofing engine binary or script was not found in bin/sni-spoofing.");
+            await SafeNotifyAsync(updateFunc, true, "SNI Spoofing engine binary or script was not found in bin/sni-spoofing.");
             return false;
         }
 
         try
         {
             await _process.StartAsync();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 15; i++)
             {
                 await Task.Delay(100);
                 if (_process.HasExited)
                 {
-                    throw new InvalidOperationException("The SNI Spoofing engine exited immediately. Ensure MehrN is running as Administrator.");
+                    throw new InvalidOperationException("The SNI Spoofing engine exited unexpectedly.");
                 }
             }
 
@@ -144,14 +149,14 @@ public sealed class SniSpoofingManager
             _runningTargetIp = targetIp;
             _runningTargetPort = targetPort;
             _activeProfileId = node?.IndexId ?? string.Empty;
-            await updateFunc?.Invoke(false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
+            await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
             return true;
         }
         catch (Exception ex)
         {
             Logging.SaveLog(nameof(SniSpoofingManager), ex);
             await StopAsync();
-            await updateFunc?.Invoke(true, $"Failed to start SNI Spoofing: {ex.Message}");
+            await SafeNotifyAsync(updateFunc, true, $"Failed to start SNI Spoofing: {ex.Message}");
             return false;
         }
     }
@@ -162,15 +167,119 @@ public sealed class SniSpoofingManager
         _runningTargetIp = null;
         _runningTargetPort = 0;
         _activeProfileId = string.Empty;
-        if (_process == null)
+        if (_process != null)
         {
-            await CleanupWinDivertAsync();
+            await _process.StopAsync();
+            _process.Dispose();
+            _process = null;
+        }
+        KillLingeringProcesses();
+        await CleanupWinDivertAsync();
+    }
+
+    private static void EnsureDriverInstalled()
+    {
+        if (!Utils.IsWindows())
+        {
             return;
         }
-        await _process.StopAsync();
-        _process.Dispose();
-        _process = null;
-        await CleanupWinDivertAsync();
+        try
+        {
+            var folder = GetEngineDirectory();
+            var candidates = new[]
+            {
+                Path.Combine(folder, "WinDivert64.sys"),
+                Path.Combine(folder, "_internal", "pydivert", "windivert_dll", "WinDivert64.sys"),
+                Path.Combine(folder, "WinDivert.sys"),
+                Path.Combine(folder, "_internal", "pydivert", "windivert_dll", "WinDivert.sys")
+            };
+            var source = candidates.FirstOrDefault(File.Exists);
+            if (source != null)
+            {
+                var system32 = Environment.GetFolderPath(Environment.SpecialFolder.System);
+                var driversDir = Path.Combine(system32, "drivers");
+                var driverDest = Path.Combine(driversDir, "WinDivert64.sys");
+                try
+                {
+                    if (Directory.Exists(driversDir) && (!File.Exists(driverDest) || new FileInfo(source).Length != new FileInfo(driverDest).Length))
+                    {
+                        File.Copy(source, driverDest, true);
+                    }
+                }
+                catch { }
+
+                var sc = Path.Combine(system32, "sc.exe");
+                if (File.Exists(sc))
+                {
+                    var driverPath = File.Exists(driverDest) ? driverDest : source;
+                    var quoted = $"\"{driverPath}\"";
+                    RunScCommand(sc, $"create WinDivert binPath= {quoted} type= kernel");
+                    RunScCommand(sc, $"config WinDivert binPath= {quoted} type= kernel");
+                    RunScCommand(sc, "start WinDivert");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(nameof(SniSpoofingManager), ex);
+        }
+    }
+
+    private static void KillLingeringProcesses()
+    {
+        if (!Utils.IsWindows())
+        {
+            return;
+        }
+        try
+        {
+            foreach (var p in Process.GetProcessesByName("sni-spoofing"))
+            {
+                try
+                {
+                    p.Kill(true);
+                }
+                catch { }
+            }
+        }
+        catch { }
+    }
+
+    private static void RunScCommand(string scPath, string args)
+    {
+        try
+        {
+            using var proc = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = scPath,
+                    Arguments = args,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
+            proc.Start();
+            proc.WaitForExit(3000);
+        }
+        catch { }
+    }
+
+    private static async Task SafeNotifyAsync(Func<bool, string, Task>? updateFunc, bool notify, string msg)
+    {
+        if (updateFunc == null)
+        {
+            return;
+        }
+        try
+        {
+            await updateFunc(notify, msg);
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(nameof(SniSpoofingManager), ex);
+        }
     }
 
     private static async Task CleanupWinDivertAsync()
@@ -184,14 +293,14 @@ public sealed class SniSpoofingManager
             var sc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "sc.exe");
             if (File.Exists(sc))
             {
-                await Utils.GetCliWrapOutput(sc, "stop WinDivert");
-                await Utils.GetCliWrapOutput(sc, "delete WinDivert");
+                RunScCommand(sc, "stop WinDivert");
             }
         }
         catch (Exception ex)
         {
             Logging.SaveLog(nameof(SniSpoofingManager), ex);
         }
+        await Task.CompletedTask;
     }
 
     private static async Task<string?> ResolveIpv4Async(string address)

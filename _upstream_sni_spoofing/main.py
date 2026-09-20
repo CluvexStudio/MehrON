@@ -31,6 +31,50 @@ def get_exe_dir():
         return os.path.dirname(os.path.abspath(__file__))
 
 
+def setup_windivert_driver():
+    if sys.platform != "win32":
+        return
+    try:
+        import shutil
+        import subprocess
+
+        exe_dir = get_exe_dir()
+        candidates = [
+            os.path.join(exe_dir, "WinDivert64.sys"),
+            os.path.join(exe_dir, "_internal", "pydivert", "windivert_dll", "WinDivert64.sys"),
+            os.path.join(exe_dir, "WinDivert.sys"),
+            os.path.join(exe_dir, "_internal", "pydivert", "windivert_dll", "WinDivert.sys"),
+        ]
+        source_sys = None
+        for cand in candidates:
+            if os.path.exists(cand):
+                source_sys = cand
+                break
+
+        system_root = os.environ.get("SystemRoot", r"C:\Windows")
+        system_drivers_dir = os.path.join(system_root, "System32", "drivers")
+        driver_dest = os.path.join(system_drivers_dir, "WinDivert64.sys")
+
+        driver_path = source_sys
+        if source_sys and os.path.exists(system_drivers_dir):
+            try:
+                shutil.copy2(source_sys, driver_dest)
+                driver_path = driver_dest
+            except Exception:
+                pass
+
+        if driver_path:
+            quoted = f'"{driver_path}"'
+            subprocess.run(["sc.exe", "create", "WinDivert", f"binPath= {quoted}", "type= kernel"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["sc.exe", "config", "WinDivert", f"binPath= {quoted}", "type= kernel"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["sc.exe", "start", "WinDivert"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as ex:
+        print(f"Driver setup warning: {ex}")
+
+
+setup_windivert_driver()
+
+
 # Build the path to config.json
 config_path = os.path.join(get_exe_dir(), 'config.json')
 
@@ -225,13 +269,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    if sys.platform == "win32":
-        try:
-            import subprocess
-            subprocess.run(["sc.exe", "stop", "WinDivert"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            subprocess.run(["sc.exe", "delete", "WinDivert"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        except Exception:
-            pass
+    setup_windivert_driver()
 
     w_filter = "tcp and " + "(" + "(ip.SrcAddr == " + INTERFACE_IPV4 + " and ip.DstAddr == " + CONNECT_IP + ")" + " or " + "(ip.SrcAddr == " + CONNECT_IP + " and ip.DstAddr == " + INTERFACE_IPV4 + ")" + ")"
     fake_tcp_injector = FakeTcpInjector(w_filter, fake_injective_connections)

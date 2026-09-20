@@ -371,9 +371,20 @@ public partial class MainWindowViewModel : MyReactiveObject
 
         await Reload();
 
-        if (Utils.IsWindows() && Utils.IsAdministrator() && _config.SniSpoofingItem.Enabled)
+        if (Utils.IsWindows() && _config.SniSpoofingItem.Enabled)
         {
-            _ = SniSpoofingManager.Instance.StartAsync(null, UpdateHandler);
+            if (Utils.IsAdministrator())
+            {
+                _ = SniSpoofingManager.Instance.StartAsync(null, null);
+            }
+            else
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(1000);
+                    await SniSpoofingManager.Instance.StartAsync(null, UpdateHandler);
+                });
+            }
         }
     }
 
