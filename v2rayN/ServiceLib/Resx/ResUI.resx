@@ -1923,4 +1923,25 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbSortingProcess" xml:space="preserve">
     <value>Process</value>
   </data>
+  <data name="menuDoubleTunnel" xml:space="preserve">
+    <value>Double Tunneling (Beta)</value>
+  </data>
+  <data name="DoubleTunnelTitle" xml:space="preserve">
+    <value>Double Tunneling (Beta)</value>
+  </data>
+  <data name="DoubleTunnelHeaderDesc" xml:space="preserve">
+    <value>Client-side proxy chaining: Route local traffic through an intermediate entry server to an exit destination server without server-side setup.</value>
+  </data>
+  <data name="DoubleTunnelMiddleServer" xml:space="preserve">
+    <value>Middle Server (Entry / 1st Relay)</value>
+  </data>
+  <data name="DoubleTunnelExitServer" xml:space="preserve">
+    <value>Exit Server (Destination / 2nd Relay)</value>
+  </data>
+  <data name="DoubleTunnelSameServerWarning" xml:space="preserve">
+    <value>The middle server and exit server cannot be the same.</value>
+  </data>
+  <data name="DoubleTunnelSelectBothWarning" xml:space="preserve">
+    <value>Please select both a middle server and an exit server.</value>
+  </data>
 </root>

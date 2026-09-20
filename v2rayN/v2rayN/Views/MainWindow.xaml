@@ -84,6 +84,10 @@
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuAddProxyChainServer}" />
                                 <MenuItem
+                                    x:Name="menuDoubleTunnel"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="{x:Static resx:ResUI.menuDoubleTunnel}" />
+                                <MenuItem
                                     x:Name="menuAddCustomOutboundServer"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
