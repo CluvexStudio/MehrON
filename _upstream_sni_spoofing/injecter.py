@@ -31,7 +31,10 @@ class TcpInjector(ABC):
         sys.exit("Not implemented")
 
     def run(self):
-        with self.w:
-            while True:
-                packet = self.w.recv(65575)
-                self.inject(packet)
+        try:
+            with self.w:
+                while True:
+                    packet = self.w.recv(65575)
+                    self.inject(packet)
+        except Exception as ex:
+            print(f"TcpInjector error: {ex}", file=sys.stderr)
