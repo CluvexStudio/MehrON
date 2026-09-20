@@ -132,9 +132,20 @@ public static class ConnectionHandler
             }
 
             var ip = ipInfo.ip ?? ipInfo.clientIp ?? ipInfo.ip_addr ?? ipInfo.query;
-            var country = ipInfo.country_code ?? ipInfo.country ?? ipInfo.countryCode ?? ipInfo.location?.country_code ?? "unknown";
+            var countryCode = ipInfo.country_code ?? ipInfo.countryCode ?? ipInfo.location?.country_code ?? string.Empty;
+            var countryName = ipInfo.country ?? ipInfo.country_name ?? string.Empty;
 
-            return new IpInfoResult(country, ip);
+            if (countryCode.IsNullOrEmpty() && countryName.Length == 2)
+            {
+                countryCode = countryName;
+                countryName = countryCode.CountryToName() ?? countryName;
+            }
+            else if (countryName.IsNullOrEmpty() && countryCode.IsNotEmpty())
+            {
+                countryName = countryCode.CountryToName() ?? countryCode;
+            }
+
+            return new IpInfoResult(countryCode.IsNotEmpty() ? countryCode : countryName, ip, countryName);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

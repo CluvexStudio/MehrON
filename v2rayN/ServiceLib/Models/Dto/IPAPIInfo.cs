@@ -18,11 +18,22 @@ public class LocationInfo
     public string? country_code { get; set; }
 }
 
-public readonly record struct IpInfoResult(string Country, string? Ip)
+public readonly record struct IpInfoResult(string Country, string? Ip, string? CountryName = null)
 {
     public override string ToString()
     {
-        var emoji = Utils.IsWindows() ? null : Country.CountryToEmoji();
-        return $"{emoji}({Country}) {Ip}";
+        var isFa = AppManager.Instance?.Config?.UiItem?.CurrentLanguage?.Equals("fa", StringComparison.OrdinalIgnoreCase) == true;
+        var emoji = Country.CountryToEmoji();
+        var name = Country.CountryToName(isFa);
+        if (name.IsNullOrEmpty())
+        {
+            name = !CountryName.IsNullOrEmpty() ? CountryName : Country;
+        }
+
+        var countryDisplay = (emoji.IsNotEmpty() && name.IsNotEmpty())
+            ? $"{emoji} {name}"
+            : (emoji.IsNotEmpty() ? $"{emoji} {Country}" : (!name.IsNullOrEmpty() ? name : Country));
+
+        return countryDisplay;
     }
 }
