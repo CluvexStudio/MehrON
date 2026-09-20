@@ -7,6 +7,8 @@ public partial class SniSpoofingSettingViewModel : MyReactiveObject, ICloseable
     private readonly SniSpoofingItem _settings;
 
     [Reactive] public partial bool Enabled { get; set; }
+    [Reactive] public partial string Engine { get; set; } = "Rust";
+    public List<string> Engines { get; } = ["Rust", "Python"];
     [Reactive] public partial string ListenHost { get; set; } = "127.0.0.1";
     [Reactive] public partial int ListenPort { get; set; }
     [Reactive] public partial string ConnectIp { get; set; } = string.Empty;
@@ -20,6 +22,7 @@ public partial class SniSpoofingSettingViewModel : MyReactiveObject, ICloseable
         _config = AppManager.Instance.Config;
         _settings = JsonUtils.DeepCopy(_config.SniSpoofingItem);
         Enabled = _settings.Enabled;
+        Engine = _settings.Engine is "Python" ? "Python" : "Rust";
         ListenHost = _settings.ListenHost;
         ListenPort = _settings.ListenPort;
         ConnectIp = _settings.ConnectIp;
@@ -43,6 +46,7 @@ public partial class SniSpoofingSettingViewModel : MyReactiveObject, ICloseable
         }
 
         _settings.Enabled = Enabled;
+        _settings.Engine = Engine is "Python" ? "Python" : "Rust";
         _settings.ListenHost = ListenHost.Trim();
         _settings.ListenPort = ListenPort;
         _settings.ConnectIp = ConnectIp.Trim();
