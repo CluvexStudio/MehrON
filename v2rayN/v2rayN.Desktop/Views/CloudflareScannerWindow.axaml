@@ -9,8 +9,10 @@
     xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     Title="{x:Static resx:ResUI.CloudflareScannerTitle}"
-    Width="860"
+    Width="920"
     Height="640"
+    MinWidth="860"
+    MinHeight="500"
     x:DataType="vms:CloudflareScannerViewModel"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner"
@@ -25,27 +27,31 @@
             BorderThickness="1"
             CornerRadius="6"
             DockPanel.Dock="Bottom">
-            <DockPanel>
-                <Button
-                    x:Name="btnClose"
-                    Width="90"
-                    Content="{x:Static resx:ResUI.TbCancel}"
-                    DockPanel.Dock="Right"
-                    IsCancel="True" />
-                <StackPanel Orientation="Horizontal" Spacing="8">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Left: Copy Actions -->
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="8">
                     <Button
                         x:Name="btnCopySelected"
                         Content="{x:Static resx:ResUI.TbCopySelected}" />
                     <Button
                         x:Name="btnCopyAllWorking"
                         Content="{x:Static resx:ResUI.TbCopyAllWorking}" />
-                    <Rectangle
-                        Width="1"
-                        Height="20"
-                        Margin="4,0"
-                        Fill="{DynamicResource SystemControlHighlightListLowBrush}" />
+                </StackPanel>
+
+                <!-- Center: Server Selection & Apply -->
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="8">
                     <TextBlock
                         VerticalAlignment="Center"
+                        FontWeight="Medium"
                         Text="{x:Static resx:ResUI.menuServers}" />
                     <ComboBox
                         Width="220"
@@ -54,9 +60,21 @@
                         SelectedItem="{Binding SelectedProfile}" />
                     <Button
                         x:Name="btnApply"
+                        FontWeight="SemiBold"
                         Content="{x:Static resx:ResUI.TbApplyToProfile}" />
                 </StackPanel>
-            </DockPanel>
+
+                <!-- Right: Cancel / Close -->
+                <Button
+                    x:Name="btnClose"
+                    Grid.Column="2"
+                    Width="100"
+                    Margin="24,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Content="{x:Static resx:ResUI.TbCancel}"
+                    IsCancel="True" />
+            </Grid>
         </Border>
 
         <!-- Top Configuration & Controls -->
