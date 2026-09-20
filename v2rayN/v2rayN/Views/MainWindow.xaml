@@ -246,14 +246,14 @@
                         </Menu>
                         <Separator />
                         <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <MenuItem Padding="{StaticResource MarginLeftRight8}" AutomationProperties.Name="Super Restrictive Settings">
+                            <MenuItem Padding="{StaticResource MarginLeftRight8}" AutomationProperties.Name="Compatibility settings with limitations">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
                                             Margin="{StaticResource MarginRight8}"
                                             VerticalAlignment="Center"
                                             Kind="ShieldOutline" />
-                                        <TextBlock Text="Super Restrictive Settings" />
+                                        <TextBlock Text="Compatibility settings with limitations" />
                                     </StackPanel>
                                 </MenuItem.Header>
                                 <MenuItem
