@@ -311,10 +311,10 @@ public class HappyEyeballs4RayItem
 [Serializable]
 public class SniSpoofingItem
 {
-    public bool Enabled { get; set; }
+    public bool Enabled { get; set; } = true;
     public string ListenHost { get; set; } = "127.0.0.1";
     public int ListenPort { get; set; } = 40443;
-    public string ConnectIp { get; set; } = string.Empty;
+    public string ConnectIp { get; set; } = "188.114.98.0";
     public int ConnectPort { get; set; } = 443;
     public string FakeSni { get; set; } = "auth.vercel.com";
 }
