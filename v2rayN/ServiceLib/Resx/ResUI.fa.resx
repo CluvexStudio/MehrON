@@ -1797,4 +1797,25 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="menuNewUpdate" xml:space="preserve">
     <value>New Update</value>
   </data>
+  <data name="menuDoubleTunnel" xml:space="preserve">
+    <value>تانل دوگانه (Beta)</value>
+  </data>
+  <data name="DoubleTunnelTitle" xml:space="preserve">
+    <value>تانل دوگانه (Beta)</value>
+  </data>
+  <data name="DoubleTunnelHeaderDesc" xml:space="preserve">
+    <value>زنجیره پروکسی کلاینت‌محور: هدایت ترافیک از طریق سرور میانی به سرور نهایی بدون نیاز به پیکربندی در سمت سرور.</value>
+  </data>
+  <data name="DoubleTunnelMiddleServer" xml:space="preserve">
+    <value>سرور میانی (ورودی / رله اول)</value>
+  </data>
+  <data name="DoubleTunnelExitServer" xml:space="preserve">
+    <value>سرور نهایی (خروجی / رله دوم)</value>
+  </data>
+  <data name="DoubleTunnelSameServerWarning" xml:space="preserve">
+    <value>سرور میانی و سرور نهایی نمی‌توانند یکسان باشند.</value>
+  </data>
+  <data name="DoubleTunnelSelectBothWarning" xml:space="preserve">
+    <value>لطفاً هر دو سرور میانی و نهایی را انتخاب کنید.</value>
+  </data>
 </root>
