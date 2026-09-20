@@ -9,6 +9,7 @@ public sealed class SniSpoofingManager
 {
     private const string EngineFolder = "sni-spoofing";
     private const string EngineExe = "sni-spoofing.exe";
+    private const string EngineRustExe = "sni-spoof-rs.exe";
     private const string EngineScript = "main.py";
     private static readonly Lazy<SniSpoofingManager> _instance = new(() => new());
     public static SniSpoofingManager Instance => _instance.Value;
@@ -18,6 +19,7 @@ public sealed class SniSpoofingManager
     private string _activeProfileId = string.Empty;
     private string? _runningTargetIp;
     private int _runningTargetPort;
+    private string? _runningEngine;
 
     public static bool CanUse(ProfileItem node)
     {
@@ -33,7 +35,7 @@ public sealed class SniSpoofingManager
         {
             return false;
         }
-        if (!File.Exists(GetExePath()) && !File.Exists(GetScriptPath()))
+        if (!File.Exists(GetRustExePath()) && !File.Exists(GetExePath()) && !File.Exists(GetScriptPath()))
         {
             return false;
         }
@@ -63,8 +65,31 @@ public sealed class SniSpoofingManager
             return true;
         }
 
-        if (!File.Exists(GetExePath()) && !File.Exists(GetScriptPath()))
+        var rustExePath = GetRustExePath();
+        var pyExePath = GetExePath();
+        var scriptPath = GetScriptPath();
+
+        var wantsRust = setting.Engine.Equals("Rust", StringComparison.OrdinalIgnoreCase);
+        bool useRust;
+        if (wantsRust)
         {
+            useRust = File.Exists(rustExePath) || (!File.Exists(pyExePath) && !File.Exists(scriptPath));
+        }
+        else
+        {
+            useRust = !File.Exists(pyExePath) && !File.Exists(scriptPath) && File.Exists(rustExePath);
+        }
+
+        var activeEngine = useRust ? "Rust" : "Python";
+
+        if (useRust && !File.Exists(rustExePath))
+        {
+            await SafeNotifyAsync(updateFunc, true, "Rust SNI Spoofing engine (sni-spoof-rs.exe) was not found in bin/sni-spoofing.");
+            return false;
+        }
+        if (!useRust && !File.Exists(pyExePath) && !File.Exists(scriptPath))
+        {
+            await SafeNotifyAsync(updateFunc, true, "Python SNI Spoofing engine was not found in bin/sni-spoofing.");
             return false;
         }
 
@@ -91,7 +116,7 @@ public sealed class SniSpoofingManager
             ? setting.ConnectPort
             : (node != null && node.Port > 0 ? node.Port : (setting.ConnectPort > 0 ? setting.ConnectPort : 443));
 
-        if (_isRunning && _process != null && !_process.HasExited && _runningTargetIp == targetIp && _runningTargetPort == targetPort)
+        if (_isRunning && _process != null && !_process.HasExited && _runningTargetIp == targetIp && _runningTargetPort == targetPort && _runningEngine == activeEngine)
         {
             if (node != null)
             {
@@ -106,31 +131,51 @@ public sealed class SniSpoofingManager
 
         var folder = GetEngineDirectory();
         var configPath = Path.Combine(folder, "config.json");
-        var content = JsonSerializer.Serialize(new Dictionary<string, object>
-        {
-            ["LISTEN_HOST"] = setting.ListenHost,
-            ["LISTEN_PORT"] = setting.ListenPort,
-            ["CONNECT_IP"] = targetIp,
-            ["CONNECT_PORT"] = targetPort,
-            ["FAKE_SNI"] = setting.FakeSni,
-        }, new JsonSerializerOptions { WriteIndented = true });
-        await File.WriteAllTextAsync(configPath, content);
 
-        var exePath = GetExePath();
-        var scriptPath = GetScriptPath();
-
-        if (File.Exists(exePath))
+        if (useRust)
         {
-            _process = new ProcessService(exePath, string.Empty, folder, true, false, null, updateFunc);
-        }
-        else if (File.Exists(scriptPath))
-        {
-            _process = new ProcessService(GetPythonExecutable(), "-X utf8 main.py", folder, true, false, null, updateFunc);
+            var rustConfig = new
+            {
+                graceful_shutdown_sec = 0,
+                listeners = new[]
+                {
+                    new
+                    {
+                        listen = $"{setting.ListenHost}:{setting.ListenPort}",
+                        connect = $"{targetIp}:{targetPort}",
+                        fake_sni = setting.FakeSni,
+                        conn_timeout_sec = 5,
+                        handshake_timeout_sec = 2,
+                        keepalive_time_sec = 11,
+                        keepalive_interval_sec = 2
+                    }
+                }
+            };
+            var content = JsonSerializer.Serialize(rustConfig, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(configPath, content);
+            _process = new ProcessService(rustExePath, $"\"{configPath}\"", folder, true, false, null, updateFunc);
         }
         else
         {
-            await SafeNotifyAsync(updateFunc, true, "SNI Spoofing engine binary or script was not found in bin/sni-spoofing.");
-            return false;
+            var pythonConfig = new Dictionary<string, object>
+            {
+                ["LISTEN_HOST"] = setting.ListenHost,
+                ["LISTEN_PORT"] = setting.ListenPort,
+                ["CONNECT_IP"] = targetIp,
+                ["CONNECT_PORT"] = targetPort,
+                ["FAKE_SNI"] = setting.FakeSni,
+            };
+            var content = JsonSerializer.Serialize(pythonConfig, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(configPath, content);
+
+            if (File.Exists(pyExePath))
+            {
+                _process = new ProcessService(pyExePath, string.Empty, folder, true, false, null, updateFunc);
+            }
+            else if (File.Exists(scriptPath))
+            {
+                _process = new ProcessService(GetPythonExecutable(), "-X utf8 main.py", folder, true, false, null, updateFunc);
+            }
         }
 
         try
@@ -141,24 +186,28 @@ public sealed class SniSpoofingManager
                 await Task.Delay(100);
                 if (_process.HasExited)
                 {
-                    throw new InvalidOperationException("The SNI Spoofing engine exited unexpectedly.");
+                    throw new InvalidOperationException($"The SNI Spoofing {activeEngine} engine exited unexpectedly.");
                 }
             }
 
             _isRunning = true;
             _runningTargetIp = targetIp;
             _runningTargetPort = targetPort;
+            _runningEngine = activeEngine;
             _activeProfileId = node?.IndexId ?? string.Empty;
-            await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
+            await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing ({activeEngine}) enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
             return true;
         }
         catch (Win32Exception winEx) when (winEx.NativeErrorCode == 740)
         {
             try
             {
+                var targetExe = useRust ? rustExePath : (File.Exists(pyExePath) ? pyExePath : GetPythonExecutable());
+                var targetArgs = useRust ? $"\"{configPath}\"" : (File.Exists(pyExePath) ? string.Empty : "-X utf8 main.py");
                 var psi = new ProcessStartInfo
                 {
-                    FileName = exePath,
+                    FileName = targetExe,
+                    Arguments = targetArgs,
                     WorkingDirectory = folder,
                     UseShellExecute = true,
                     Verb = "runas",
@@ -169,8 +218,9 @@ public sealed class SniSpoofingManager
                 _isRunning = true;
                 _runningTargetIp = targetIp;
                 _runningTargetPort = targetPort;
+                _runningEngine = activeEngine;
                 _activeProfileId = node?.IndexId ?? string.Empty;
-                await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
+                await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing ({activeEngine}) enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
                 return true;
             }
             catch (Exception ex)
@@ -195,6 +245,7 @@ public sealed class SniSpoofingManager
         _isRunning = false;
         _runningTargetIp = null;
         _runningTargetPort = 0;
+        _runningEngine = null;
         _activeProfileId = string.Empty;
         if (_process != null)
         {
@@ -263,6 +314,14 @@ public sealed class SniSpoofingManager
         try
         {
             foreach (var p in Process.GetProcessesByName("sni-spoofing"))
+            {
+                try
+                {
+                    p.Kill(true);
+                }
+                catch { }
+            }
+            foreach (var p in Process.GetProcessesByName("sni-spoof-rs"))
             {
                 try
                 {
@@ -351,6 +410,7 @@ public sealed class SniSpoofingManager
 
     private static string GetEngineDirectory() => Utils.GetBinPath(EngineFolder);
     private static string GetExePath() => Path.Combine(GetEngineDirectory(), EngineExe);
+    private static string GetRustExePath() => Path.Combine(GetEngineDirectory(), EngineRustExe);
     private static string GetScriptPath() => Path.Combine(GetEngineDirectory(), EngineScript);
     private static string GetPythonExecutable()
     {

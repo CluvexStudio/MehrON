@@ -312,6 +312,7 @@ public class HappyEyeballs4RayItem
 public class SniSpoofingItem
 {
     public bool Enabled { get; set; } = true;
+    public string Engine { get; set; } = "Rust";
     public string ListenHost { get; set; } = "127.0.0.1";
     public int ListenPort { get; set; } = 40443;
     public string ConnectIp { get; set; } = "188.114.98.0";

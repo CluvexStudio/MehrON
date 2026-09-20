@@ -9,7 +9,7 @@
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     Title="SNI Spoofing Settings"
     Width="580"
-    Height="470"
+    Height="520"
     x:TypeArguments="vms:SniSpoofingSettingViewModel"
     ShowInTaskbar="False"
     Style="{StaticResource WindowGlobal}"
@@ -22,24 +22,26 @@
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Patterniha SNI Spoofing" />
-                <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Text="Sends a fake TLS ClientHello before your real TLS handshake. Windows administrator permission is required." />
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="SNI Spoofing (Rust / Python)" />
+                <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Text="Sends a fake TLS ClientHello before your real TLS handshake. Choose between the high-performance Rust core (sni-spoof-rs) or the original Python engine. Windows administrator permission is required." />
                 <CheckBox IsChecked="{Binding Enabled}" Content="Enable SNI spoofing for the active compatible profile" />
                 <Grid Margin="0,14,0,0">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="160" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
-                    <TextBlock VerticalAlignment="Center" Text="Listen address" />
-                    <TextBox Grid.Column="1" Text="{Binding ListenHost, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center" Text="Listen port" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ListenPort, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Center" Text="Fake SNI" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Text="{Binding FakeSni, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect IP" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectIp, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Grid.Row="4" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect port" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectPort, UpdateSourceTrigger=PropertyChanged}" />
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="Spoofing engine" />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Engines}" SelectedItem="{Binding Engine}" />
+                    <TextBlock Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center" Text="Listen address" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ListenHost, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Center" Text="Listen port" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ListenPort, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Center" Text="Fake SNI" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Text="{Binding FakeSni, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="4" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect IP" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectIp, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="5" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect port" />
+                    <TextBox Grid.Row="5" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectPort, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
-                <TextBlock Margin="0,14,0,0" TextWrapping="Wrap" Text="Connect IP/port correspond to Patterniha's CONNECT_IP/CONNECT_PORT. Leave Connect IP blank to resolve the active profile automatically. Only TCP TLS VMess, VLESS, and Trojan profiles are supported." />
+                <TextBlock Margin="0,14,0,0" TextWrapping="Wrap" Text="Connect IP/port: Leave Connect IP blank to resolve the active profile automatically. The Rust engine provides minimal RAM (~5MB) and low latency." />
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

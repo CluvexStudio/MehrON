@@ -93,6 +93,16 @@ jobs:
           Pop-Location
           Copy-Item -Path "_upstream_sni_spoofing/dist/sni-spoofing/*" -Destination "$binDir/sni-spoofing/" -Recurse -Force
 
+          # Download Rust SNI Spoofing engine (sni-spoof-rs)
+          Write-Host "Downloading Rust SNI Spoofing engine..."
+          $rustZip = "sni-spoof-rs.zip"
+          curl.exe -L -s -o $rustZip "https://github.com/therealaleph/sni-spoofing-rust/releases/latest/download/sni-spoof-rs-windows-amd64.zip"
+          Expand-Archive -Path $rustZip -DestinationPath "rust-extracted" -Force
+          Copy-Item -Path "rust-extracted/sni-spoof-rs.exe" -Destination "$binDir/sni-spoofing/" -Force
+          Copy-Item -Path "rust-extracted/WinDivert64.sys" -Destination "$binDir/sni-spoofing/" -Force -ErrorAction SilentlyContinue
+          Copy-Item -Path "rust-extracted/WinDivert.dll" -Destination "$binDir/sni-spoofing/" -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path $rustZip, "rust-extracted" -Recurse -Force -ErrorAction SilentlyContinue
+
           # Download Xray v26.3.27 (compatible with non-TLS VLESS and SNI spoofing)
           Write-Host "Downloading Xray v26.3.27..."
           $xrayZip = "xray-26.3.27.zip"
@@ -125,6 +135,9 @@ jobs:
           # Verify core binaries exist
           if (-not (Test-Path "$binDir/xray/xray.exe")) {
             throw "xray.exe was not found or copied into bin/xray/"
+          }
+          if (-not (Test-Path "$binDir/sni-spoofing/sni-spoof-rs.exe")) {
+            throw "sni-spoof-rs.exe was not found in bin/sni-spoofing/"
           }
           if (-not (Test-Path "$binDir/sni-spoofing/sni-spoofing.exe")) {
             throw "sni-spoofing.exe was not found in bin/sni-spoofing/"
