@@ -14,12 +14,13 @@
     x:TypeArguments="vms:StatusBarViewModel"
     Style="{StaticResource ViewGlobal}"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Margin="10,4,10,10">
         <materialDesign:ColorZone
             Height="auto"
-            Margin="{StaticResource Margin4}"
+            CornerRadius="12"
+            materialDesign:ElevationAssist.Elevation="Dp3"
             Mode="Standard">
-            <DockPanel>
+            <DockPanel Margin="8,4">
                 <StackPanel
                     Margin="{StaticResource MarginLeftRight8}"
                     VerticalAlignment="Center"
@@ -33,6 +34,25 @@
                         x:Name="txtSpeedDirectDisplay"
                         HorizontalAlignment="Right"
                         Style="{StaticResource StatusbarItem}" />
+                </StackPanel>
+
+                <StackPanel
+                    x:Name="spToggleLog"
+                    Margin="{StaticResource MarginLeftRight8}"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Right"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="{StaticResource MarginLeftRight8}"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource StatusbarItem}"
+                        Text="{x:Static resx:ResUI.MsgInformationTitle}" />
+                    <ToggleButton
+                        x:Name="togShowLog"
+                        Margin="{StaticResource Margin4}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="Show Log" />
                 </StackPanel>
 
                 <StackPanel
