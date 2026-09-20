@@ -358,8 +358,6 @@
                     </ToolBar>
                 </ToolBarTray>
 
-                <ContentControl x:Name="contentStatusBarView" DockPanel.Dock="Bottom" />
-
                 <Grid>
                     <Grid x:Name="gridMain" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
@@ -479,6 +477,11 @@
                             </TabItem>
                         </TabControl>
                     </Grid>
+                    <ContentControl
+                        x:Name="contentStatusBarView"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,0,10" />
                     <materialDesign:Snackbar x:Name="MainSnackbar" MessageQueue="{materialDesign:MessageQueue}" />
                 </Grid>
             </DockPanel>

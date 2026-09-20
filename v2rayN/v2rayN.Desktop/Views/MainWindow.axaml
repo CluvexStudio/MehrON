@@ -124,8 +124,6 @@
                     IsVisible="False" />
             </DockPanel>
 
-            <ContentControl x:Name="contentStatusBarView" DockPanel.Dock="Bottom" />
-
             <Grid>
                 <Grid
                     x:Name="gridMain"
@@ -165,6 +163,12 @@
                         <TabItem x:Name="tabClashConnections2" Header="{x:Static resx:ResUI.TbConnections}" />
                     </TabControl>
                 </Grid>
+
+                <ContentControl
+                    x:Name="contentStatusBarView"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,0,10" />
             </Grid>
         </DockPanel>
     </dialogHost:DialogHost>

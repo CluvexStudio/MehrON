@@ -15,21 +15,14 @@
     Background="Transparent"
     Style="{StaticResource ViewGlobal}"
     mc:Ignorable="d">
-    <Grid Background="Transparent" Margin="12,4,12,12">
+    <Grid Background="Transparent">
         <Border
             x:Name="borderGlass"
             HorizontalAlignment="Center"
             Padding="14,6"
             CornerRadius="18"
-            BorderThickness="1">
-            <Border.Effect>
-                <DropShadowEffect
-                    BlurRadius="28"
-                    ShadowDepth="4"
-                    Direction="270"
-                    Opacity="0.35"
-                    Color="#000000" />
-            </Border.Effect>
+            BorderThickness="1"
+            Background="Transparent">
             <DockPanel Margin="0">
                 <StackPanel
                     Margin="{StaticResource MarginLeftRight8}"
