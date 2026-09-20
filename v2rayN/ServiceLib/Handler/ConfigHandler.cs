@@ -116,10 +116,9 @@ public static class ConfigHandler
         config.ConstItem ??= new ConstItem();
         if (isNewConfig)
         {
-            // PattN: fresh installs default to the Iran regional preset sources (Chocolate4U)
-            config.ConstItem.GeoSourceUrl = Global.GeoFilesSources[2];
+            config.ConstItem.GeoSourceUrl = Global.GeoFilesSources[3];
             config.ConstItem.SrsSourceUrl = Global.SingboxRulesetSources[2];
-            config.ConstItem.RouteRulesTemplateSourceUrl = Global.RoutingRulesSources[2];
+            config.ConstItem.RouteRulesTemplateSourceUrl = string.Empty;
         }
 
         config.SimpleDNSItem ??= InitBuiltinSimpleDNS();
@@ -2581,9 +2580,13 @@ public static class ConfigHandler
         var item = await SQLiteHelper.Instance.TableAsync<RoutingItem>().FirstOrDefaultAsync(it => it.IsActive == true);
         if (item is null)
         {
-            var item2 = await SQLiteHelper.Instance.TableAsync<RoutingItem>().FirstOrDefaultAsync();
-            await SetDefaultRouting(config, item2);
-            return item2;
+            var item2 = await SQLiteHelper.Instance.TableAsync<RoutingItem>().FirstOrDefaultAsync(it => it.Remarks == "Global" || (it.Remarks.Contains("Global") && !it.Remarks.Contains("IR")));
+            item2 ??= await SQLiteHelper.Instance.TableAsync<RoutingItem>().FirstOrDefaultAsync();
+            if (item2 != null)
+            {
+                await SetDefaultRouting(config, item2);
+                return item2;
+            }
         }
 
         return item;
@@ -2755,6 +2758,35 @@ public static class ConfigHandler
             }
         }
 
+        // Ensure the real Global rule exists and is available
+        var realGlobal = items?.FirstOrDefault(t => t.Remarks == "Global" || t.Remarks == $"{ver}全局(Global)" || (t.Remarks.EndsWith("(Global)") && !t.Remarks.Contains("IR") && !t.Remarks.Contains("پراکسی")));
+        if (realGlobal == null && items != null && items.Count > 0)
+        {
+            realGlobal = new RoutingItem()
+            {
+                Remarks = "Global",
+                Url = string.Empty,
+                Sort = (items.MaxBy(t => t.Sort)?.Sort ?? 0) + 1,
+            };
+            await AddBatchRoutingRules(realGlobal, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "global"));
+            items = await AppManager.Instance.RoutingItems();
+        }
+        else if (realGlobal != null && realGlobal.Remarks == $"{ver}全局(Global)")
+        {
+            realGlobal.Remarks = "Global";
+            await SQLiteHelper.Instance.UpdateAsync(realGlobal);
+        }
+
+        // Migrate default routing to real Global
+        if (config.RoutingBasicItem.DefaultRoutingMigratedToGlobal != true)
+        {
+            config.RoutingBasicItem.DefaultRoutingMigratedToGlobal = true;
+            if (realGlobal != null)
+            {
+                await SetDefaultRouting(config, realGlobal);
+            }
+        }
+
         if (!blImportAdvancedRules && items.Count() > 0) // items.Count(u => u.Remarks.StartsWith(ver)) > 0)
         {
             //migrate
@@ -2773,12 +2805,21 @@ public static class ConfigHandler
         }
 
         var maxSort = items.Count;
+        //Global
+        var item1 = new RoutingItem()
+        {
+            Remarks = "Global",
+            Url = string.Empty,
+            Sort = maxSort + 1,
+        };
+        await AddBatchRoutingRules(item1, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "global"));
+
         //Bypass the mainland
         var item2 = new RoutingItem()
         {
             Remarks = $"{ver}绕过大陆(Whitelist)",
             Url = string.Empty,
-            Sort = maxSort + 1,
+            Sort = maxSort + 2,
         };
         await AddBatchRoutingRules(item2, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "white"));
 
@@ -2787,18 +2828,9 @@ public static class ConfigHandler
         {
             Remarks = $"{ver}黑名单(Blacklist)",
             Url = string.Empty,
-            Sort = maxSort + 2,
-        };
-        await AddBatchRoutingRules(item3, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "black"));
-
-        //Global
-        var item1 = new RoutingItem()
-        {
-            Remarks = $"{ver}全局(Global)",
-            Url = string.Empty,
             Sort = maxSort + 3,
         };
-        await AddBatchRoutingRules(item1, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "global"));
+        await AddBatchRoutingRules(item3, EmbedUtils.GetEmbedText(Global.CustomRoutingFileName + "black"));
 
         //PattN: Iran direct (Chocolate4U), see https://github.com/Chocolate4U/Iran-v2ray-rules
         var item4 = new RoutingItem()
@@ -2820,7 +2852,7 @@ public static class ConfigHandler
 
         if (!blImportAdvancedRules)
         {
-            await SetDefaultRouting(config, item4);
+            await SetDefaultRouting(config, item1);
         }
         return 0;
     }
@@ -3137,7 +3169,7 @@ public static class ConfigHandler
         var routingPrefix = effectiveGeoUrl.Contains("Chocolate4U", StringComparison.OrdinalIgnoreCase) ? "IR-"
             : effectiveGeoUrl.Contains("russia", StringComparison.OrdinalIgnoreCase) ? "RU"
             : "V4-";
-        var presetRouting = (await AppManager.Instance.RoutingItems())?.FirstOrDefault(t => t.Remarks.StartsWith(routingPrefix));
+        var presetRouting = (await AppManager.Instance.RoutingItems())?.FirstOrDefault(t => (routingPrefix == "V4-" && t.Remarks == "Global") || t.Remarks.StartsWith(routingPrefix));
         if (presetRouting != null)
         {
             await SetDefaultRouting(config, presetRouting);
