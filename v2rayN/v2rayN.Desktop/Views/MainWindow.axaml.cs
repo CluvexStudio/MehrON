@@ -82,6 +82,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
             this.OneWayBind(ViewModel, vm => vm.StatusBarViewModel, v => v.contentStatusBarView.Content).DisposeWith(disposables);
 
+            this.WhenAnyValue(v => v.ViewModel.StatusBarViewModel.ShowBottomLog)
+                .ObserveOn(RxSchedulers.MainThreadScheduler)
+                .Subscribe(ApplyLogVisibility)
+                .DisposeWith(disposables);
+
             _layoutBindingsDisposable.DisposeWith(disposables);
 
             this.WhenAnyValue(v => v.ViewModel.MainGirdOrientation)
@@ -373,6 +378,12 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
     private void RestoreUI()
     {
+        if (!_config.UiItem.ShowBottomLog)
+        {
+            ApplyLogVisibility(false);
+            return;
+        }
+
         if (_config.UiItem.MainGirdHeight1 > 0 && _config.UiItem.MainGirdHeight2 > 0)
         {
             if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Horizontal)
@@ -392,6 +403,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
     {
         ConfigHandler.SaveWindowSizeItem(_config, GetType().Name, Width, Height);
 
+        if (!_config.UiItem.ShowBottomLog)
+        {
+            return;
+        }
+
         if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Horizontal)
         {
             ConfigHandler.SaveMainGirdHeight(_config, gridMain.ColumnDefinitions[0].ActualWidth, gridMain.ColumnDefinitions[2].ActualWidth);
@@ -399,6 +415,30 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         else if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Vertical)
         {
             ConfigHandler.SaveMainGirdHeight(_config, gridMain1.RowDefinitions[0].ActualHeight, gridMain1.RowDefinitions[2].ActualHeight);
+        }
+    }
+
+    private void ApplyLogVisibility(bool showLog)
+    {
+        if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Vertical)
+        {
+            gridMain1.RowDefinitions[1].Height = showLog ? new GridLength(10) : new GridLength(0);
+            gridMain1.RowDefinitions[2].Height = showLog
+                ? new GridLength(_config.UiItem.MainGirdHeight2 > 0 ? _config.UiItem.MainGirdHeight2 : 1, GridUnitType.Star)
+                : new GridLength(0);
+            tabMain1.IsVisible = showLog;
+        }
+        else if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Horizontal)
+        {
+            gridMain.ColumnDefinitions[1].Width = showLog ? new GridLength(10) : new GridLength(0);
+            gridMain.ColumnDefinitions[2].Width = showLog
+                ? new GridLength(_config.UiItem.MainGirdHeight2 > 0 ? _config.UiItem.MainGirdHeight2 : 1, GridUnitType.Star)
+                : new GridLength(0);
+            tabMain.IsVisible = showLog;
+        }
+        else if (_config.UiItem.MainGirdOrientation == EGirdOrientation.Tab)
+        {
+            tabMsgView2.IsVisible = showLog;
         }
     }
 

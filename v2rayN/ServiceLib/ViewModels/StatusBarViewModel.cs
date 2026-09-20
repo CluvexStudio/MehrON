@@ -99,6 +99,9 @@ public partial class StatusBarViewModel : MyReactiveObject
     public partial bool EnableTun { get; set; }
 
     [Reactive]
+    public partial bool ShowBottomLog { get; set; } = true;
+
+    [Reactive]
     public partial bool BlIsNonWindows { get; set; }
 
     #endregion UI
@@ -106,6 +109,7 @@ public partial class StatusBarViewModel : MyReactiveObject
     public StatusBarViewModel()
     {
         _config = AppManager.Instance.Config;
+        ShowBottomLog = _config.UiItem.ShowBottomLog;
         SelectedRouting = new();
         SelectedServer = new();
         RunningServerToolTipText = GetRunningServerToolTipText("-");
@@ -138,6 +142,16 @@ public partial class StatusBarViewModel : MyReactiveObject
 
         this.WhenAnyValue(x => x.EnableTun)
             .SubscribeAsync(async _ => await DoEnableTun());
+
+        this.WhenAnyValue(x => x.ShowBottomLog)
+            .Subscribe(v =>
+            {
+                if (_config.UiItem.ShowBottomLog != v)
+                {
+                    _config.UiItem.ShowBottomLog = v;
+                    _ = ConfigHandler.SaveConfig(_config);
+                }
+            });
 
         CopyProxyCmdToClipboardCmd = ReactiveCommand.CreateFromTask(async () =>
         {
