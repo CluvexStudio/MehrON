@@ -16,55 +16,27 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#E6FFFFFF" />
-                        <GradientStop Offset="0.4" Color="#CCF3F6FA" />
-                        <GradientStop Offset="1.0" Color="#B8E2EAF5" />
-                    </LinearGradientBrush>
-                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#F0FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#80FFFFFF" />
-                    </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #26000000, 0 2 8 0 #12000000, inset 0 1 1 0 #FFFFFF</BoxShadows>
+                    <SolidColorBrush x:Key="GlassBorderBrush" Color="#33000000" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#B32B303C" />
-                        <GradientStop Offset="0.4" Color="#991D2028" />
-                        <GradientStop Offset="1.0" Color="#8513151B" />
-                    </LinearGradientBrush>
-                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#66FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#26FFFFFF" />
-                    </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #70000000, 0 2 8 0 #35000000, inset 0 1 1 0 #59FFFFFF</BoxShadows>
+                    <SolidColorBrush x:Key="GlassBorderBrush" Color="#4DFFFFFF" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Default">
-                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#B32B303C" />
-                        <GradientStop Offset="0.4" Color="#991D2028" />
-                        <GradientStop Offset="1.0" Color="#8513151B" />
-                    </LinearGradientBrush>
-                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#66FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#26FFFFFF" />
-                    </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #70000000, 0 2 8 0 #35000000, inset 0 1 1 0 #59FFFFFF</BoxShadows>
+                    <SolidColorBrush x:Key="GlassBorderBrush" Color="#4DFFFFFF" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="Transparent" Margin="12,4,12,12">
+    <Grid Background="Transparent">
         <Border
             x:Name="borderGlass"
             HorizontalAlignment="Center"
             Padding="14,6"
-            Background="{DynamicResource GlassFillBrush}"
+            Background="Transparent"
             BorderBrush="{DynamicResource GlassBorderBrush}"
             BorderThickness="1"
-            CornerRadius="18"
-            BoxShadow="{DynamicResource GlassBoxShadow}">
+            CornerRadius="18">
             <DockPanel>
                 <StackPanel
                     Margin="{StaticResource MarginLr8}"
