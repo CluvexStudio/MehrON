@@ -12,15 +12,25 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:TypeArguments="vms:StatusBarViewModel"
+    Background="Transparent"
     Style="{StaticResource ViewGlobal}"
     mc:Ignorable="d">
-    <Grid Margin="10,4,10,10">
-        <materialDesign:ColorZone
-            Height="auto"
-            CornerRadius="12"
-            materialDesign:ElevationAssist.Elevation="Dp3"
-            Mode="Standard">
-            <DockPanel Margin="8,4">
+    <Grid Background="Transparent" Margin="12,4,12,12">
+        <Border
+            x:Name="borderGlass"
+            HorizontalAlignment="Center"
+            Padding="14,6"
+            CornerRadius="18"
+            BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="28"
+                    ShadowDepth="4"
+                    Direction="270"
+                    Opacity="0.35"
+                    Color="#000000" />
+            </Border.Effect>
+            <DockPanel Margin="0">
                 <StackPanel
                     Margin="{StaticResource MarginLeftRight8}"
                     VerticalAlignment="Center"
@@ -45,14 +55,15 @@
                     <TextBlock
                         Margin="{StaticResource MarginLeftRight8}"
                         VerticalAlignment="Center"
+                        FontWeight="Medium"
                         Style="{StaticResource StatusbarItem}"
-                        Text="{x:Static resx:ResUI.MsgInformationTitle}" />
+                        Text="Log" />
                     <ToggleButton
                         x:Name="togShowLog"
                         Margin="{StaticResource Margin4}"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        AutomationProperties.Name="Show Log" />
+                        AutomationProperties.Name="Log" />
                 </StackPanel>
 
                 <StackPanel
@@ -116,12 +127,20 @@
                 </StackPanel>
 
                 <StackPanel Margin="{StaticResource MarginLeftRight8}" VerticalAlignment="Center">
-                    <TextBlock x:Name="txtRunningServerDisplay" Style="{StaticResource StatusbarItem}" />
+                    <TextBlock
+                        x:Name="txtRunningServerDisplay"
+                        MaxWidth="260"
+                        TextTrimming="CharacterEllipsis"
+                        Style="{StaticResource StatusbarItem}" />
                     <Border Margin="1" />
-                    <TextBlock x:Name="txtRunningInfoDisplay" Style="{StaticResource StatusbarItem}" />
+                    <TextBlock
+                        x:Name="txtRunningInfoDisplay"
+                        MaxWidth="260"
+                        TextTrimming="CharacterEllipsis"
+                        Style="{StaticResource StatusbarItem}" />
                 </StackPanel>
             </DockPanel>
-        </materialDesign:ColorZone>
+        </Border>
 
         <tb:TaskbarIcon
             x:Name="tbNotify"
