@@ -77,11 +77,6 @@
                             x:Name="menuGlobalHotkeySetting"
                             Header="{x:Static resx:ResUI.menuGlobalHotkeySetting}"
                             IsVisible="{Binding BlIsWindows}" />
-                        <MenuItem Header="Super Restrictive Settings">
-                            <MenuItem x:Name="menuSniSpoofingSetting" Header="SNI Spoofing Settings" />
-                            <MenuItem x:Name="menuMhrSetting" Header="MHR Settings" />
-                            <MenuItem x:Name="menuStopMhr" Header="Stop MHR" />
-                        </MenuItem>
                         <Separator />
                         <MenuItem
                             x:Name="menuRebootAsAdmin"
@@ -101,6 +96,12 @@
                         </MenuItem>
                         <MenuItem x:Name="menuBackupAndRestore" Header="{x:Static resx:ResUI.menuBackupAndRestore}" />
                         <MenuItem x:Name="menuOpenTheFileLocation" Header="{x:Static resx:ResUI.menuOpenTheFileLocation}" />
+                    </MenuItem>
+
+                    <MenuItem Header="Super Restrictive Settings">
+                        <MenuItem x:Name="menuSniSpoofingSetting" Header="SNI Spoofing Settings" />
+                        <MenuItem x:Name="menuMhrSetting" Header="MHR Settings" />
+                        <MenuItem x:Name="menuStopMhr" Header="Stop MHR" />
                     </MenuItem>
 
                     <MenuItem x:Name="menuHelp" Header="{x:Static resx:ResUI.menuHelp}">
