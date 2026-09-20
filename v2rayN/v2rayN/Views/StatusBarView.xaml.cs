@@ -100,15 +100,48 @@ public partial class StatusBarView
 
     private void ApplyGlassTheme()
     {
-        borderGlass.Background = System.Windows.Media.Brushes.Transparent;
         bool isLight = _config?.UiItem?.CurrentTheme == nameof(ETheme.Light);
         if (isLight)
         {
-            borderGlass.BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x40, 0x00, 0x00, 0x00));
+            var bg = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(0, 1)
+            };
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x73, 0xFF, 0xFF, 0xFF), 0.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x59, 0xEE, 0xF3, 0xFA), 0.5));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x47, 0xDE, 0xE6, 0xF2), 1.0));
+            borderGlass.Background = bg;
+
+            var border = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(0, 1)
+            };
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x99, 0xFF, 0xFF, 0xFF), 0.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x40, 0x70, 0x80, 0x90), 1.0));
+            borderGlass.BorderBrush = border;
         }
         else
         {
-            borderGlass.BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF));
+            var bg = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(0, 1)
+            };
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x66, 0x2A, 0x2E, 0x3C), 0.0));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x4D, 0x1D, 0x20, 0x2A), 0.5));
+            bg.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x3D, 0x14, 0x16, 0x1E), 1.0));
+            borderGlass.Background = bg;
+
+            var border = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(0, 1)
+            };
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x59, 0xFF, 0xFF, 0xFF), 0.0));
+            border.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF), 1.0));
+            borderGlass.BorderBrush = border;
         }
     }
 }
