@@ -212,6 +212,20 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
                     ProfileExManager.Instance.SetTestDelay(item.IndexId, responseTime);
                     await UpdateFunc(item.IndexId, responseTime.ToString());
                     completedIds.TryAdd(item.IndexId, 0);
+
+                    if (responseTime > 0 && !_config.UiItem.HideColumnIpInfo)
+                    {
+                        var existing = ProfileExManager.Instance.GetProfileExItem(item.IndexId)?.IpInfo;
+                        if (existing.IsNullOrEmpty() || existing == ResUI.SpeedtestingSkip || existing == Global.None)
+                        {
+                            var resolvedLocation = await ResolveAddressCountryAsync(item.Address, innerCt);
+                            if (!resolvedLocation.IsNullOrEmpty())
+                            {
+                                ProfileExManager.Instance.SetTestIpInfo(item.IndexId, resolvedLocation);
+                                await UpdateIpInfoFunc(item.IndexId, resolvedLocation);
+                            }
+                        }
+                    }
                 }
                 catch (OperationCanceledException) when (ct.IsCancellationRequested)
                 {
@@ -597,5 +611,67 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
     private async Task UpdateIpInfoFunc(string indexId, string ip)
     {
         await _updateFunc?.Invoke(new() { IndexId = indexId, IpInfo = ip });
+    }
+
+    private static readonly ConcurrentDictionary<string, string> _addressCountryCache = new();
+
+    private async Task<string?> ResolveAddressCountryAsync(string? address, CancellationToken ct)
+    {
+        if (address.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        if (_addressCountryCache.TryGetValue(address, out var cached))
+        {
+            return cached;
+        }
+
+        try
+        {
+            var ip = address;
+            if (!IPAddress.TryParse(address, out _))
+            {
+                var addresses = await Dns.GetHostAddressesAsync(address, ct);
+                ip = addresses.FirstOrDefault(a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString();
+            }
+
+            if (ip.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (_addressCountryCache.TryGetValue(ip, out var cachedIp))
+            {
+                _addressCountryCache[address] = cachedIp;
+                return cachedIp;
+            }
+
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            cts.CancelAfter(3000);
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
+            var json = await client.GetStringAsync($"http://ip-api.com/json/{ip}?fields=country,countryCode", cts.Token);
+            if (json.IsNotEmpty())
+            {
+                var info = JsonUtils.Deserialize<IPAPIInfo>(json);
+                if (info != null)
+                {
+                    var cc = info.countryCode ?? info.country_code ?? string.Empty;
+                    var result = new IpInfoResult(cc, ip, info.country);
+                    var str = result.ToString();
+                    if (!str.IsNullOrEmpty())
+                    {
+                        _addressCountryCache[address] = str;
+                        _addressCountryCache[ip] = str;
+                        return str;
+                    }
+                }
+            }
+        }
+        catch
+        {
+        }
+
+        return null;
     }
 }
