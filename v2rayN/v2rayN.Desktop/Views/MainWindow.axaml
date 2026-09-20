@@ -168,7 +168,7 @@
                     x:Name="contentStatusBarView"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
-                    Margin="0,0,0,10" />
+                    Margin="0,0,0,24" />
             </Grid>
         </DockPanel>
     </dialogHost:DialogHost>
