@@ -29,7 +29,7 @@
                 <Button
                     x:Name="btnClose"
                     Width="90"
-                    Content="{x:Static resx:ResUI.TbClose}"
+                    Content="{x:Static resx:ResUI.TbCancel}"
                     DockPanel.Dock="Right"
                     IsCancel="True" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -141,7 +141,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Text="{Binding TestHost}"
-                        Watermark="speed.cloudflare.com" />
+                        PlaceholderText="speed.cloudflare.com" />
 
                     <!-- Threads -->
                     <TextBlock
