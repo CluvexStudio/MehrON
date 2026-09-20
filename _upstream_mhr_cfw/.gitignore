@@ -1,0 +1,35 @@
+# ignore secrets and user config
+.env
+config.json
+ca/
+
+# ignore python venv
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+*.spec
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp MITM certs
+domainfront_certs_*/

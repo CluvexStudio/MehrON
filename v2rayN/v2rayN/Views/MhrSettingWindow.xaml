@@ -1,0 +1,32 @@
+<base:WindowBase
+    x:Class="v2rayN.Views.MhrSettingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:v2rayN.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="MHR Settings" Width="620" Height="500"
+    x:TypeArguments="vms:MhrSettingViewModel" ShowInTaskbar="False"
+    Style="{StaticResource WindowGlobal}" WindowStartupLocation="CenterOwner" mc:Ignorable="d">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button x:Name="btnStop" Width="100" Margin="{StaticResource MarginLeftRight8}" Content="Stop" Style="{StaticResource DefButton}" />
+            <Button x:Name="btnSave" Width="120" Content="Save &amp; Start" IsDefault="True" Style="{StaticResource DefButton}" />
+            <Button x:Name="btnCancel" Width="100" Margin="{StaticResource MarginLeftRight8}" Content="{x:Static resx:ResUI.TbCancel}" IsCancel="True" Style="{StaticResource DefButton}" />
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel>
+            <TextBlock FontSize="18" FontWeight="SemiBold" Text="Master HTTP Relay" />
+            <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Text="MHR-CFW also requires a deployed Cloudflare Worker URL in its server-side Code.gs." />
+            <CheckBox IsChecked="{Binding Enabled}" Content="Enable and start the selected relay" />
+            <Grid Margin="0,14,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="170"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Relay variant"/><ComboBox Grid.Column="1" ItemsSource="{Binding Variants}" SelectedItem="{Binding Variant}"/>
+                <TextBlock Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center" Text="Deployment ID"/><TextBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ScriptId, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Center" Text="AUTH_KEY"/><TextBox Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Text="{Binding AuthKey, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Center" Text="HTTP proxy port"/><TextBox Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Text="{Binding HttpPort, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="4" Margin="0,10,0,0" VerticalAlignment="Center" Text="SOCKS5 proxy port"/><TextBox Grid.Row="4" Grid.Column="1" Margin="0,10,0,0" Text="{Binding Socks5Port, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </StackPanel></ScrollViewer>
+    </DockPanel>
+</base:WindowBase>

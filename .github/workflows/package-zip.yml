@@ -1,0 +1,138 @@
+name: package and release Zip
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
+      target: # windows linux macos windows-desktop
+        required: true
+        type: string
+    secrets:
+      GPG_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  package:
+    name: package x64 arm64
+    strategy:
+      matrix:
+        arch: [ x64, arm64 ]
+    runs-on: ubuntu-latest
+    env:
+      Target: |- 
+        ${{
+          case(
+            inputs.target == 'windows-desktop', 'windows',
+            inputs.target
+          )
+        }}
+      Arch: |-
+        ${{
+          case(
+            matrix.arch == 'x64', '64',
+            matrix.arch
+          ) 
+        }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - name: Restore build artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: ${{ matrix.arch }}
+        path: PattN-${{ env.Target }}-${{ env.Arch }}
+
+    - name: Get v2rayN-core-bin
+      run: |
+        wget -nv -O core-bin.zip "https://github.com/2dust/v2rayN-core-bin/raw/refs/heads/master/v2rayN-$Target-$Arch.zip"
+        7z x -y core-bin.zip
+        cp -an v2rayN-$Target-$Arch/. PattN-$Target-$Arch/
+
+    - name: Bundle patterniha/Xray-core
+      run: |
+        set -euo pipefail
+        case "$Target-$Arch" in
+          windows-64)    asset=Xray-windows-64.zip ;;
+          windows-arm64) asset=Xray-windows-arm64-v8a.zip ;;
+          linux-64)      asset=Xray-linux-64.zip ;;
+          linux-arm64)   asset=Xray-linux-arm64-v8a.zip ;;
+          macos-64)      asset=Xray-macos-64.zip ;;
+          macos-arm64)   asset=Xray-macos-arm64-v8a.zip ;;
+          *) echo "::error::no Xray asset mapping for $Target-$Arch"; exit 1 ;;
+        esac
+        wget -nv -O xray-core.zip "https://github.com/patterniha/Xray-core/releases/latest/download/$asset"
+        7z x -y -oxray-core xray-core.zip
+        mkdir -p PattN-$Target-$Arch/bin/xray
+        cp -f xray-core/xray* PattN-$Target-$Arch/bin/xray/
+        chmod +x PattN-$Target-$Arch/bin/xray/xray 2>/dev/null || true
+
+    - name: Bundle Patterniha SNI-Spoofing
+      if: env.Target == 'windows'
+      run: |
+        set -euo pipefail
+        wget -nv -O sni-spoofing.rar "https://github.com/patterniha/SNI-Spoofing/releases/download/v1.0/SNI-Spoofing_by_patterniha_v1.rar"
+        mkdir -p sni-spoofing-release "PattN-$Target-$Arch/bin/sni-spoofing"
+        7z x -y -osni-spoofing-release sni-spoofing.rar
+        engine="$(find sni-spoofing-release -type f -iname '*.exe' | head -n 1)"
+        test -n "$engine"
+        cp -a "$(dirname "$engine")/." "PattN-$Target-$Arch/bin/sni-spoofing/"
+        bundled_engine="$(find "PattN-$Target-$Arch/bin/sni-spoofing" -maxdepth 1 -type f -iname '*.exe' | head -n 1)"
+        test -n "$bundled_engine"
+        if [ "$bundled_engine" != "PattN-$Target-$Arch/bin/sni-spoofing/SNI-Spoofing.exe" ]; then
+          mv "$bundled_engine" "PattN-$Target-$Arch/bin/sni-spoofing/SNI-Spoofing.exe"
+        fi
+
+    - name: Bundle MHR relay sources
+      run: |
+        set -euo pipefail
+        git clone --depth 1 --branch python_testing https://github.com/masterking32/MasterHttpRelayVPN.git mhr-source
+        git clone --depth 1 https://github.com/denuitt1/mhr-cfw.git mhr-cfw-source
+        rm -rf mhr-source/.git mhr-source/.github mhr-source/docs mhr-source/tests mhr-source/apps_script
+        rm -rf mhr-cfw-source/.git mhr-cfw-source/.github mhr-cfw-source/deploy
+        mkdir -p "PattN-$Target-$Arch/bin/mhr/mhr" "PattN-$Target-$Arch/bin/mhr/mhr-cfw"
+        cp -a mhr-source/. "PattN-$Target-$Arch/bin/mhr/mhr/"
+        cp -a mhr-cfw-source/. "PattN-$Target-$Arch/bin/mhr/mhr-cfw/"
+
+    - name: Bundle Chocolate4U geo files
+      run: |
+        set -euo pipefail
+        wget -nv -O "PattN-$Target-$Arch/bin/geosite.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geosite.dat"
+        wget -nv -O "PattN-$Target-$Arch/bin/geoip.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geoip.dat"
+        mkdir -p "PattN-$Target-$Arch/bin/srss"
+        wget -nv -O "PattN-$Target-$Arch/bin/srss/geosite-category-ir.srs" "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geosite-category-ir.srs"
+        wget -nv -O "PattN-$Target-$Arch/bin/srss/geoip-ir.srs" "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geoip-ir.srs"
+
+    - name: Package zip archive
+      run: 7z a -tZip PattN-$Target-$Arch.zip PattN-$Target-$Arch -mx1
+
+    - name: Rename windows-desktop
+      if: inputs.target == 'windows-desktop'
+      run: mv "PattN-$Target-$Arch.zip" "PattN-$Target-$Arch-desktop.zip"
+
+    - name: Upload zip artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: release-${{ inputs.target }}-${{ matrix.arch }}
+        path: PattN*.zip
+        if-no-files-found: error
+
+  release:
+    name: sign and upload zip x64 arm64
+    needs: package
+    strategy:
+      matrix:
+        arch: [ x64, arm64 ]
+    uses: ./.github/workflows/upload-sign.yml
+    with:
+      release_tag: ${{ inputs.release_tag }}
+      artifact_name: release-${{ inputs.target }}-${{ matrix.arch }}
+      file_pattern: '*.zip'
+    secrets:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}

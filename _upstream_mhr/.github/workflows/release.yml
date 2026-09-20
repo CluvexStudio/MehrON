@@ -1,0 +1,312 @@
+name: Release
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag name to publish (example: v1.2.0). Leave empty for build-only run."
+        required: false
+        type: string
+      publish:
+        description: "Publish GitHub release"
+        required: false
+        default: false
+        type: boolean
+      make_public:
+        description: "Make release public immediately (false = draft + prerelease)"
+        required: false
+        default: false
+        type: boolean
+      include_termux:
+        description: "Publish Termux ARM64 and ARMv7 bundles"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  build-binaries:
+    name: Build ${{ matrix.platform }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.optional }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+            arch: amd64
+            optional: false
+          - os: ubuntu-latest
+            platform: linux
+            arch: amd64
+            optional: false
+          - os: macos-13
+            platform: macos
+            arch: amd64
+            optional: false
+          - os: macos-14
+            platform: macos
+            arch: arm64
+            optional: false
+          - os: ubuntu-24.04-arm
+            platform: linux
+            arch: arm64
+            optional: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pyinstaller
+
+      - name: Build standalone binary
+        run: pyinstaller --noconfirm --clean --onefile --name MasterHttpRelayVPN --paths src main.py
+
+      - name: Smoke test binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            BIN="dist/MasterHttpRelayVPN.exe"
+          else
+            BIN="dist/MasterHttpRelayVPN"
+            chmod +x "$BIN"
+          fi
+          "$BIN" --version
+          "$BIN" --help >/dev/null
+
+      - name: Package release artifact (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $content = Get-Content "src/core/constants.py" -Raw
+          $m = [regex]::Match($content, '__version__\s*=\s*"([^"]+)"')
+          if (-not $m.Success) { throw "Could not read version from src/core/constants.py" }
+          $version = $m.Groups[1].Value
+          New-Item -ItemType Directory -Path "release-assets" -Force | Out-Null
+          $staging = "release-staging"
+          Remove-Item -Recurse -Force $staging -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $staging -Force | Out-Null
+          Copy-Item "dist/MasterHttpRelayVPN.exe" "$staging/MasterHttpRelayVPN.exe"
+          foreach ($f in @("README.md", "README_FA.md", "config.example.json", "start.bat", "start.sh")) {
+            if (Test-Path $f) { Copy-Item $f $staging }
+          }
+          $archive = "MasterHttpRelayVPN-$version-${{ matrix.platform }}-${{ matrix.arch }}.zip"
+          Compress-Archive -Path "$staging/*" -DestinationPath "release-assets/$archive" -Force
+          $hash = (Get-FileHash "release-assets/$archive" -Algorithm SHA256).Hash.ToLower()
+          "$hash  $archive" | Out-File -FilePath "release-assets/$archive.sha256" -Encoding ascii
+
+      - name: Package release artifact (non-Windows)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(python - <<'PY'
+          import re
+          from pathlib import Path
+          t = Path('src/core/constants.py').read_text(encoding='utf-8')
+          m = re.search(r'__version__\s*=\s*"([^"]+)"', t)
+          print(m.group(1) if m else '0.0.0')
+          PY
+          )
+          mkdir -p release-assets release-staging
+          rm -rf release-staging/*
+          cp dist/MasterHttpRelayVPN release-staging/MasterHttpRelayVPN
+          chmod +x release-staging/MasterHttpRelayVPN
+          for f in README.md README_FA.md config.example.json start.sh start.bat; do
+            [ -f "$f" ] && cp "$f" release-staging/
+          done
+          archive="MasterHttpRelayVPN-${version}-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz"
+          tar -C release-staging -czf "release-assets/$archive" .
+          ARCHIVE_NAME="$archive" python - <<'PY'
+          import hashlib
+          import os
+          from pathlib import Path
+
+          archive = Path("release-assets") / os.environ["ARCHIVE_NAME"]
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+          (archive.parent / f"{archive.name}.sha256").write_text(
+              f"{digest}  {archive.name}\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}-${{ matrix.arch }}
+          path: release-assets/*
+
+  build-termux:
+    name: Build termux-arm64-armv7
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.inputs.include_termux == 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for cross-arch containers
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build Termux binaries (arm64 + armv7)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version=$(python - <<'PY'
+          import re
+          from pathlib import Path
+          t = Path('src/core/constants.py').read_text(encoding='utf-8')
+          m = re.search(r'__version__\s*=\s*"([^"]+)"', t)
+          print(m.group(1) if m else '0.0.0')
+          PY
+          )
+
+          mkdir -p release-assets termux-dist
+
+          # Build using Alpine Linux with QEMU for cross-compilation
+          # This is more reliable than depending on Termux Docker images
+          build_termux_arch () {
+            local arch="$1"
+            local platform="$2"
+            local qemu_arch="$3"
+
+            echo "Building for Termux ${arch}..."
+            rm -rf dist build *.spec || true
+
+            # Use Alpine with QEMU for reliable cross-platform builds
+            docker run --rm --platform "$platform" \
+              -v "$PWD:/work" \
+              -w /work \
+              alpine:latest \
+              sh -c '
+                set -euo pipefail
+                echo "Installing build dependencies..."
+                apk add --no-cache python3 py3-pip make gcc musl-dev openssl-dev libffi-dev rust cargo
+                echo "Installing Python packages..."
+                python3 -m pip install --upgrade pip pyinstaller
+                pip install -r requirements.txt
+                echo "Building binary for '"'"'${arch}'"'"'..."
+                pyinstaller --noconfirm --clean --onefile --name MasterHttpRelayVPN --paths src main.py
+              '
+
+            if [ ! -f dist/MasterHttpRelayVPN ]; then
+              echo "ERROR: Missing binary output for ${arch}" >&2
+              exit 1
+            fi
+            cp dist/MasterHttpRelayVPN "termux-dist/MasterHttpRelayVPN-${arch}"
+            chmod +x "termux-dist/MasterHttpRelayVPN-${arch}"
+            echo "✓ Successfully built for ${arch}"
+          }
+
+          # Build both ARM architectures
+          build_termux_arch "arm64" "linux/arm64" "aarch64"
+          build_termux_arch "armv7" "linux/arm/v7" "arm"
+
+          echo ""
+          echo "Packaging releases..."
+          for arch in arm64 armv7; do
+            staging="termux-staging-${arch}"
+            rm -rf "$staging"
+            mkdir -p "$staging"
+            cp "termux-dist/MasterHttpRelayVPN-${arch}" "$staging/MasterHttpRelayVPN"
+            chmod +x "$staging/MasterHttpRelayVPN"
+            
+            [ -f config.example.json ] && cp config.example.json "$staging/"
+            [ -f README.md ] && cp README.md "$staging/"
+            [ -f README_FA.md ] && cp README_FA.md "$staging/"
+
+            # Create Termux launch script for native Termux environment
+            printf '%s\n' \
+              '#!/data/data/com.termux/files/usr/bin/bash' \
+              'set -euo pipefail' \
+              'chmod +x ./MasterHttpRelayVPN' \
+              'exec ./MasterHttpRelayVPN "$@"' \
+              > "$staging/termux-run.sh"
+            chmod +x "$staging/termux-run.sh"
+
+            archive="MasterHttpRelayVPN-${version}-termux-${arch}.zip"
+            (cd "$staging" && zip -qr "../release-assets/${archive}" .)
+
+            # Generate checksum
+            python3 << EOF
+import hashlib
+from pathlib import Path
+archive_file = Path("release-assets") / "$archive"
+sha256_sum = hashlib.sha256(archive_file.read_bytes()).hexdigest()
+checksum_file = archive_file.with_suffix(archive_file.suffix + ".sha256")
+checksum_file.write_text(f"{sha256_sum}  $archive\\n")
+EOF
+            echo "✓ Packaged: $archive"
+          done
+          
+          echo ""
+          ls -lah release-assets/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-termux
+          path: release-assets/*
+
+  publish-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-binaries, build-termux]
+    if: always() && !cancelled() && (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true' && startsWith(github.event.inputs.release_tag, 'v')))
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+
+      - name: Flatten artifact directories
+        run: |
+          mkdir -p final-assets
+          find release-assets -type f -exec cp {} final-assets/ \;
+          ls -lah final-assets
+
+      - name: Fail if no artifacts
+        run: |
+          set -euo pipefail
+          count=$(find final-assets -type f | wc -l)
+          echo "Artifact count: ${count}"
+          if [ "${count}" -eq 0 ]; then
+            echo "No artifacts were produced."
+            exit 1
+          fi
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.event.inputs.release_tag }}
+          files: final-assets/*
+          generate_release_notes: true
+          prerelease: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.make_public != 'true' }}
+          draft: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.make_public != 'true' }}
+          make_latest: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.make_public == 'true') && 'true' || 'false' }}

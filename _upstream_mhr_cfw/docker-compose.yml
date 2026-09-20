@@ -1,0 +1,18 @@
+name: "mhr-cfw-docker"
+
+services:
+  mhr-cfw:
+    image: .
+    container_name: "mhr-cfw"
+    restart: unless-stopped
+    networks:
+      - mhr-cfw-proxy
+    ports:
+      - "8085:8085" # http port
+      - "1080:1080" # socks5 port
+
+networks:
+  mhr-cfw-proxy:
+    name: mhr-cfw-proxy
+    driver: bridge
+    external: false

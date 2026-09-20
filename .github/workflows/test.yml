@@ -1,0 +1,44 @@
+name: Code Test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'v2rayN/ServiceLib/**'
+      - 'v2rayN/ServiceLib.UdpTest/**'
+      - 'v2rayN/ServiceLib.Tests/**'
+      - 'v2rayN/Directory.Build.*'
+      - 'v2rayN/Directory.Packages.props'
+      - 'global.json'
+      - '.github/workflows/test.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'v2rayN/ServiceLib/**'
+      - 'v2rayN/ServiceLib.UdpTest/**'
+      - 'v2rayN/ServiceLib.Tests/**'
+      - 'v2rayN/Directory.Build.*'
+      - 'v2rayN/Directory.Packages.props'
+      - 'global.json'
+      - '.github/workflows/test.yml'
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.x'
+
+    - name: Test Code
+      run: dotnet test ./v2rayN/ServiceLib.Tests/ServiceLib.Tests.csproj -c Release
