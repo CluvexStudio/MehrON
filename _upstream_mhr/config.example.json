@@ -1,0 +1,58 @@
+{
+	"google_ip": "216.239.38.120",
+	"front_domain": "www.google.com",
+	"front_domains": [
+		"www.google.com",
+		"mail.google.com",
+		"accounts.google.com"
+	],
+	"script_id": "YOUR_APPS_SCRIPT_DEPLOYMENT_ID",
+	"auth_key": "CHANGE_ME_TO_A_STRONG_SECRET",
+	"listen_host": "127.0.0.1",
+	"http_port": 8085,
+	"socks5_port": 1080,
+	"verify_ssl": true,
+	"lan_sharing": false,
+	"relay_ip_literals": true,
+	"relay_timeout": 55,
+	"tls_connect_timeout": 20,
+	"tcp_connect_timeout": 15,
+	"parallel_relay": 1,
+	"h2_connections": 1,
+	"ping_interval": 0.1,
+	"enable_batch": true,
+	"batch_window_micro": 0.020,
+	"batch_window_macro": 0.100,
+	"enable_sub_batch": false,
+	"block_hosts": [
+		"ads.example.com",
+		".doubleclick.net"
+	],
+	"direct_hosts": [
+		"rubika.ir",
+		"soft98.ir"
+	],
+	"youtube_via_relay": false,
+	"hosts": {
+		"example.org": "93.184.216.34",
+		".internal.lan": "192.168.1.10"
+	},
+	"exit_node": {
+		"enabled": false,
+		"provider": "cloudflare",
+		"url": "",
+		"psk": "",
+		"mode": "full",
+		"hosts": [
+			".chatgpt.com",
+			".openai.com"
+		]
+	},
+	"log_level": "INFO",
+	"adblock_lists": [
+		"https://raw.githubusercontent.com/MasterKia/PersianBlocker/main/PersianBlockerAds-Hosts.txt",
+		"https://raw.githubusercontent.com/MasterKia/PersianBlocker/main/PersianBlockerTrackers-Hosts.txt",
+		"https://raw.githubusercontent.com/MasterKia/PersianBlocker/main/PersianBlockerAnnoyances-Domains.txt",
+		"https://raw.githubusercontent.com/MasterKia/PersianBlocker/main/PersianBlockerHosts.txt"
+	]
+}

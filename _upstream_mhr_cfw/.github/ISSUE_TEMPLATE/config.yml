@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Setup help and general questions
+    url: https://github.com/denuitt1/mhr-cfw#readme
+    about: Read the README first — it covers setup, AUTH_KEY / WORKER_URL wiring, and `--scan`.

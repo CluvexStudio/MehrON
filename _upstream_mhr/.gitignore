@@ -1,0 +1,42 @@
+# Secrets & user config
+config.json
+.env
+
+# CA certificates (generated at runtime, contain private keys)
+ca/
+
+# Adblock list cache (downloaded at runtime)
+adblock_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp MITM certs
+domainfront_certs_*/
+
+# Local scripts (excluded from git pushes)
+scripts/

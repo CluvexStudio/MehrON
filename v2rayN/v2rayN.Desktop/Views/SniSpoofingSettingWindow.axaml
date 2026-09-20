@@ -1,0 +1,39 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.SniSpoofingSettingWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="SNI Spoofing Settings"
+    Width="580"
+    Height="470"
+    x:DataType="vms:SniSpoofingSettingViewModel"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button x:Name="btnSave" Width="110" Content="{x:Static resx:ResUI.TbConfirm}" IsDefault="True" />
+            <Button x:Name="btnCancel" Width="110" Margin="{StaticResource MarginLr8}" Content="{x:Static resx:ResUI.TbCancel}" IsCancel="True" />
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Spacing="12">
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Patterniha SNI Spoofing" />
+                <TextBlock TextWrapping="Wrap" Opacity="0.8" Text="Sends a fake TLS ClientHello before your real TLS handshake. The selected server is forwarded through a local listener when enabled. Windows administrator permission is required." />
+                <CheckBox IsChecked="{Binding Enabled}" Content="Enable SNI spoofing for the active compatible profile" />
+                <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
+                    <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Listen address" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ListenHost}" />
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Listen port" />
+                    <NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="65535" Value="{Binding ListenPort}" />
+                    <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Fake SNI" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FakeSni}" PlaceholderText="auth.vercel.com" />
+                    <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Connect IP" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ConnectIp}" PlaceholderText="Leave blank to resolve active profile" />
+                    <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="Connect port" />
+                    <NumericUpDown Grid.Row="4" Grid.Column="1" Minimum="1" Maximum="65535" Value="{Binding ConnectPort}" />
+                </Grid>
+                <TextBlock TextWrapping="Wrap" Opacity="0.7" Text="Connect IP/port correspond to Patterniha's CONNECT_IP/CONNECT_PORT. Leave Connect IP blank to use the active profile's resolved IPv4 address. Only TCP TLS profiles are supported." />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

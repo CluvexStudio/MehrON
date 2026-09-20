@@ -1,0 +1,46 @@
+<base:WindowBase
+    x:Class="v2rayN.Views.SniSpoofingSettingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:v2rayN.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="SNI Spoofing Settings"
+    Width="580"
+    Height="470"
+    x:TypeArguments="vms:SniSpoofingSettingViewModel"
+    ShowInTaskbar="False"
+    Style="{StaticResource WindowGlobal}"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button x:Name="btnSave" Width="110" Content="{x:Static resx:ResUI.TbConfirm}" IsDefault="True" Style="{StaticResource DefButton}" />
+            <Button x:Name="btnCancel" Width="110" Margin="{StaticResource MarginLeftRight8}" Content="{x:Static resx:ResUI.TbCancel}" IsCancel="True" Style="{StaticResource DefButton}" />
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Patterniha SNI Spoofing" />
+                <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Text="Sends a fake TLS ClientHello before your real TLS handshake. Windows administrator permission is required." />
+                <CheckBox IsChecked="{Binding Enabled}" Content="Enable SNI spoofing for the active compatible profile" />
+                <Grid Margin="0,14,0,0">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="160" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="Listen address" />
+                    <TextBox Grid.Column="1" Text="{Binding ListenHost, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center" Text="Listen port" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ListenPort, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Center" Text="Fake SNI" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,10,0,0" Text="{Binding FakeSni, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect IP" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectIp, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="4" Margin="0,10,0,0" VerticalAlignment="Center" Text="Connect port" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,10,0,0" Text="{Binding ConnectPort, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+                <TextBlock Margin="0,14,0,0" TextWrapping="Wrap" Text="Connect IP/port correspond to Patterniha's CONNECT_IP/CONNECT_PORT. Leave Connect IP blank to resolve the active profile automatically. Only TCP TLS VMess, VLESS, and Trojan profiles are supported." />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</base:WindowBase>

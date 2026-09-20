@@ -1,0 +1,40 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.MhrSettingWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="MHR Settings"
+    Width="620"
+    Height="500"
+    x:DataType="vms:MhrSettingViewModel"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button x:Name="btnStop" Width="100" Margin="{StaticResource MarginLr8}" Content="Stop" />
+            <Button x:Name="btnSave" Width="120" Content="Save &amp; Start" IsDefault="True" />
+            <Button x:Name="btnCancel" Width="100" Margin="{StaticResource MarginLr8}" Content="{x:Static resx:ResUI.TbCancel}" IsCancel="True" />
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Spacing="12">
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Master HTTP Relay" />
+                <TextBlock TextWrapping="Wrap" Opacity="0.8" Text="MHR forwards local HTTP/SOCKS5 traffic through Google Apps Script. MHR-CFW additionally requires a deployed Cloudflare Worker URL in its server-side Code.gs." />
+                <CheckBox IsChecked="{Binding Enabled}" Content="Enable and start the selected relay" />
+                <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
+                    <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Relay variant" />
+                    <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Variants}" SelectedItem="{Binding Variant}" />
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Deployment ID" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ScriptId}" PlaceholderText="Google Apps Script deployment ID" />
+                    <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="AUTH_KEY" />
+                    <TextBox Grid.Row="2" Grid.Column="1" PasswordChar="●" Text="{Binding AuthKey}" PlaceholderText="Must match Code.gs" />
+                    <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="HTTP proxy port" />
+                    <NumericUpDown Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="65535" Value="{Binding HttpPort}" />
+                    <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="SOCKS5 proxy port" />
+                    <NumericUpDown Grid.Row="4" Grid.Column="1" Minimum="1" Maximum="65535" Value="{Binding Socks5Port}" />
+                </Grid>
+                <TextBlock TextWrapping="Wrap" Opacity="0.7" Text="Saving copies this variant’s config.example.json to config.json, then writes script_id, auth_key, and the chosen ports. The bundled source requires Python 3.10+ and its requirements before it can start." />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

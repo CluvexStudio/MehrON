@@ -1,0 +1,137 @@
+name: Build and Release MehrN
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create a GitHub Release'
+        required: false
+        type: boolean
+        default: true
+      release_tag:
+        description: 'Release Tag (leave empty to use Directory.Build.props version)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Resolve Version
+        id: version_step
+        shell: pwsh
+        run: |
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $tag = "${{ github.ref_name }}"
+          } elseif ("${{ inputs.release_tag }}" -ne "") {
+            $tag = "${{ inputs.release_tag }}"
+            if (-not $tag.StartsWith("v")) { $tag = "v$tag" }
+          } else {
+            $propVer = [xml](Get-Content ./v2rayN/Directory.Build.props)
+            $v = $propVer.Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+            $tag = "v$v"
+          }
+          Write-Host "Resolved Version Tag: $tag"
+          "TAG_NAME=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Build & Publish MehrN Desktop
+        shell: pwsh
+        run: |
+          $outDir = "./dist/MehrN-windows-64"
+          dotnet publish ./v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:DebugType=none `
+            -p:DebugSymbols=false `
+            -o $outDir
+
+          # Remove debug symbols if any
+          Get-ChildItem -Path $outDir -Filter "*.pdb" -Recurse | Remove-Item -Force
+
+      - name: Bundle Core Binaries
+        shell: pwsh
+        run: |
+          $outDir = "./dist/MehrN-windows-64"
+          $binDir = "$outDir/bin"
+          New-Item -ItemType Directory -Path "$binDir/xray" -Force | Out-Null
+          New-Item -ItemType Directory -Path "$binDir/sing_box" -Force | Out-Null
+
+          # Download v2rayN-core-bin bundle
+          Write-Host "Downloading core binaries bundle..."
+          $coreZip = "core-bin.zip"
+          curl.exe -L -s -o $coreZip "https://raw.githubusercontent.com/2dust/v2rayN-core-bin/refs/heads/master/v2rayN-windows-64.zip"
+          Expand-Archive -Path $coreZip -DestinationPath "core-extracted" -Force
+
+          # Copy runtime cores and wintun
+          if (Test-Path "core-extracted/bin/xray") {
+            Copy-Item -Path "core-extracted/bin/xray/*" -Destination "$binDir/xray/" -Recurse -Force
+          }
+          if (Test-Path "core-extracted/bin/sing_box") {
+            Copy-Item -Path "core-extracted/bin/sing_box/*" -Destination "$binDir/sing_box/" -Recurse -Force
+          }
+
+          # Download latest Chocolate4U Iran geo rules
+          Write-Host "Downloading Iran geo rules..."
+          curl.exe -L -s -o "$binDir/geosite.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geosite.dat"
+          curl.exe -L -s -o "$binDir/geoip.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geoip.dat"
+
+          # Cleanup download artifacts
+          Remove-Item -Path $coreZip, "core-extracted" -Recurse -Force -ErrorAction SilentlyContinue
+
+      - name: Package Zip Archive
+        shell: pwsh
+        run: |
+          $outDir = "./dist/MehrN-windows-64"
+          $zipPath = "./MehrN-windows-64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path "$outDir/*" -DestinationPath $zipPath -Force
+          $size = (Get-Item $zipPath).Length / 1MB
+          Write-Host ("Created archive: {0} ({1:N2} MB)" -f $zipPath, $size)
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MehrN-windows-64
+          path: MehrN-windows-64.zip
+          if-no-files-found: error
+
+      - name: Create or Update GitHub Release
+        if: github.ref_type == 'tag' || inputs.create_release == true || github.ref_name == 'main'
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.TAG_NAME }}
+          name: MehrN ${{ env.TAG_NAME }}
+          body: |
+            ## MehrN ${{ env.TAG_NAME }}
+            Automated build produced by GitHub Actions.
+            - Platform: Windows x64 (Self-Contained Portable)
+            - Includes Xray, sing-box, and optimized routing rules.
+          files: MehrN-windows-64.zip
+          draft: false
+          prerelease: false

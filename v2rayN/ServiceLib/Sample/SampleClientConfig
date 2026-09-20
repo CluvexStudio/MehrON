@@ -1,0 +1,32 @@
+{
+	"log": {
+		"access": "Vaccess.log",
+		"error": "Verror.log",
+		"loglevel": "warning"
+	},
+	"inbounds": [],
+	"outbounds": [
+		{
+			"protocol": "freedom",
+			"streamSettings": {
+				"sockopt": {
+					"happyEyeballs": {
+						"tryDelayMs": 300,
+						"prioritizeIPv6": false,
+						"interleave": 2,
+						"maxConcurrentTry": 20
+					}
+				}
+			},
+			"tag": "direct"
+		},
+		{
+			"protocol": "blackhole",
+			"tag": "block"
+		}
+	],
+	"routing": {
+		"domainStrategy": "IPIfNonMatch",
+		"rules": []
+	}
+}
