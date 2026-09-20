@@ -69,7 +69,7 @@ public sealed class SniSpoofingManager
         var pyExePath = GetExePath();
         var scriptPath = GetScriptPath();
 
-        var wantsRust = setting.Engine.Equals("Rust", StringComparison.OrdinalIgnoreCase);
+        var wantsRust = !setting.Engine.Equals("Python", StringComparison.OrdinalIgnoreCase);
         bool useRust;
         if (wantsRust)
         {
