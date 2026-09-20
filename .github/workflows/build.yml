@@ -80,6 +80,7 @@ jobs:
           $binDir = "$outDir/bin"
           New-Item -ItemType Directory -Path "$binDir/xray" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sing_box" -Force | Out-Null
+          New-Item -ItemType Directory -Path "$binDir/mihomo" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sni-spoofing" -Force | Out-Null
 
           # Build standalone SNI Spoofing engine
@@ -103,38 +104,78 @@ jobs:
           Copy-Item -Path "rust-extracted/WinDivert.dll" -Destination "$binDir/sni-spoofing/" -Force -ErrorAction SilentlyContinue
           Remove-Item -Path $rustZip, "rust-extracted" -Recurse -Force -ErrorAction SilentlyContinue
 
-          # Download Xray v26.3.27 (compatible with non-TLS VLESS and SNI spoofing)
-          Write-Host "Downloading Xray v26.3.27..."
-          $xrayZip = "xray-26.3.27.zip"
-          curl.exe -L -s -o $xrayZip "https://github.com/XTLS/Xray-core/releases/download/v26.3.27/Xray-windows-64.zip"
+          # Download latest Xray-core (patterniha v26.9.13)
+          Write-Host "Downloading latest Xray-core..."
+          $xrayZip = "xray-latest.zip"
+          curl.exe -L -s -o $xrayZip "https://github.com/patterniha/Xray-core/releases/latest/download/Xray-windows-64.zip"
           Expand-Archive -Path $xrayZip -DestinationPath "xray-extracted" -Force
           Copy-Item -Path "xray-extracted/xray.exe" -Destination "$binDir/xray/" -Force
-          Copy-Item -Path "xray-extracted/geosite.dat" -Destination "$binDir/" -Force
-          Copy-Item -Path "xray-extracted/geoip.dat" -Destination "$binDir/" -Force
-          Copy-Item -Path "xray-extracted/geosite.dat" -Destination "$binDir/xray/" -Force
-          Copy-Item -Path "xray-extracted/geoip.dat" -Destination "$binDir/xray/" -Force
+          Copy-Item -Path "xray-extracted/geosite.dat" -Destination "$binDir/" -Force -ErrorAction SilentlyContinue
+          Copy-Item -Path "xray-extracted/geoip.dat" -Destination "$binDir/" -Force -ErrorAction SilentlyContinue
+          Copy-Item -Path "xray-extracted/geosite.dat" -Destination "$binDir/xray/" -Force -ErrorAction SilentlyContinue
+          Copy-Item -Path "xray-extracted/geoip.dat" -Destination "$binDir/xray/" -Force -ErrorAction SilentlyContinue
 
-          # Download v2rayN-core-bin bundle for sing_box, wintun, and utilities
+          # Download v2rayN-core-bin bundle for wintun, srss rules, and base utilities
           Write-Host "Downloading core binaries bundle..."
           $coreZip = "core-bin.zip"
           curl.exe -L -s -o $coreZip "https://raw.githubusercontent.com/2dust/v2rayN-core-bin/refs/heads/master/v2rayN-windows-64.zip"
           Expand-Archive -Path $coreZip -DestinationPath "core-extracted" -Force
 
-          # Copy sing_box and wintun
+          # Copy base utilities and shared libraries
           $coreRoot = if (Test-Path "core-extracted/v2rayN-windows-64/bin") { "core-extracted/v2rayN-windows-64/bin" } else { "core-extracted/bin" }
           if (Test-Path "$coreRoot/xray/wintun.dll") {
             Copy-Item -Path "$coreRoot/xray/wintun.dll" -Destination "$binDir/xray/" -Force
-          }
-          if (Test-Path "$coreRoot/sing_box") {
-            Copy-Item -Path "$coreRoot/sing_box/*" -Destination "$binDir/sing_box/" -Recurse -Force
+            Copy-Item -Path "$coreRoot/xray/wintun.dll" -Destination "$binDir/sing_box/" -Force
+            Copy-Item -Path "$coreRoot/xray/wintun.dll" -Destination "$binDir/mihomo/" -Force
           }
           if (Test-Path "$coreRoot/EnableLoopback.exe") {
             Copy-Item -Path "$coreRoot/EnableLoopback.exe" -Destination "$binDir/" -Force
           }
+          if (Test-Path "$coreRoot/Country.mmdb") {
+            Copy-Item -Path "$coreRoot/Country.mmdb" -Destination "$binDir/" -Force
+            Copy-Item -Path "$coreRoot/Country.mmdb" -Destination "$binDir/mihomo/" -Force
+          }
+          if (Test-Path "$coreRoot/geoip.metadb") {
+            Copy-Item -Path "$coreRoot/geoip.metadb" -Destination "$binDir/" -Force
+            Copy-Item -Path "$coreRoot/geoip.metadb" -Destination "$binDir/mihomo/" -Force
+          }
+          if (Test-Path "$coreRoot/srss") {
+            Copy-Item -Path "$coreRoot/srss" -Destination "$binDir/" -Recurse -Force
+          }
 
-          # Verify core binaries exist
+          # Download latest sing-box (v1.14.1)
+          Write-Host "Downloading latest sing-box (v1.14.1)..."
+          $singZip = "sing-box-latest.zip"
+          curl.exe -L -s -o $singZip "https://github.com/SagerNet/sing-box/releases/download/v1.14.1/sing-box-1.14.1-windows-amd64.zip"
+          Expand-Archive -Path $singZip -DestinationPath "sing-extracted" -Force
+          $singExe = Get-ChildItem -Path "sing-extracted" -Recurse -Filter "sing-box.exe" | Select-Object -First 1
+          if ($singExe) {
+            Copy-Item -Path $singExe.FullName -Destination "$binDir/sing_box/sing-box.exe" -Force
+          }
+          if (Test-Path "$coreRoot/sing_box/libcronet.dll") {
+            Copy-Item -Path "$coreRoot/sing_box/libcronet.dll" -Destination "$binDir/sing_box/" -Force
+          }
+
+          # Download latest mihomo (v1.19.31)
+          Write-Host "Downloading latest mihomo (v1.19.31)..."
+          $mihomoZip = "mihomo-latest.zip"
+          curl.exe -L -s -o $mihomoZip "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.31/mihomo-windows-amd64-compatible-v1.19.31.zip"
+          Expand-Archive -Path $mihomoZip -DestinationPath "mihomo-extracted" -Force
+          $mihomoExe = Get-ChildItem -Path "mihomo-extracted" -Recurse -Filter "*.exe" | Select-Object -First 1
+          if ($mihomoExe) {
+            Copy-Item -Path $mihomoExe.FullName -Destination "$binDir/mihomo/mihomo.exe" -Force
+            Copy-Item -Path $mihomoExe.FullName -Destination "$binDir/mihomo/$($mihomoExe.Name)" -Force
+          }
+
+          # Verify core binaries exist and print versions
           if (-not (Test-Path "$binDir/xray/xray.exe")) {
             throw "xray.exe was not found or copied into bin/xray/"
+          }
+          if (-not (Test-Path "$binDir/sing_box/sing-box.exe")) {
+            throw "sing-box.exe was not found or copied into bin/sing_box/"
+          }
+          if (-not (Test-Path "$binDir/mihomo/mihomo.exe")) {
+            throw "mihomo.exe was not found or copied into bin/mihomo/"
           }
           if (-not (Test-Path "$binDir/sni-spoofing/sni-spoof-rs.exe")) {
             throw "sni-spoof-rs.exe was not found in bin/sni-spoofing/"
@@ -142,6 +183,11 @@ jobs:
           if (-not (Test-Path "$binDir/sni-spoofing/sni-spoofing.exe")) {
             throw "sni-spoofing.exe was not found in bin/sni-spoofing/"
           }
+
+          Write-Host "Verifying bundled core versions:"
+          & "$binDir/xray/xray.exe" version
+          & "$binDir/sing_box/sing-box.exe" version
+          & "$binDir/mihomo/mihomo.exe" -v
 
           # Download official rules containing gfw, geolocation-!cn, etc.
           Write-Host "Downloading geo rules..."
@@ -151,7 +197,7 @@ jobs:
           Copy-Item -Path "$binDir/geoip.dat" -Destination "$binDir/xray/" -Force
 
           # Cleanup download artifacts
-          Remove-Item -Path $coreZip, "core-extracted", $xrayZip, "xray-extracted" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path $coreZip, "core-extracted", $xrayZip, "xray-extracted", $singZip, "sing-extracted", $mihomoZip, "mihomo-extracted" -Recurse -Force -ErrorAction SilentlyContinue
 
       - name: Package Zip Archive
         shell: pwsh
@@ -181,7 +227,7 @@ jobs:
             ## MehrN ${{ env.TAG_NAME }}
             Automated build produced by GitHub Actions.
             - Platform: Windows x64 (Self-Contained Portable)
-            - Includes Xray, sing-box, and optimized routing rules.
+            - Includes Xray v26.9.13, sing-box v1.14.1, mihomo v1.19.31, and optimized routing rules.
           files: MehrN-windows-64.zip
           draft: false
           prerelease: false
