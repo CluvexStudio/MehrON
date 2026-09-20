@@ -1,0 +1,264 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.CloudflareScannerWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entities="clr-namespace:ServiceLib.Models.Entities;assembly=ServiceLib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:ServiceLib.Models.Dto;assembly=ServiceLib"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="{x:Static resx:ResUI.CloudflareScannerTitle}"
+    Width="860"
+    Height="640"
+    x:DataType="vms:CloudflareScannerViewModel"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <DockPanel Margin="{StaticResource Margin8}">
+        <!-- Bottom Action Bar -->
+        <Border
+            Margin="{StaticResource Margin4}"
+            Padding="8,6"
+            BorderBrush="{DynamicResource SystemControlHighlightListLowBrush}"
+            BorderThickness="1"
+            CornerRadius="6"
+            DockPanel.Dock="Bottom">
+            <DockPanel>
+                <Button
+                    x:Name="btnClose"
+                    Width="90"
+                    Content="{x:Static resx:ResUI.TbClose}"
+                    DockPanel.Dock="Right"
+                    IsCancel="True" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        x:Name="btnCopySelected"
+                        Content="{x:Static resx:ResUI.TbCopySelected}" />
+                    <Button
+                        x:Name="btnCopyAllWorking"
+                        Content="{x:Static resx:ResUI.TbCopyAllWorking}" />
+                    <Rectangle
+                        Width="1"
+                        Height="20"
+                        Margin="4,0"
+                        Fill="{DynamicResource SystemControlHighlightListLowBrush}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{x:Static resx:ResUI.menuServers}" />
+                    <ComboBox
+                        Width="220"
+                        DisplayMemberBinding="{Binding Remarks}"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding SelectedProfile}" />
+                    <Button
+                        x:Name="btnApply"
+                        Content="{x:Static resx:ResUI.TbApplyToProfile}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Top Configuration & Controls -->
+        <StackPanel
+            Margin="{StaticResource Margin8}"
+            DockPanel.Dock="Top"
+            Spacing="10">
+            <!-- Header -->
+            <TextBlock
+                FontSize="18"
+                FontWeight="SemiBold"
+                Text="{x:Static resx:ResUI.CloudflareScannerTitle}" />
+            <TextBlock
+                FontSize="12"
+                Opacity="0.8"
+                Text="{x:Static resx:ResUI.CloudflareScannerDesc}"
+                TextWrapping="Wrap" />
+
+            <!-- Configuration Card -->
+            <Border
+                Padding="12,10"
+                BorderBrush="{DynamicResource SystemControlHighlightListLowBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <Grid
+                    ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto"
+                    RowDefinitions="Auto,Auto"
+                    RowSpacing="8"
+                    ColumnSpacing="10">
+                    <!-- Preset -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Text="{x:Static resx:ResUI.TbSubnetRange}" />
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding RangePresets}"
+                        SelectedItem="{Binding SelectedRangePreset}" />
+
+                    <!-- Port -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Text="{x:Static resx:ResUI.TbPort}" />
+                    <NumericUpDown
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Width="100"
+                        Maximum="65535"
+                        Minimum="1"
+                        Value="{Binding Port}" />
+
+                    <!-- Samples -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="4"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Text="{x:Static resx:ResUI.TbSampleCount}" />
+                    <NumericUpDown
+                        Grid.Row="0"
+                        Grid.Column="5"
+                        Width="100"
+                        Maximum="2000"
+                        Minimum="10"
+                        Value="{Binding SampleCount}" />
+
+                    <!-- Host / SNI -->
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Text="{x:Static resx:ResUI.TbTestHost}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding TestHost}"
+                        Watermark="speed.cloudflare.com" />
+
+                    <!-- Threads -->
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Text="{x:Static resx:ResUI.TbThreads}" />
+                    <NumericUpDown
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Width="100"
+                        Maximum="64"
+                        Minimum="1"
+                        Value="{Binding ThreadCount}" />
+
+                    <!-- Speed Test Checkbox -->
+                    <CheckBox
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        Grid.ColumnSpan="2"
+                        Content="{x:Static resx:ResUI.TbEnableSpeedTest}"
+                        IsChecked="{Binding EnableSpeedTest}" />
+                </Grid>
+            </Border>
+
+            <!-- Scan Action Bar & Progress -->
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10">
+                <Button
+                    x:Name="btnStart"
+                    Width="110"
+                    Content="{x:Static resx:ResUI.TbStartScan}"
+                    IsEnabled="{Binding !IsScanning}"
+                    IsDefault="True" />
+                <Button
+                    x:Name="btnStop"
+                    Grid.Column="1"
+                    Width="90"
+                    Content="{x:Static resx:ResUI.TbStopScan}"
+                    IsEnabled="{Binding IsScanning}" />
+                <StackPanel
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+                    <ProgressBar
+                        Height="8"
+                        Maximum="100"
+                        Minimum="0"
+                        Value="{Binding ProgressPercentage}" />
+                    <TextBlock
+                        FontSize="11"
+                        Opacity="0.75"
+                        Text="{Binding StatusMessage}" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Column="3"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Border
+                        Padding="8,4"
+                        Background="{DynamicResource SystemControlHighlightListLowBrush}"
+                        CornerRadius="4">
+                        <TextBlock
+                            FontSize="12"
+                            Text="{Binding ScannedCount, StringFormat='Tested: {0}'}" />
+                    </Border>
+                    <Border
+                        Padding="8,4"
+                        Background="#2028a745"
+                        CornerRadius="4">
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="#28a745"
+                            Text="{Binding WorkingCount, StringFormat='Working: {0}'}" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <!-- Results Table -->
+        <DataGrid
+            x:Name="gridResults"
+            AutoGenerateColumns="False"
+            BorderThickness="1"
+            CanUserResizeColumns="True"
+            GridLinesVisibility="All"
+            HeadersVisibility="Column"
+            IsReadOnly="True"
+            ItemsSource="{Binding Results}"
+            SelectedItem="{Binding SelectedResult}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="180"
+                    Binding="{Binding Ip}"
+                    Header="IP Address" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Port}"
+                    Header="{x:Static resx:ResUI.TbPort}" />
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding PingDisplay}"
+                    Header="Ping" />
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding DataCenter}"
+                    Header="{x:Static resx:ResUI.TbDataCenter}" />
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding Status}"
+                    Header="Status" />
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding Speed}"
+                    Header="Speed" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

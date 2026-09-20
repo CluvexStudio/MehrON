@@ -1944,4 +1944,61 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="DoubleTunnelSelectBothWarning" xml:space="preserve">
     <value>Please select both a middle server and an exit server.</value>
   </data>
+  <data name="menuCloudflareScanner" xml:space="preserve">
+    <value>Cloudflare Clean IP Scanner</value>
+  </data>
+  <data name="CloudflareScannerTitle" xml:space="preserve">
+    <value>Cloudflare Clean IP Scanner</value>
+  </data>
+  <data name="CloudflareScannerDesc" xml:space="preserve">
+    <value>Scan and test Cloudflare IP ranges to find clean, unblocked CDN IPs with low latency.</value>
+  </data>
+  <data name="TbStartScan" xml:space="preserve">
+    <value>Start Scan</value>
+  </data>
+  <data name="TbStopScan" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TbScanning" xml:space="preserve">
+    <value>Scanning...</value>
+  </data>
+  <data name="TbScanCompleted" xml:space="preserve">
+    <value>Scan completed</value>
+  </data>
+  <data name="TbThreads" xml:space="preserve">
+    <value>Threads</value>
+  </data>
+  <data name="TbSampleCount" xml:space="preserve">
+    <value>Samples</value>
+  </data>
+  <data name="TbSubnetRange" xml:space="preserve">
+    <value>IP Range</value>
+  </data>
+  <data name="TbTestHost" xml:space="preserve">
+    <value>Host / SNI</value>
+  </data>
+  <data name="TbEnableSpeedTest" xml:space="preserve">
+    <value>Speed Test</value>
+  </data>
+  <data name="TbDataCenter" xml:space="preserve">
+    <value>Data Center</value>
+  </data>
+  <data name="TbCopySelected" xml:space="preserve">
+    <value>Copy Selected IP</value>
+  </data>
+  <data name="TbCopyAllWorking" xml:space="preserve">
+    <value>Copy All Working IPs</value>
+  </data>
+  <data name="TbApplyToProfile" xml:space="preserve">
+    <value>Apply to Server</value>
+  </data>
+  <data name="TbApplySuccess" xml:space="preserve">
+    <value>Clean IP applied successfully to profile</value>
+  </data>
+  <data name="TbPleaseSelectIp" xml:space="preserve">
+    <value>Please select an IP first</value>
+  </data>
+  <data name="TbPleaseSelectProfile" xml:space="preserve">
+    <value>Please select a server profile</value>
+  </data>
 </root>

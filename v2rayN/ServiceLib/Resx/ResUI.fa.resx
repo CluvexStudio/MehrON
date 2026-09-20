@@ -1818,4 +1818,61 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="DoubleTunnelSelectBothWarning" xml:space="preserve">
     <value>لطفاً هر دو سرور میانی و نهایی را انتخاب کنید.</value>
   </data>
+  <data name="menuCloudflareScanner" xml:space="preserve">
+    <value>اسکنر آی‌پی کلودفلر</value>
+  </data>
+  <data name="CloudflareScannerTitle" xml:space="preserve">
+    <value>اسکنر آی‌پی تمیز کلودفلر</value>
+  </data>
+  <data name="CloudflareScannerDesc" xml:space="preserve">
+    <value>اسکن و تست رنج‌های آی‌پی کلودفلر جهت یافتن آی‌پی‌های تمیز و فیلترنشده با پینگ مناسب.</value>
+  </data>
+  <data name="TbStartScan" xml:space="preserve">
+    <value>شروع اسکن</value>
+  </data>
+  <data name="TbStopScan" xml:space="preserve">
+    <value>توقف</value>
+  </data>
+  <data name="TbScanning" xml:space="preserve">
+    <value>در حال اسکن...</value>
+  </data>
+  <data name="TbScanCompleted" xml:space="preserve">
+    <value>اسکن به پایان رسید</value>
+  </data>
+  <data name="TbThreads" xml:space="preserve">
+    <value>تعداد رشته‌ها (Threads)</value>
+  </data>
+  <data name="TbSampleCount" xml:space="preserve">
+    <value>تعداد نمونه</value>
+  </data>
+  <data name="TbSubnetRange" xml:space="preserve">
+    <value>رنج آی‌پی</value>
+  </data>
+  <data name="TbTestHost" xml:space="preserve">
+    <value>هاست تست / SNI</value>
+  </data>
+  <data name="TbEnableSpeedTest" xml:space="preserve">
+    <value>تست سرعت دانلود</value>
+  </data>
+  <data name="TbDataCenter" xml:space="preserve">
+    <value>دیتاسنتر</value>
+  </data>
+  <data name="TbCopySelected" xml:space="preserve">
+    <value>کپی آی‌پی انتخاب‌شده</value>
+  </data>
+  <data name="TbCopyAllWorking" xml:space="preserve">
+    <value>کپی تمام آی‌پی‌های سالم</value>
+  </data>
+  <data name="TbApplyToProfile" xml:space="preserve">
+    <value>اعمال روی سرور</value>
+  </data>
+  <data name="TbApplySuccess" xml:space="preserve">
+    <value>آی‌پی تمیز با موفقیت روی سرور اعمال شد</value>
+  </data>
+  <data name="TbPleaseSelectIp" xml:space="preserve">
+    <value>لطفاً ابتدا یک آی‌پی را انتخاب کنید</value>
+  </data>
+  <data name="TbPleaseSelectProfile" xml:space="preserve">
+    <value>لطفاً یک سرور را انتخاب کنید</value>
+  </data>
 </root>

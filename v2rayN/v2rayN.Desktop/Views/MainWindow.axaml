@@ -46,6 +46,7 @@
                         <MenuItem x:Name="menuAddPolicyGroupServer" Header="{x:Static resx:ResUI.menuAddPolicyGroupServer}" />
                         <MenuItem x:Name="menuAddProxyChainServer" Header="{x:Static resx:ResUI.menuAddProxyChainServer}" />
                         <MenuItem x:Name="menuDoubleTunnel" Header="{x:Static resx:ResUI.menuDoubleTunnel}" />
+                        <MenuItem x:Name="menuCloudflareScanner" Header="{x:Static resx:ResUI.menuCloudflareScanner}" />
                         <MenuItem x:Name="menuAddCustomOutboundServer" Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
                         <Separator />
                         <MenuItem x:Name="menuAddVmessServer" Header="{x:Static resx:ResUI.menuAddVmessServer}" />
@@ -103,6 +104,8 @@
                         <MenuItem x:Name="menuSniSpoofingSetting" Header="SNI Spoofing Settings" />
                         <MenuItem x:Name="menuMhrSetting" Header="MHR Settings" />
                         <MenuItem x:Name="menuStopMhr" Header="Stop MHR" />
+                        <Separator />
+                        <MenuItem x:Name="menuLcCloudflareScanner" Header="{x:Static resx:ResUI.menuCloudflareScanner}" />
                     </MenuItem>
 
                     <MenuItem x:Name="menuHelp" Header="{x:Static resx:ResUI.menuHelp}">

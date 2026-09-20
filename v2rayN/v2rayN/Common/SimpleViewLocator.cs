@@ -17,6 +17,7 @@ public class SimpleViewLocator : IViewLocator
         Register<CheckUpdateViewModel, CheckUpdateView>();
         Register<ClashConnectionsViewModel, ClashConnectionsView>();
         Register<ClashProxiesViewModel, ClashProxiesView>();
+        Register<CloudflareScannerViewModel, CloudflareScannerWindow>();
         Register<DNSSettingViewModel, DNSSettingWindow>();
         Register<DoubleTunnelViewModel, DoubleTunnelWindow>();
         Register<FullConfigTemplateViewModel, FullConfigTemplateWindow>();

@@ -37,6 +37,7 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> AddPolicyGroupServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddProxyChainServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> DoubleTunnelCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> CloudflareScannerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddServerViaClipboardCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddServerViaScanCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddServerViaImageCmd { get; }
@@ -164,6 +165,10 @@ public partial class MainWindowViewModel : MyReactiveObject
         DoubleTunnelCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await DoubleTunnelAsync();
+        });
+        CloudflareScannerCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await CloudflareScannerAsync();
         });
         AddServerViaClipboardCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -540,6 +545,13 @@ public partial class MainWindowViewModel : MyReactiveObject
         {
             await RefreshServersDispatcherAsync();
         }
+    }
+
+    public async Task CloudflareScannerAsync()
+    {
+        var vm = new CloudflareScannerViewModel();
+        await AppManager.Instance.WindowDialog.ShowDialogAsync(vm);
+        await RefreshServersDispatcherAsync();
     }
 
     public async Task AddServerViaClipboardAsync(string? clipboardData)
