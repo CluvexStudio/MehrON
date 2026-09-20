@@ -80,11 +80,11 @@ public sealed class SniSpoofingManager
 
         var targetIp = !setting.ConnectIp.IsNullOrEmpty()
             ? setting.ConnectIp.Trim()
-            : (node != null && node.Address != Global.Loopback ? await ResolveIpv4Async(node.Address) : null);
+            : (node != null && node.Address != Global.Loopback ? await ResolveIpv4Async(node.Address) : "188.114.98.0");
 
-        if (targetIp == null)
+        if (string.IsNullOrEmpty(targetIp))
         {
-            return true;
+            targetIp = "188.114.98.0";
         }
 
         var targetPort = !setting.ConnectIp.IsNullOrEmpty() && setting.ConnectPort is > 0 and <= 65535
@@ -151,6 +151,35 @@ public sealed class SniSpoofingManager
             _activeProfileId = node?.IndexId ?? string.Empty;
             await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
             return true;
+        }
+        catch (Win32Exception winEx) when (winEx.NativeErrorCode == 740)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    WorkingDirectory = folder,
+                    UseShellExecute = true,
+                    Verb = "runas",
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                };
+                Process.Start(psi);
+                _isRunning = true;
+                _runningTargetIp = targetIp;
+                _runningTargetPort = targetPort;
+                _activeProfileId = node?.IndexId ?? string.Empty;
+                await SafeNotifyAsync(updateFunc, false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logging.SaveLog(nameof(SniSpoofingManager), ex);
+                await StopAsync();
+                await SafeNotifyAsync(updateFunc, true, $"Failed to start SNI Spoofing: {ex.Message}");
+                return false;
+            }
         }
         catch (Exception ex)
         {
