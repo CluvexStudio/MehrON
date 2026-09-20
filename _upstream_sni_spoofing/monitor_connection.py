@@ -12,6 +12,6 @@ class MonitorConnection:
         self.dst_ip = dst_ip
         self.src_port = src_port
         self.dst_port = dst_port
-        self.id = (self.src_ip, self.src_port, self.dst_ip, self.dst_port)
+        self.id = (self.src_port, self.dst_ip, self.dst_port)
         self.thread_lock = threading.Lock()
         self.sock = sock
