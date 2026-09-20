@@ -158,13 +158,13 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
                 if (result.IsSuccess)
                 {
                     Interlocked.Increment(ref working);
-                    await RxSchedulers.MainThreadScheduler.Schedule(() =>
+                    RxSchedulers.MainThreadScheduler.Schedule(() =>
                     {
                         Results.Add(result);
                     });
                 }
 
-                await RxSchedulers.MainThreadScheduler.Schedule(() =>
+                RxSchedulers.MainThreadScheduler.Schedule(() =>
                 {
                     ScannedCount = currentScanned;
                     WorkingCount = working;
@@ -234,9 +234,10 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
         }
 
         var originalAddress = SelectedProfile.Address;
-        if (SelectedProfile.RequestHost.IsNullOrEmpty() && !IPAddress.TryParse(originalAddress, out _))
+        var transport = SelectedProfile.GetTransportExtra();
+        if (transport.Host.IsNullOrEmpty() && !IPAddress.TryParse(originalAddress, out _))
         {
-            SelectedProfile.RequestHost = originalAddress;
+            SelectedProfile.SetTransportExtra(transport with { Host = originalAddress, GrpcAuthority = originalAddress });
         }
         if (SelectedProfile.Sni.IsNullOrEmpty() && !IPAddress.TryParse(originalAddress, out _))
         {
