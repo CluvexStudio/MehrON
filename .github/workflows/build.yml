@@ -117,10 +117,10 @@ jobs:
             throw "sni-spoofing.exe was not found in bin/sni-spoofing/"
           }
 
-          # Download latest Chocolate4U Iran geo rules
-          Write-Host "Downloading Iran geo rules..."
-          curl.exe -L -s -o "$binDir/geosite.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geosite.dat"
-          curl.exe -L -s -o "$binDir/geoip.dat" "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geoip.dat"
+          # Download official rules containing gfw, geolocation-!cn, etc.
+          Write-Host "Downloading geo rules..."
+          curl.exe -L -s -o "$binDir/geosite.dat" "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+          curl.exe -L -s -o "$binDir/geoip.dat" "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
 
           # Cleanup download artifacts
           Remove-Item -Path $coreZip, "core-extracted" -Recurse -Force -ErrorAction SilentlyContinue
