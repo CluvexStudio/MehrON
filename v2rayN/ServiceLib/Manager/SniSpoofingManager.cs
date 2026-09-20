@@ -16,54 +16,88 @@ public sealed class SniSpoofingManager
     private ProcessService? _process;
     private bool _isRunning;
     private string _activeProfileId = string.Empty;
+    private string? _runningTargetIp;
+    private int _runningTargetPort;
 
     public static bool CanUse(ProfileItem node)
     {
         return IsSupported(node)
                && Instance._isRunning
-               && node.IndexId == Instance._activeProfileId;
+               && (Instance._activeProfileId.IsNullOrEmpty() || node.IndexId == Instance._activeProfileId);
     }
 
-    private static bool IsSupported(ProfileItem node)
+    public static bool IsSupported(ProfileItem? node)
     {
         var setting = AppManager.Instance.Config.SniSpoofingItem;
-        return Utils.IsWindows()
-               && setting.Enabled
-               && node.ConfigType is EConfigType.VMess or EConfigType.VLESS or EConfigType.Trojan
-               && node.StreamSecurity == Global.StreamSecurity
-               && (File.Exists(GetExePath()) || File.Exists(GetScriptPath()));
+        if (!Utils.IsWindows() || !setting.Enabled)
+        {
+            return false;
+        }
+        if (!File.Exists(GetExePath()) && !File.Exists(GetScriptPath()))
+        {
+            return false;
+        }
+        if (node == null)
+        {
+            return true;
+        }
+        return node.ConfigType is EConfigType.VMess or EConfigType.VLESS or EConfigType.Trojan
+               && (node.StreamSecurity == Global.StreamSecurity || node.Address == Global.Loopback);
     }
 
     public static string GetOutboundAddress(ProfileItem node) => CanUse(node) ? Global.Loopback : node.Address;
 
     public static int GetOutboundPort(ProfileItem node) => CanUse(node) ? AppManager.Instance.Config.SniSpoofingItem.ListenPort : node.Port;
 
-    public async Task<bool> StartAsync(ProfileItem node, Func<bool, string, Task>? updateFunc)
+    public async Task<bool> StartAsync(ProfileItem? node = null, Func<bool, string, Task>? updateFunc = null)
     {
-        if (!IsSupported(node))
+        var setting = AppManager.Instance.Config.SniSpoofingItem;
+        if (!setting.Enabled || !Utils.IsWindows())
+        {
+            await StopAsync();
+            return true;
+        }
+
+        if (node != null && !IsSupported(node))
         {
             return true;
         }
+
+        if (!File.Exists(GetExePath()) && !File.Exists(GetScriptPath()))
+        {
+            return false;
+        }
+
         if (!Utils.IsAdministrator())
         {
             await updateFunc?.Invoke(true, "SNI Spoofing requires MehrN to be run as administrator.");
             return false;
         }
 
-        await StopAsync();
-        var setting = AppManager.Instance.Config.SniSpoofingItem;
-        var targetIp = setting.ConnectIp.IsNullOrEmpty()
-            ? await ResolveIpv4Async(node.Address)
-            : setting.ConnectIp.Trim();
+        var targetIp = !setting.ConnectIp.IsNullOrEmpty()
+            ? setting.ConnectIp.Trim()
+            : (node != null && node.Address != Global.Loopback ? await ResolveIpv4Async(node.Address) : null);
+
         if (targetIp == null)
         {
-            await updateFunc?.Invoke(true, "SNI Spoofing could not resolve the selected server to an IPv4 address.");
-            return false;
+            return true;
         }
 
         var targetPort = !setting.ConnectIp.IsNullOrEmpty() && setting.ConnectPort is > 0 and <= 65535
             ? setting.ConnectPort
-            : (node.Port > 0 ? node.Port : (setting.ConnectPort > 0 ? setting.ConnectPort : 443));
+            : (node != null && node.Port > 0 ? node.Port : (setting.ConnectPort > 0 ? setting.ConnectPort : 443));
+
+        if (_isRunning && _process != null && !_process.HasExited && _runningTargetIp == targetIp && _runningTargetPort == targetPort)
+        {
+            if (node != null)
+            {
+                _activeProfileId = node.IndexId;
+            }
+            return true;
+        }
+
+        await StopAsync();
+        await CleanupWinDivertAsync();
 
         var folder = GetEngineDirectory();
         var configPath = Path.Combine(folder, "config.json");
@@ -107,7 +141,9 @@ public sealed class SniSpoofingManager
             }
 
             _isRunning = true;
-            _activeProfileId = node.IndexId;
+            _runningTargetIp = targetIp;
+            _runningTargetPort = targetPort;
+            _activeProfileId = node?.IndexId ?? string.Empty;
             await updateFunc?.Invoke(false, $"SNI Spoofing enabled: {setting.ListenHost}:{setting.ListenPort} → {targetIp}:{targetPort}");
             return true;
         }
@@ -123,14 +159,39 @@ public sealed class SniSpoofingManager
     public async Task StopAsync()
     {
         _isRunning = false;
+        _runningTargetIp = null;
+        _runningTargetPort = 0;
         _activeProfileId = string.Empty;
         if (_process == null)
         {
+            await CleanupWinDivertAsync();
             return;
         }
         await _process.StopAsync();
         _process.Dispose();
         _process = null;
+        await CleanupWinDivertAsync();
+    }
+
+    private static async Task CleanupWinDivertAsync()
+    {
+        if (!Utils.IsWindows())
+        {
+            return;
+        }
+        try
+        {
+            var sc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "sc.exe");
+            if (File.Exists(sc))
+            {
+                await Utils.GetCliWrapOutput(sc, "stop WinDivert");
+                await Utils.GetCliWrapOutput(sc, "delete WinDivert");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(nameof(SniSpoofingManager), ex);
+        }
     }
 
     private static async Task<string?> ResolveIpv4Async(string address)

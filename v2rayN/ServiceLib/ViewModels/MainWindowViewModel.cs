@@ -370,6 +370,11 @@ public partial class MainWindowViewModel : MyReactiveObject
         await RefreshServersDispatcherAsync();
 
         await Reload();
+
+        if (Utils.IsWindows() && Utils.IsAdministrator() && _config.SniSpoofingItem.Enabled)
+        {
+            _ = SniSpoofingManager.Instance.StartAsync(null, UpdateHandler);
+        }
     }
 
     #endregion Init

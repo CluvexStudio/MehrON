@@ -61,6 +61,19 @@ public partial class SniSpoofingSettingViewModel : MyReactiveObject, ICloseable
                 }
                 return;
             }
+
+            if (Utils.IsWindows())
+            {
+                if (Enabled && Utils.IsAdministrator())
+                {
+                    _ = SniSpoofingManager.Instance.StartAsync(null, null);
+                }
+                else if (!Enabled)
+                {
+                    _ = SniSpoofingManager.Instance.StopAsync();
+                }
+            }
+
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
         else
