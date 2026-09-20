@@ -27,7 +27,7 @@ public partial class MainWindow
         menuPromotion.Click += MenuPromotion_Click;
         menuClose.Click += MenuClose_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
-        menuDownloadRelease.Click += (s, e) => Utils.OpenPath("https://github.com/yastorovsky/MehrN/releases/latest");
+        menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
 

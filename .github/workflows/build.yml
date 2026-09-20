@@ -82,6 +82,13 @@ jobs:
           # Remove debug symbols if any
           Get-ChildItem -Path $outDir -Filter "*.pdb" -Recurse | Remove-Item -Force
 
+          if (-not (Test-Path "$outDir/MehrN.exe")) {
+            throw "MehrN.exe was not built or found in $outDir"
+          }
+          if (-not (Test-Path "$outDir/AmazTool.exe")) {
+            throw "AmazTool.exe was not built or found in $outDir"
+          }
+
       - name: Bundle Core Binaries
         shell: pwsh
         run: |
