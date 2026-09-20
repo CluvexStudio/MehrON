@@ -17,39 +17,39 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <LinearGradientBrush x:Key="GlassTintBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#73FFFFFF" />
-                        <GradientStop Offset="0.5" Color="#59EEF3FA" />
-                        <GradientStop Offset="1.0" Color="#47DEE6F2" />
+                        <GradientStop Offset="0.0" Color="#B8FFFFFF" />
+                        <GradientStop Offset="0.5" Color="#A6EDF2F9" />
+                        <GradientStop Offset="1.0" Color="#94DFE8F4" />
                     </LinearGradientBrush>
                     <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#99FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#40708090" />
+                        <GradientStop Offset="0.0" Color="#BFFFFFFF" />
+                        <GradientStop Offset="1.0" Color="#59708090" />
                     </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 8 24 0 #18000000, inset 0 1 0 0 #B3FFFFFF</BoxShadows>
+                    <BoxShadows x:Key="GlassBoxShadow">0 8 28 0 #20000000, inset 0 1 0 0 #D9FFFFFF</BoxShadows>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <LinearGradientBrush x:Key="GlassTintBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#662A2E3C" />
-                        <GradientStop Offset="0.5" Color="#4D1D202A" />
-                        <GradientStop Offset="1.0" Color="#3D14161E" />
+                        <GradientStop Offset="0.0" Color="#A62B3040" />
+                        <GradientStop Offset="0.5" Color="#941E222E" />
+                        <GradientStop Offset="1.0" Color="#85151821" />
                     </LinearGradientBrush>
                     <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#59FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#20FFFFFF" />
+                        <GradientStop Offset="0.0" Color="#73FFFFFF" />
+                        <GradientStop Offset="1.0" Color="#2EFFFFFF" />
                     </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 8 24 0 #33000000, inset 0 1 0 0 #40FFFFFF</BoxShadows>
+                    <BoxShadows x:Key="GlassBoxShadow">0 8 28 0 #40000000, inset 0 1 0 0 #59FFFFFF</BoxShadows>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Default">
                     <LinearGradientBrush x:Key="GlassTintBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#662A2E3C" />
-                        <GradientStop Offset="0.5" Color="#4D1D202A" />
-                        <GradientStop Offset="1.0" Color="#3D14161E" />
+                        <GradientStop Offset="0.0" Color="#A62B3040" />
+                        <GradientStop Offset="0.5" Color="#941E222E" />
+                        <GradientStop Offset="1.0" Color="#85151821" />
                     </LinearGradientBrush>
                     <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
-                        <GradientStop Offset="0.0" Color="#59FFFFFF" />
-                        <GradientStop Offset="1.0" Color="#20FFFFFF" />
+                        <GradientStop Offset="0.0" Color="#73FFFFFF" />
+                        <GradientStop Offset="1.0" Color="#2EFFFFFF" />
                     </LinearGradientBrush>
-                    <BoxShadows x:Key="GlassBoxShadow">0 8 24 0 #33000000, inset 0 1 0 0 #40FFFFFF</BoxShadows>
+                    <BoxShadows x:Key="GlassBoxShadow">0 8 28 0 #40000000, inset 0 1 0 0 #59FFFFFF</BoxShadows>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
