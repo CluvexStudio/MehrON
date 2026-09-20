@@ -21,15 +21,27 @@ internal class UpgradeApp
         Console.WriteLine(Resx.Resource.TryTerminateProcess);
         try
         {
-            var existing = Process.GetProcessesByName(Utils.V2rayN);
-            foreach (var pp in existing)
+            var procNames = new[] { Utils.V2rayN, "xray", "p-xray-p", "sing-box", "mihomo", "sni-spoof-rs", "sni-spoofing" };
+            foreach (var name in procNames)
             {
-                var path = pp.MainModule?.FileName ?? "";
-                if (path.StartsWith(Utils.GetPath(Utils.V2rayN)))
+                try
                 {
-                    pp?.Kill();
-                    pp?.WaitForExit(1000);
+                    var procs = Process.GetProcessesByName(name);
+                    foreach (var pp in procs)
+                    {
+                        try
+                        {
+                            var path = pp.MainModule?.FileName ?? "";
+                            if (string.IsNullOrEmpty(path) || path.StartsWith(Utils.StartupPath(), StringComparison.OrdinalIgnoreCase))
+                            {
+                                pp?.Kill();
+                                pp?.WaitForExit(1000);
+                            }
+                        }
+                        catch { }
+                    }
                 }
+                catch { }
             }
         }
         catch (Exception ex)
@@ -47,37 +59,53 @@ internal class UpgradeApp
             var splitKey = "/";
 
             using var archive = ZipFile.OpenRead(fileName);
+            var nonEmptyEntries = archive.Entries.Where(e => e.Length > 0).ToList();
+            bool hasTopLevelDir = false;
+            var firstEntryWithSlash = nonEmptyEntries.FirstOrDefault(e => e.FullName.Contains('/'));
+            if (firstEntryWithSlash != null)
+            {
+                var topDir = firstEntryWithSlash.FullName.Split('/')[0];
+                if (!string.Equals(topDir, "bin", StringComparison.OrdinalIgnoreCase)
+                    && nonEmptyEntries.All(e => e.FullName.StartsWith(topDir + "/", StringComparison.OrdinalIgnoreCase)))
+                {
+                    hasTopLevelDir = true;
+                }
+            }
+
             foreach (var entry in archive.Entries)
             {
                 try
                 {
-                    if (entry.Length == 0)
+                    if (entry.Length == 0 || entry.FullName.EndsWith('/'))
                     {
                         continue;
                     }
 
                     Console.WriteLine(entry.FullName);
 
-                    var lst = entry.FullName.Split(splitKey);
-                    if (lst.Length == 1)
+                    string fullName;
+                    if (hasTopLevelDir)
                     {
-                        continue;
+                        var lst = entry.FullName.Split(splitKey);
+                        if (lst.Length <= 1)
+                        {
+                            continue;
+                        }
+                        fullName = string.Join(splitKey, lst[1..]);
+                    }
+                    else
+                    {
+                        fullName = entry.FullName;
                     }
 
-                    var fullName = string.Join(splitKey, lst[1..lst.Length]);
+                    var entryOutputPath = Utils.GetPath(fullName);
 
-                    if (string.Equals(Utils.GetExePath(), Utils.GetPath(fullName), StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(Utils.GetExePath(), entryOutputPath, StringComparison.OrdinalIgnoreCase))
                     {
                         File.Move(Utils.GetExePath(), thisAppOldFile);
                     }
 
-                    var entryOutputPath = Utils.GetPath(fullName);
                     Directory.CreateDirectory(Path.GetDirectoryName(entryOutputPath)!);
-                    //In the bin folder, if the file already exists, it will be skipped
-                    if (fullName.StartsWith("bin") && File.Exists(entryOutputPath))
-                    {
-                        continue;
-                    }
 
                     TryExtractToFile(entry, entryOutputPath);
 
