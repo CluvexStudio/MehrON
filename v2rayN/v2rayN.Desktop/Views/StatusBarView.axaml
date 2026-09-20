@@ -9,15 +9,62 @@
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
     x:DataType="vms:StatusBarViewModel"
     Design.DataContext="{x:Static dd:DesignData.StatusBar}"
+    Background="Transparent"
     mc:Ignorable="d">
-    <Grid Margin="10,4,10,10">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#E6FFFFFF" />
+                        <GradientStop Offset="0.4" Color="#CCF3F6FA" />
+                        <GradientStop Offset="1.0" Color="#B8E2EAF5" />
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#F0FFFFFF" />
+                        <GradientStop Offset="1.0" Color="#80FFFFFF" />
+                    </LinearGradientBrush>
+                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #26000000, 0 2 8 0 #12000000, inset 0 1 1 0 #FFFFFF</BoxShadows>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#B32B303C" />
+                        <GradientStop Offset="0.4" Color="#991D2028" />
+                        <GradientStop Offset="1.0" Color="#8513151B" />
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#66FFFFFF" />
+                        <GradientStop Offset="1.0" Color="#26FFFFFF" />
+                    </LinearGradientBrush>
+                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #70000000, 0 2 8 0 #35000000, inset 0 1 1 0 #59FFFFFF</BoxShadows>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Default">
+                    <LinearGradientBrush x:Key="GlassFillBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#B32B303C" />
+                        <GradientStop Offset="0.4" Color="#991D2028" />
+                        <GradientStop Offset="1.0" Color="#8513151B" />
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="GlassBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Offset="0.0" Color="#66FFFFFF" />
+                        <GradientStop Offset="1.0" Color="#26FFFFFF" />
+                    </LinearGradientBrush>
+                    <BoxShadows x:Key="GlassBoxShadow">0 10 32 0 #70000000, 0 2 8 0 #35000000, inset 0 1 1 0 #59FFFFFF</BoxShadows>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="Transparent" Margin="12,4,12,12">
         <Border
-            Padding="8,4"
-            Background="{DynamicResource SemiColorFill0}"
-            BorderBrush="{DynamicResource SemiColorBorder}"
+            x:Name="borderGlass"
+            HorizontalAlignment="Center"
+            Padding="14,6"
+            Background="{DynamicResource GlassFillBrush}"
+            BorderBrush="{DynamicResource GlassBorderBrush}"
             BorderThickness="1"
-            CornerRadius="12"
-            BoxShadow="{DynamicResource SemiShadowElevated}">
+            CornerRadius="18"
+            BoxShadow="{DynamicResource GlassBoxShadow}">
             <DockPanel>
                 <StackPanel
                     Margin="{StaticResource MarginLr8}"
@@ -37,13 +84,14 @@
                     <TextBlock
                         Margin="{StaticResource MarginLr4}"
                         VerticalAlignment="Center"
-                        Text="{x:Static resx:ResUI.MsgInformationTitle}" />
+                        FontWeight="Medium"
+                        Text="Log" />
                     <ToggleSwitch
                         x:Name="togShowLog"
                         Margin="{StaticResource Margin4}"
                         HorizontalAlignment="Center"
                         Theme="{DynamicResource SimpleToggleSwitch}"
-                        ToolTip.Tip="Toggle Logs Panel" />
+                        ToolTip.Tip="Toggle Log" />
                 </StackPanel>
 
                 <StackPanel
@@ -98,9 +146,15 @@
                 </StackPanel>
 
                 <StackPanel Margin="{StaticResource MarginLr8}" VerticalAlignment="Center">
-                    <TextBlock x:Name="txtRunningServerDisplay" />
+                    <TextBlock
+                        x:Name="txtRunningServerDisplay"
+                        MaxWidth="260"
+                        TextTrimming="CharacterEllipsis" />
                     <Border Margin="1" />
-                    <TextBlock x:Name="txtRunningInfoDisplay" />
+                    <TextBlock
+                        x:Name="txtRunningInfoDisplay"
+                        MaxWidth="260"
+                        TextTrimming="CharacterEllipsis" />
                 </StackPanel>
             </DockPanel>
         </Border>
