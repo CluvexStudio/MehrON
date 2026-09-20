@@ -101,7 +101,7 @@ public class ProfileExManager
         return profileEx;
     }
 
-    private ProfileExItem GetProfileExItem(string? indexId)
+    public ProfileExItem GetProfileExItem(string? indexId)
     {
         return _lstProfileEx.FirstOrDefault(t => t.IndexId == indexId) ?? AddProfileEx(indexId);
     }
