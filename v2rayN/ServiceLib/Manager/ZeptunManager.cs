@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Sockets;
+
 namespace ServiceLib.Manager;
 
 /// <summary>
@@ -61,7 +64,7 @@ public sealed class ZeptunManager
 
     public static bool IsZeptunAvailable() => !string.IsNullOrEmpty(GetZeptunExePath());
 
-    public async Task<bool> StartAsync(int socksPort, Func<bool, string, Task>? updateFunc = null)
+    public async Task<bool> StartAsync(int socksPort, ProfileItem? node = null, Func<bool, string, Task>? updateFunc = null)
     {
         await StopAsync();
 
@@ -93,14 +96,64 @@ public sealed class ZeptunManager
         var mtu = (item?.ZeptunMtu > 0 && item.ZeptunMtu != 8500) ? item.ZeptunMtu : 1500;
         var stack = (Utils.IsWindows() || string.IsNullOrWhiteSpace(item?.ZeptunStack) || item?.ZeptunStack is "hybrid" or "system") ? "userspace" : item.ZeptunStack.Trim();
 
+        var excludeIps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // Keep local LAN and loopback accessible
+        excludeIps.Add("127.0.0.0/8");
+        excludeIps.Add("10.0.0.0/8");
+        excludeIps.Add("172.16.0.0/12");
+        excludeIps.Add("192.168.0.0/16");
+        excludeIps.Add("169.254.0.0/16");
+
+        // CRITICAL: Exclude remote proxy server address to avoid routing loop!
+        if (!string.IsNullOrWhiteSpace(node?.Address))
+        {
+            var host = node.Address.Trim();
+            if (IPAddress.TryParse(host, out var directIp))
+            {
+                excludeIps.Add(directIp.AddressFamily == AddressFamily.InterNetworkV6 ? $"{directIp}/128" : $"{directIp}/32");
+            }
+            else
+            {
+                try
+                {
+                    var addresses = await Dns.GetHostAddressesAsync(host);
+                    foreach (var addr in addresses)
+                    {
+                        excludeIps.Add(addr.AddressFamily == AddressFamily.InterNetworkV6 ? $"{addr}/128" : $"{addr}/32");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logging.SaveLog($"Zeptun: failed to resolve host {host}", ex);
+                }
+            }
+        }
+
+        if (config.TunModeItem.RouteExcludeAddress is { Count: > 0 })
+        {
+            foreach (var addr in config.TunModeItem.RouteExcludeAddress)
+            {
+                if (!string.IsNullOrWhiteSpace(addr))
+                {
+                    excludeIps.Add(addr.Trim());
+                }
+            }
+        }
+
         var arguments = $"run --tun {interfaceName} --mtu {mtu} --socks5 127.0.0.1:{socksPort} --stack {stack}";
         if (item?.ZeptunAutoRoute ?? true)
         {
             arguments += " --auto-route";
         }
-        if (item?.ZeptunStrictRoute ?? true)
+        if (item?.ZeptunStrictRoute == true)
         {
             arguments += " --strict-route";
+        }
+
+        foreach (var cidr in excludeIps)
+        {
+            arguments += $" --exclude {cidr}";
         }
 
         if (!string.IsNullOrWhiteSpace(item?.ExtraArguments))
@@ -189,6 +242,7 @@ public sealed class ZeptunManager
         {
             try
             {
+                await _process.StopAsync();
                 _process.Dispose();
             }
             catch (Exception ex)

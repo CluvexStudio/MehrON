@@ -106,7 +106,7 @@ public class CoreManager
         {
             var socksPort = AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
             await WaitForPort(socksPort);
-            await ZeptunManager.Instance.StartAsync(socksPort, _updateFunc);
+            await ZeptunManager.Instance.StartAsync(socksPort, node, _updateFunc);
         }
 
         AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;

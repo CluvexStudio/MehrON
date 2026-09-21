@@ -271,6 +271,7 @@ public partial class MainWindowViewModel : MyReactiveObject
             if (await AppManager.Instance.WindowDialog.ShowDialogAsync(viewModel) == true)
             {
                 NoticeManager.Instance.Enqueue(ResUI.OperationSuccess);
+                await Reload();
             }
         });
 
