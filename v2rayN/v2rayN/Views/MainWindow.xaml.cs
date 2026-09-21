@@ -109,25 +109,26 @@ public partial class MainWindow
                 .Subscribe(ApplyLogVisibility)
                 .DisposeWith(disposables);
 
-            ViewModel?.OpenCheckUpdateRequested
-                .ObserveOn(RxSchedulers.MainThreadScheduler)
-                .Subscribe(preRelease =>
-                {
-                    _checkUpdateView ??= new CheckUpdateView();
-                    if (ViewModel?.CheckUpdateViewModel != null)
+            if (ViewModel != null)
+            {
+                ViewModel.OpenCheckUpdateRequested
+                    .AsObservable()
+                    .ObserveOn(RxSchedulers.MainThreadScheduler)
+                    .Subscribe(preRelease =>
                     {
+                        _checkUpdateView ??= new CheckUpdateView();
                         ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
                         _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
-                    }
-                    ViewHost.Show(_checkUpdateView);
-                    AppEvents.HasUpdateNotified.Publish(false);
-                }).DisposeWith(disposables);
+                        ViewHost.Show(_checkUpdateView);
+                        AppEvents.HasUpdateNotified.Publish(false);
+                    }).DisposeWith(disposables);
 
-            ViewModel.ShowYesNoInteraction.RegisterHandler(interaction =>
-            {
-                var result = UI.ShowYesNo(interaction.Input);
-                interaction.SetOutput(result == MessageBoxResult.Yes);
-            }).DisposeWith(disposables);
+                ViewModel.ShowYesNoInteraction.RegisterHandler(interaction =>
+                {
+                    var result = UI.ShowYesNo(interaction.Input);
+                    interaction.SetOutput(result == MessageBoxResult.Yes);
+                }).DisposeWith(disposables);
+            }
 
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(interaction =>
             {

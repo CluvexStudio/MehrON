@@ -100,25 +100,26 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 .Subscribe(UpdateLayout)
                 .DisposeWith(disposables);
 
-            ViewModel?.OpenCheckUpdateRequested
-                .ObserveOn(RxSchedulers.MainThreadScheduler)
-                .Subscribe(preRelease =>
-                {
-                    _checkUpdateView ??= new CheckUpdateView();
-                    if (ViewModel?.CheckUpdateViewModel != null)
+            if (ViewModel != null)
+            {
+                ViewModel.OpenCheckUpdateRequested
+                    .AsObservable()
+                    .ObserveOn(RxSchedulers.MainThreadScheduler)
+                    .Subscribe(preRelease =>
                     {
+                        _checkUpdateView ??= new CheckUpdateView();
                         ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
                         _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
-                    }
-                    DialogHost.Show(_checkUpdateView);
-                    AppEvents.HasUpdateNotified.Publish(false);
-                }).DisposeWith(disposables);
+                        DialogHost.Show(_checkUpdateView);
+                        AppEvents.HasUpdateNotified.Publish(false);
+                    }).DisposeWith(disposables);
 
-            ViewModel.ShowYesNoInteraction.RegisterHandler(async interaction =>
-            {
-                var result = await UI.ShowYesNo(interaction.Input);
-                interaction.SetOutput(result == ButtonResult.Yes);
-            }).DisposeWith(disposables);
+                ViewModel.ShowYesNoInteraction.RegisterHandler(async interaction =>
+                {
+                    var result = await UI.ShowYesNo(interaction.Input);
+                    interaction.SetOutput(result == ButtonResult.Yes);
+                }).DisposeWith(disposables);
+            }
 
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(async interaction =>
             {
