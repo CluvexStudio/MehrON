@@ -1,0 +1,82 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.SettingsCenterWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="{x:Static resx:ResUI.menuSettingsCenter}"
+    Width="900"
+    Height="600"
+    x:DataType="vms:SettingsCenterViewModel"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <Button
+            x:Name="btnClose"
+            Width="100"
+            Margin="{StaticResource Margin4}"
+            HorizontalAlignment="Center"
+            Content="{x:Static resx:ResUI.menuClose}"
+            DockPanel.Dock="Bottom"
+            IsCancel="True" />
+        <TextBox
+            Margin="{StaticResource Margin4}"
+            DockPanel.Dock="Top"
+            Text="{Binding SearchText}"
+            Watermark="{x:Static resx:ResUI.SettingsCenterSearch}" />
+        <Grid ColumnDefinitions="300,*">
+            <ListBox
+                x:Name="lstSections"
+                Grid.Column="0"
+                Margin="{StaticResource Margin4}"
+                ItemsSource="{Binding FilteredSections}"
+                SelectedItem="{Binding SelectedSection}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vms:SettingSectionItem">
+                        <StackPanel Margin="{StaticResource Margin4}">
+                            <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                            <TextBlock
+                                FontSize="12"
+                                Opacity="0.65"
+                                Text="{Binding Category}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel
+                Grid.Column="1"
+                Margin="12,4,4,4"
+                VerticalAlignment="Top">
+                <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="{Binding SelectedTitle}"
+                    TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Opacity="0.7"
+                    Text="{Binding SelectedCategory}" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Opacity="0.7"
+                    Text="{Binding SelectedKeywords}"
+                    TextWrapping="Wrap" />
+                <Button
+                    Width="140"
+                    Margin="0,12,0,0"
+                    HorizontalAlignment="Left"
+                    Command="{Binding OpenSectionCmd}"
+                    Content="{x:Static resx:ResUI.SettingsCenterOpen}"
+                    IsDefault="True" />
+                <TextBlock
+                    Margin="0,12,0,0"
+                    Opacity="0.7"
+                    Text="{x:Static resx:ResUI.SettingsCenterTip}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

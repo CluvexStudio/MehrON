@@ -444,6 +444,33 @@
   <data name="menuSubSetting" xml:space="preserve">
     <value>Subscription group settings</value>
   </data>
+  <data name="menuMhrSetting" xml:space="preserve">
+    <value>MHR Setting</value>
+  </data>
+  <data name="menuSettingsCenter" xml:space="preserve">
+    <value>Settings Center</value>
+  </data>
+  <data name="menuSniSpoofingSetting" xml:space="preserve">
+    <value>SNI Spoofing Setting</value>
+  </data>
+  <data name="SettingsCategoryAdvancedTools" xml:space="preserve">
+    <value>Advanced tools</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SettingsCategoryNetwork" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="SettingsCenterOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="SettingsCenterSearch" xml:space="preserve">
+    <value>Search settings…</value>
+  </data>
+  <data name="SettingsCenterTip" xml:space="preserve">
+    <value>Double-click a section or press Open. Each section window saves on its own.</value>
+  </data>
   <data name="menuSubUpdate" xml:space="preserve">
     <value>Update subscriptions without proxy</value>
   </data>

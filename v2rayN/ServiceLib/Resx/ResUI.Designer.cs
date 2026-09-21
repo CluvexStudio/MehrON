@@ -1877,7 +1877,88 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("menuSubSetting", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   查找类似 MHR Setting 的本地化字符串。
+        /// </summary>
+        public static string menuMhrSetting {
+            get {
+                return ResourceManager.GetString("menuMhrSetting", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Settings Center 的本地化字符串。
+        /// </summary>
+        public static string menuSettingsCenter {
+            get {
+                return ResourceManager.GetString("menuSettingsCenter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 SNI Spoofing Setting 的本地化字符串。
+        /// </summary>
+        public static string menuSniSpoofingSetting {
+            get {
+                return ResourceManager.GetString("menuSniSpoofingSetting", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Advanced tools 的本地化字符串。
+        /// </summary>
+        public static string SettingsCategoryAdvancedTools {
+            get {
+                return ResourceManager.GetString("SettingsCategoryAdvancedTools", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 General 的本地化字符串。
+        /// </summary>
+        public static string SettingsCategoryGeneral {
+            get {
+                return ResourceManager.GetString("SettingsCategoryGeneral", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network 的本地化字符串。
+        /// </summary>
+        public static string SettingsCategoryNetwork {
+            get {
+                return ResourceManager.GetString("SettingsCategoryNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Open 的本地化字符串。
+        /// </summary>
+        public static string SettingsCenterOpen {
+            get {
+                return ResourceManager.GetString("SettingsCenterOpen", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Search settings… 的本地化字符串。
+        /// </summary>
+        public static string SettingsCenterSearch {
+            get {
+                return ResourceManager.GetString("SettingsCenterSearch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Double-click a section or press Open. 的本地化字符串。
+        /// </summary>
+        public static string SettingsCenterTip {
+            get {
+                return ResourceManager.GetString("SettingsCenterTip", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   查找类似 Share 的本地化字符串。
         /// </summary>

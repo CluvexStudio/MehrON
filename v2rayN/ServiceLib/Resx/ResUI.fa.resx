@@ -444,6 +444,33 @@
   <data name="menuSubSetting" xml:space="preserve">
     <value>تنظیم گروه اشتراک</value>
   </data>
+  <data name="menuMhrSetting" xml:space="preserve">
+    <value>تنظیمات MHR</value>
+  </data>
+  <data name="menuSettingsCenter" xml:space="preserve">
+    <value>مرکز تنظیمات</value>
+  </data>
+  <data name="menuSniSpoofingSetting" xml:space="preserve">
+    <value>تنظیمات SNI Spoofing</value>
+  </data>
+  <data name="SettingsCategoryAdvancedTools" xml:space="preserve">
+    <value>ابزارهای پیشرفته</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>عمومی</value>
+  </data>
+  <data name="SettingsCategoryNetwork" xml:space="preserve">
+    <value>شبکه</value>
+  </data>
+  <data name="SettingsCenterOpen" xml:space="preserve">
+    <value>باز کردن</value>
+  </data>
+  <data name="SettingsCenterSearch" xml:space="preserve">
+    <value>جستجوی تنظیمات…</value>
+  </data>
+  <data name="SettingsCenterTip" xml:space="preserve">
+    <value>برای باز شدن، روی بخش دابل‌کلیک کنید یا دکمه باز کردن را بزنید. هر پنجره تنظیمات جداگانه ذخیره می‌شود.</value>
+  </data>
   <data name="menuSubUpdate" xml:space="preserve">
     <value>اشتراک را بدون پروکسی به روز شود</value>
   </data>
