@@ -99,6 +99,14 @@ public partial class StatusBarViewModel : MyReactiveObject
     public partial bool EnableTun { get; set; }
 
     [Reactive]
+    public partial bool IsConnected { get; set; }
+
+    [Reactive]
+    public partial string ConnectButtonText { get; set; } = "Connect";
+
+    public ReactiveCommand<RxVoid, RxVoid> ToggleConnectCmd { get; }
+
+    [Reactive]
     public partial bool ShowBottomLog { get; set; } = true;
 
     [Reactive]
@@ -140,8 +148,18 @@ public partial class StatusBarViewModel : MyReactiveObject
             .Where(y => y >= 0)
             .SubscribeAsync(async _ => await DoSystemProxySelected());
 
+        ToggleConnectCmd = ReactiveCommand.Create(() =>
+        {
+            EnableTun = !EnableTun;
+        });
+
         this.WhenAnyValue(x => x.EnableTun)
-            .SubscribeAsync(async _ => await DoEnableTun());
+            .SubscribeAsync(async v =>
+            {
+                IsConnected = v;
+                ConnectButtonText = v ? "Disconnect" : "Connect";
+                await DoEnableTun();
+            });
 
         this.WhenAnyValue(x => x.ShowBottomLog)
             .Subscribe(v =>

@@ -109,15 +109,11 @@
                     VerticalAlignment="Center"
                     DockPanel.Dock="Left"
                     Orientation="Horizontal">
-                    <TextBlock
-                        Margin="{StaticResource MarginLr8}"
-                        VerticalAlignment="Center"
-                        Text="{x:Static resx:ResUI.TbEnableTunAs}" />
-                    <ToggleSwitch
-                        x:Name="togEnableTun"
-                        Margin="{StaticResource Margin4}"
-                        HorizontalAlignment="Center"
-                        Theme="{DynamicResource SimpleToggleSwitch}" />
+                    <Button
+                        x:Name="btnConnect"
+                        Classes="ConnectButton"
+                        Classes.connected="{Binding IsConnected}"
+                        Content="{Binding ConnectButtonText}" />
                 </StackPanel>
 
                 <StackPanel

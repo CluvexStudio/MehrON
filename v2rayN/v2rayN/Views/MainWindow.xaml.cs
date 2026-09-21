@@ -26,9 +26,24 @@ public partial class MainWindow
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuClose.Click += MenuClose_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
+        menuBetaUpdates.Click += async (s, e) =>
+        {
+            if (ViewModel != null)
+            {
+                await ViewModel.CheckBetaUpdatesAsync();
+            }
+        };
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
+
+        this.StateChanged += (s, e) =>
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Task.Run(Utils.TrimMemory);
+            }
+        };
 
         pbTheme.Content ??= new ThemeSettingView();
 
@@ -101,6 +116,27 @@ public partial class MainWindow
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .Subscribe(ApplyLogVisibility)
                 .DisposeWith(disposables);
+
+            if (ViewModel != null)
+            {
+                ViewModel.OpenCheckUpdateRequested
+                    .AsObservable()
+                    .ObserveOn(RxSchedulers.MainThreadScheduler)
+                    .Subscribe(preRelease =>
+                    {
+                        _checkUpdateView ??= new CheckUpdateView();
+                        ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
+                        _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
+                        ViewHost.Show(_checkUpdateView);
+                        AppEvents.HasUpdateNotified.Publish(false);
+                    }).DisposeWith(disposables);
+
+                ViewModel.ShowYesNoInteraction.RegisterHandler(interaction =>
+                {
+                    var result = UI.ShowYesNo(interaction.Input);
+                    interaction.SetOutput(result == MessageBoxResult.Yes);
+                }).DisposeWith(disposables);
+            }
 
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(interaction =>
             {
@@ -318,6 +354,7 @@ public partial class MainWindow
         else
         {
             this?.Hide();
+            Task.Run(Utils.TrimMemory);
         }
         AppManager.Instance.ShowInTaskbar = bl;
     }
@@ -330,6 +367,7 @@ public partial class MainWindow
             ShowHideWindow(false);
         }
         RestoreUI();
+        Task.Delay(3000).ContinueWith(_ => Utils.TrimMemory());
     }
 
     private void RestoreUI()

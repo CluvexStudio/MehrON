@@ -110,6 +110,7 @@
 
                     <MenuItem x:Name="menuHelp" Header="{x:Static resx:ResUI.menuHelp}">
                         <MenuItem x:Name="menuCheckUpdate" Header="{x:Static resx:ResUI.menuCheckUpdate}" />
+                        <MenuItem x:Name="menuBetaUpdates" Header="Beta Updates" />
                         <MenuItem x:Name="menuDownloadRelease" Header="Download Latest Release (GitHub)" />
                         <Separator />
                     </MenuItem>

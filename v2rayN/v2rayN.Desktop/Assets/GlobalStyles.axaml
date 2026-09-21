@@ -40,4 +40,32 @@
         <Setter Property="Theme" Value="{DynamicResource BorderlessButton}" />
     </Style>
 
+    <Style Selector="Button.ConnectButton">
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="14,2" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.ConnectButton:not(.connected)">
+        <Setter Property="Background" Value="#1E293B" />
+        <Setter Property="Foreground" Value="#F8FAFC" />
+        <Setter Property="BorderBrush" Value="#475569" />
+    </Style>
+    <Style Selector="Button.ConnectButton:not(.connected):pointerover">
+        <Setter Property="Background" Value="#334155" />
+        <Setter Property="BorderBrush" Value="#64748B" />
+    </Style>
+    <Style Selector="Button.ConnectButton.connected">
+        <Setter Property="Background" Value="#047857" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#10B981" />
+    </Style>
+    <Style Selector="Button.ConnectButton.connected:pointerover">
+        <Setter Property="Background" Value="#B91C1C" />
+        <Setter Property="BorderBrush" Value="#EF4444" />
+    </Style>
+
 </Styles>

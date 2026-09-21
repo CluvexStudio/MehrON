@@ -25,10 +25,19 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         KeyDown += MainWindow_KeyDown;
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
+        menuBetaUpdates.Click += MenuBetaUpdates_Click;
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
         menuClose.Click += MenuClose_Click;
+
+        this.GetObservable(WindowStateProperty).Subscribe(state =>
+        {
+            if (state == WindowState.Minimized)
+            {
+                Task.Run(Utils.TrimMemory);
+            }
+        });
 
         conTheme.Content ??= new ThemeSettingView();
 
@@ -96,6 +105,27 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .Subscribe(UpdateLayout)
                 .DisposeWith(disposables);
+
+            if (ViewModel != null)
+            {
+                ViewModel.OpenCheckUpdateRequested
+                    .AsObservable()
+                    .ObserveOn(RxSchedulers.MainThreadScheduler)
+                    .Subscribe(preRelease =>
+                    {
+                        _checkUpdateView ??= new CheckUpdateView();
+                        ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
+                        _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
+                        DialogHost.Show(_checkUpdateView);
+                        AppEvents.HasUpdateNotified.Publish(false);
+                    }).DisposeWith(disposables);
+
+                ViewModel.ShowYesNoInteraction.RegisterHandler(async interaction =>
+                {
+                    var result = await UI.ShowYesNo(interaction.Input);
+                    interaction.SetOutput(result == ButtonResult.Yes);
+                }).DisposeWith(disposables);
+            }
 
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(async interaction =>
             {
@@ -285,6 +315,14 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         AppEvents.HasUpdateNotified.Publish(false);
     }
 
+    private async void MenuBetaUpdates_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel != null)
+        {
+            await ViewModel.CheckBetaUpdatesAsync();
+        }
+    }
+
     private void MenuBackupAndRestore_Click(object? sender, RoutedEventArgs e)
     {
         _backupAndRestoreView ??= new BackupAndRestoreView();
@@ -359,6 +397,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 ownedWindow.Close();
             }
             Hide();
+            Task.Run(Utils.TrimMemory);
         }
 
         AppManager.Instance.ShowInTaskbar = bl;
@@ -372,6 +411,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
             ShowHideWindow(false);
         }
         RestoreUI();
+        Task.Delay(3000).ContinueWith(_ => Utils.TrimMemory());
     }
 
     private void RestoreUI()
