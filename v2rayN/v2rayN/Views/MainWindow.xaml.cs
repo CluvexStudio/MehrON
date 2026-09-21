@@ -26,6 +26,13 @@ public partial class MainWindow
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuClose.Click += MenuClose_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
+        menuBetaUpdates.Click += async (s, e) =>
+        {
+            if (ViewModel != null)
+            {
+                await ViewModel.CheckBetaUpdatesAsync();
+            }
+        };
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;

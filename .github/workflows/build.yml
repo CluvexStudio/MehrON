@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - Beta
     tags:
       - 'v*'
   workflow_dispatch:
@@ -52,7 +53,8 @@ jobs:
           } else {
             $propVer = [xml](Get-Content ./v2rayN/Directory.Build.props)
             $v = $propVer.Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
-            $tag = "v$v"
+            $ref = "${{ github.ref_name }}"
+            $tag = if ($ref -eq "Beta" -and -not $v.Contains("-beta")) { "v$v-beta" } else { "v$v" }
           }
           Write-Host "Resolved Version Tag: $tag"
           "TAG_NAME=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
@@ -236,7 +238,7 @@ jobs:
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
-        if: github.ref_type == 'tag' || inputs.create_release == true || github.ref_name == 'main'
+        if: github.ref_type == 'tag' || inputs.create_release == true || github.ref_name == 'main' || github.ref_name == 'Beta'
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -251,4 +253,4 @@ jobs:
             MehrN-windows-64.zip
             MehrN-windows-64-desktop.zip
           draft: false
-          prerelease: false
+          prerelease: ${{ github.ref_name == 'Beta' }}
