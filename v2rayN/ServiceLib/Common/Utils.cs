@@ -1,3 +1,5 @@
+using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using CliWrap;
 using CliWrap.Buffered;
@@ -1445,6 +1447,31 @@ public class Utils
         return IsWindows()
             ? Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%")
             : Environment.GetEnvironmentVariable("HOME");
+    }
+
+    [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize")]
+    private static extern bool SetProcessWorkingSetSize(nint proc, nint min, nint max);
+
+    /// <summary>
+    /// Actively compacts LOH and trims the process working set, releasing unreferenced physical memory back to the OS.
+    /// </summary>
+    public static void TrimMemory()
+    {
+        try
+        {
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Aggressive, true, true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(2, GCCollectionMode.Aggressive, true, true);
+
+            if (OperatingSystem.IsWindows())
+            {
+                SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+            }
+        }
+        catch
+        {
+        }
     }
 
     #endregion Platform

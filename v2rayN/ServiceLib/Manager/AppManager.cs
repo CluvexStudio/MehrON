@@ -109,6 +109,18 @@ public sealed class AppManager
             await MigrateProfileExtra();
         }).Wait();
 
+        Task.Run(async () =>
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(10));
+            while (await timer.WaitForNextTickAsync())
+            {
+                if (!ShowInTaskbar)
+                {
+                    Utils.TrimMemory();
+                }
+            }
+        });
+
         return true;
     }
 

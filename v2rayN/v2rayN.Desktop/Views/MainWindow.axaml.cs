@@ -27,11 +27,17 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         menuBetaUpdates.Click += MenuBetaUpdates_Click;
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
-        menuBpbWizard.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
-        menuBpbWizardSetting.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
         menuClose.Click += MenuClose_Click;
+
+        this.GetObservable(WindowStateProperty).Subscribe(state =>
+        {
+            if (state == WindowState.Minimized)
+            {
+                Task.Run(Utils.TrimMemory);
+            }
+        });
 
         conTheme.Content ??= new ThemeSettingView();
 
@@ -391,6 +397,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 ownedWindow.Close();
             }
             Hide();
+            Task.Run(Utils.TrimMemory);
         }
 
         AppManager.Instance.ShowInTaskbar = bl;
@@ -404,6 +411,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
             ShowHideWindow(false);
         }
         RestoreUI();
+        Task.Delay(3000).ContinueWith(_ => Utils.TrimMemory());
     }
 
     private void RestoreUI()

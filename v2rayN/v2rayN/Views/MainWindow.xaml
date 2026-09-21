@@ -97,11 +97,6 @@
                                     Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
                                 <Separator Margin="-40,5" />
                                 <MenuItem
-                                    x:Name="menuBpbWizard"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="BPB Configuration Wizard" />
-                                <Separator Margin="-40,5" />
-                                <MenuItem
                                     x:Name="menuAddVmessServer"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuAddVmessServer}" />
@@ -211,10 +206,6 @@
                                     x:Name="menuFullConfigTemplate"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuFullConfigTemplate}" />
-                                <MenuItem
-                                    x:Name="menuBpbWizardSetting"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="BPB Configuration Wizard" />
                                 <MenuItem
                                     x:Name="menuGlobalHotkeySetting"
                                     Height="{StaticResource MenuItemHeight}"

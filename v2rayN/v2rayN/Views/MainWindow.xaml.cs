@@ -34,10 +34,16 @@ public partial class MainWindow
             }
         };
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
-        menuBpbWizard.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
-        menuBpbWizardSetting.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
+
+        this.StateChanged += (s, e) =>
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Task.Run(Utils.TrimMemory);
+            }
+        };
 
         pbTheme.Content ??= new ThemeSettingView();
 
@@ -348,6 +354,7 @@ public partial class MainWindow
         else
         {
             this?.Hide();
+            Task.Run(Utils.TrimMemory);
         }
         AppManager.Instance.ShowInTaskbar = bl;
     }
@@ -360,6 +367,7 @@ public partial class MainWindow
             ShowHideWindow(false);
         }
         RestoreUI();
+        Task.Delay(3000).ContinueWith(_ => Utils.TrimMemory());
     }
 
     private void RestoreUI()
