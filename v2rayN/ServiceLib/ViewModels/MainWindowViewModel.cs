@@ -74,15 +74,8 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> RegionalPresetChinaCmd { get; }
 
     public ReactiveCommand<RxVoid, RxVoid> ReloadCmd { get; }
-    public ReactiveCommand<RxVoid, RxVoid> ToggleConnectCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> CheckBetaUpdatesCmd { get; }
     public EventChannel<bool> OpenCheckUpdateRequested { get; } = new();
-
-    [Reactive]
-    public partial bool IsConnected { get; set; }
-
-    [Reactive]
-    public partial string ConnectButtonText { get; set; } = "Connect";
 
     [Reactive]
     public partial bool BlReloadEnabled { get; set; }
@@ -279,18 +272,6 @@ public partial class MainWindowViewModel : MyReactiveObject
         {
             await Reload();
         });
-
-        ToggleConnectCmd = ReactiveCommand.Create(() =>
-        {
-            StatusBarViewModel.EnableTun = !StatusBarViewModel.EnableTun;
-        });
-
-        StatusBarViewModel.WhenAnyValue(x => x.EnableTun)
-            .Subscribe(v =>
-            {
-                IsConnected = v;
-                ConnectButtonText = v ? "Disconnect" : "Connect";
-            });
 
         CheckBetaUpdatesCmd = ReactiveCommand.CreateFromTask(CheckBetaUpdatesAsync);
 
