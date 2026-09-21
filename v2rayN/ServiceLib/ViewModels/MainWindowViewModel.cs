@@ -6,6 +6,7 @@ public partial class MainWindowViewModel : MyReactiveObject
     public Interaction<RxVoid, byte[]?> ScanScreenInteraction { get; } = new();
     public Interaction<RxVoid, string?> BrowseImageFileInteraction { get; } = new();
     public Interaction<bool?, RxVoid> ShowHideWindowInteraction { get; } = new();
+    public Interaction<string, bool> ShowYesNoInteraction { get; } = new();
 
     public bool DesignMode { get; set; }
 
@@ -907,7 +908,7 @@ public partial class MainWindowViewModel : MyReactiveObject
             {
                 var curVer = Utils.GetVersionInfo();
                 var prompt = $"A new Beta release ({result.Version}) is available! (Current: v{curVer})\n\nWould you like to open the Update Manager to download and install this Beta update?";
-                if (await UI.ShowYesNo(prompt) == ButtonResult.Yes)
+                if (await ShowYesNoInteraction.HandleSafe(prompt) == true)
                 {
                     OpenCheckUpdateRequested.Publish(true);
                 }
