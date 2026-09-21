@@ -154,14 +154,12 @@ public partial class StatusBarViewModel : MyReactiveObject
         });
 
         this.WhenAnyValue(x => x.EnableTun)
-            .Subscribe(v =>
+            .SubscribeAsync(async v =>
             {
                 IsConnected = v;
                 ConnectButtonText = v ? "Disconnect" : "Connect";
+                await DoEnableTun();
             });
-
-        this.WhenAnyValue(x => x.EnableTun)
-            .SubscribeAsync(async _ => await DoEnableTun());
 
         this.WhenAnyValue(x => x.ShowBottomLog)
             .Subscribe(v =>
