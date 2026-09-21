@@ -109,15 +109,18 @@
                     VerticalAlignment="Center"
                     DockPanel.Dock="Left"
                     Orientation="Horizontal">
-                    <TextBlock
-                        Margin="{StaticResource MarginLr8}"
-                        VerticalAlignment="Center"
-                        Text="{x:Static resx:ResUI.TbEnableTunAs}" />
-                    <ToggleSwitch
-                        x:Name="togEnableTun"
-                        Margin="{StaticResource Margin4}"
-                        HorizontalAlignment="Center"
-                        Theme="{DynamicResource SimpleToggleSwitch}" />
+                    <Button
+                        x:Name="btnConnect"
+                        Classes="ConnectButton"
+                        Classes.connected="{Binding IsConnected}"
+                        Command="{Binding ToggleConnectCmd}"
+                        ToolTip.Tip="Toggle TUN Connection">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <Ellipse Width="8" Height="8" IsVisible="{Binding !IsConnected}" Fill="#94A3B8" />
+                            <Ellipse Width="8" Height="8" IsVisible="{Binding IsConnected}" Fill="#34D399" />
+                            <TextBlock Text="{Binding ConnectButtonText}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <StackPanel

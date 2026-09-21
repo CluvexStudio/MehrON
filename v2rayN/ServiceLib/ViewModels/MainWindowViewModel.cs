@@ -73,6 +73,15 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> RegionalPresetChinaCmd { get; }
 
     public ReactiveCommand<RxVoid, RxVoid> ReloadCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> ToggleConnectCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> CheckBetaUpdatesCmd { get; }
+    public EventChannel<bool> OpenCheckUpdateRequested { get; } = new();
+
+    [Reactive]
+    public partial bool IsConnected { get; set; }
+
+    [Reactive]
+    public partial string ConnectButtonText { get; set; } = "Connect";
 
     [Reactive]
     public partial bool BlReloadEnabled { get; set; }
@@ -269,6 +278,20 @@ public partial class MainWindowViewModel : MyReactiveObject
         {
             await Reload();
         });
+
+        ToggleConnectCmd = ReactiveCommand.Create(() =>
+        {
+            StatusBarViewModel.EnableTun = !StatusBarViewModel.EnableTun;
+        });
+
+        StatusBarViewModel.WhenAnyValue(x => x.EnableTun)
+            .Subscribe(v =>
+            {
+                IsConnected = v;
+                ConnectButtonText = v ? "Disconnect" : "Connect";
+            });
+
+        CheckBetaUpdatesCmd = ReactiveCommand.CreateFromTask(CheckBetaUpdatesAsync);
 
         RegionalPresetDefaultCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -865,4 +888,42 @@ public partial class MainWindowViewModel : MyReactiveObject
     }
 
     #endregion Presets
+
+    #region Beta Updates
+
+    public async Task CheckBetaUpdatesAsync()
+    {
+        NoticeManager.Instance.Enqueue("Checking for Beta updates...");
+        try
+        {
+            var updateService = new UpdateService(_config, async (_, msg) =>
+            {
+                NoticeManager.Instance.Enqueue(msg);
+                await Task.CompletedTask;
+            });
+
+            var result = await updateService.CheckHasUpdateOnly(ECoreType.v2rayN, preRelease: true, blProxy: true);
+            if (result.Success && result.Version != null)
+            {
+                var curVer = Utils.GetVersionInfo();
+                var prompt = $"A new Beta release ({result.Version}) is available! (Current: v{curVer})\n\nWould you like to open the Update Manager to download and install this Beta update?";
+                if (await UI.ShowYesNo(prompt) == ButtonResult.Yes)
+                {
+                    OpenCheckUpdateRequested.Publish(true);
+                }
+            }
+            else
+            {
+                var msg = result.Msg.IsNullOrEmpty() ? "You are running the latest version." : result.Msg;
+                NoticeManager.Instance.Enqueue(msg);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog("CheckBetaUpdates", ex);
+            NoticeManager.Instance.Enqueue($"Error checking Beta updates: {ex.Message}");
+        }
+    }
+
+    #endregion Beta Updates
 }

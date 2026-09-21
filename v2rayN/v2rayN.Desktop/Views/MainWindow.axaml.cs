@@ -25,6 +25,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         KeyDown += MainWindow_KeyDown;
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
+        menuBetaUpdates.Click += MenuBetaUpdates_Click;
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
@@ -34,6 +35,8 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         this.WhenActivated(disposables =>
         {
+            this.BindCommand(ViewModel, vm => vm.ToggleConnectCmd, v => v.btnNavConnect).DisposeWith(disposables);
+
             //servers
             this.BindCommand(ViewModel, vm => vm.AddVmessServerCmd, v => v.menuAddVmessServer).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.AddVlessServerCmd, v => v.menuAddVlessServer).DisposeWith(disposables);
@@ -96,6 +99,20 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .Subscribe(UpdateLayout)
                 .DisposeWith(disposables);
+
+            ViewModel?.OpenCheckUpdateRequested
+                .ObserveOn(RxSchedulers.MainThreadScheduler)
+                .Subscribe(preRelease =>
+                {
+                    _checkUpdateView ??= new CheckUpdateView();
+                    if (ViewModel?.CheckUpdateViewModel != null)
+                    {
+                        ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
+                        _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
+                    }
+                    DialogHost.Show(_checkUpdateView);
+                    AppEvents.HasUpdateNotified.Publish(false);
+                }).DisposeWith(disposables);
 
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(async interaction =>
             {
@@ -283,6 +300,14 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         DialogHost.Show(_checkUpdateView);
 
         AppEvents.HasUpdateNotified.Publish(false);
+    }
+
+    private async void MenuBetaUpdates_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel != null)
+        {
+            await ViewModel.CheckBetaUpdatesAsync();
+        }
     }
 
     private void MenuBackupAndRestore_Click(object? sender, RoutedEventArgs e)
