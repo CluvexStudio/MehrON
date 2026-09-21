@@ -11,10 +11,10 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
 
     private readonly TunnelingItem _settings;
 
-    [Reactive] public partial string SelectedCore { get; set; } = CoreSingboxLabel;
-    public List<string> Cores { get; } = [CoreSingboxLabel, CoreZeptunLabel];
+    [Reactive] public partial string SelectedCore { get; set; } = CoreZeptunLabel;
+    public List<string> Cores { get; } = [CoreZeptunLabel, CoreSingboxLabel];
 
-    [Reactive] public partial bool IsZeptunSelected { get; set; }
+    [Reactive] public partial bool IsZeptunSelected { get; set; } = true;
 
     [Reactive] public partial string ZeptunInterfaceName { get; set; } = "zeptun0";
     [Reactive] public partial int ZeptunMtu { get; set; } = 1500;
@@ -23,6 +23,8 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
 
     [Reactive] public partial bool ZeptunAutoRoute { get; set; } = true;
     [Reactive] public partial bool ZeptunStrictRoute { get; set; } = false;
+    [Reactive] public partial bool ZeptunDnsHijack { get; set; } = true;
+    [Reactive] public partial bool ZeptunFakeIp { get; set; } = true;
     [Reactive] public partial string ExtraArguments { get; set; } = string.Empty;
 
     public ReactiveCommand<RxVoid, RxVoid> SaveCmd { get; }
@@ -34,7 +36,7 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         _config.TunnelingItem ??= new();
         _settings = JsonUtils.DeepCopy(_config.TunnelingItem);
 
-        SelectedCore = _settings.SelectedCore == CoreZeptunLabel ? CoreZeptunLabel : CoreSingboxLabel;
+        SelectedCore = _settings.SelectedCore == CoreSingboxLabel ? CoreSingboxLabel : CoreZeptunLabel;
         IsZeptunSelected = SelectedCore == CoreZeptunLabel;
 
         ZeptunInterfaceName = string.IsNullOrWhiteSpace(_settings.ZeptunInterfaceName) ? "zeptun0" : _settings.ZeptunInterfaceName;
@@ -42,6 +44,8 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         ZeptunStack = "userspace";
         ZeptunAutoRoute = _settings.ZeptunAutoRoute;
         ZeptunStrictRoute = _settings.ZeptunStrictRoute;
+        ZeptunDnsHijack = _settings.ZeptunDnsHijack;
+        ZeptunFakeIp = _settings.ZeptunFakeIp;
         ExtraArguments = _settings.ExtraArguments;
 
         this.WhenAnyValue(x => x.SelectedCore)
@@ -65,12 +69,14 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
             return;
         }
 
-        _settings.SelectedCore = SelectedCore == CoreZeptunLabel ? CoreZeptunLabel : CoreSingboxLabel;
+        _settings.SelectedCore = SelectedCore == CoreSingboxLabel ? CoreSingboxLabel : CoreZeptunLabel;
         _settings.ZeptunInterfaceName = string.IsNullOrWhiteSpace(ZeptunInterfaceName) ? "zeptun0" : ZeptunInterfaceName.Trim();
         _settings.ZeptunMtu = ZeptunMtu;
         _settings.ZeptunStack = string.IsNullOrWhiteSpace(ZeptunStack) ? "userspace" : ZeptunStack.Trim();
         _settings.ZeptunAutoRoute = ZeptunAutoRoute;
         _settings.ZeptunStrictRoute = ZeptunStrictRoute;
+        _settings.ZeptunDnsHijack = ZeptunDnsHijack;
+        _settings.ZeptunFakeIp = ZeptunFakeIp;
         _settings.ExtraArguments = ExtraArguments?.Trim() ?? string.Empty;
 
         _config.TunnelingItem = _settings;

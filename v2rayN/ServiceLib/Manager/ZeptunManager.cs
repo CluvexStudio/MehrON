@@ -150,6 +150,14 @@ public sealed class ZeptunManager
         {
             arguments += " --strict-route";
         }
+        if ((item?.ZeptunDnsHijack ?? true) && !(item?.ExtraArguments?.Contains("--dns-hijack") ?? false))
+        {
+            arguments += " --dns-hijack";
+        }
+        if ((item?.ZeptunFakeIp ?? true) && !(item?.ExtraArguments?.Contains("--fake-ip") ?? false))
+        {
+            arguments += " --fake-ip";
+        }
 
         foreach (var cidr in excludeIps)
         {

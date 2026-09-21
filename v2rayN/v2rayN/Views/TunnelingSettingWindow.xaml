@@ -34,10 +34,10 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Text="Tunneling Engine" />
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
+                    <ComboBox x:Name="cmbCores" Grid.Column="1" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
                 </Grid>
 
-                <GroupBox Margin="0,8,0,0" Header="Zeptun Settings (Noisemux/zeptun)"
+                <GroupBox x:Name="grpZeptun" Margin="0,8,0,0" Header="Zeptun Settings (Noisemux/zeptun)"
                           materialDesign:ColorZoneAssist.Mode="PrimaryLight"
                           IsEnabled="{Binding IsZeptunSelected}">
                     <StackPanel Margin="4">
@@ -57,28 +57,30 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Margin="0,4,0,0" VerticalAlignment="Center" Text="Interface Name" />
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,4,0,4"
+                            <TextBox x:Name="txtZeptunInterfaceName" Grid.Row="0" Grid.Column="1" Margin="0,4,0,4"
                                      Text="{Binding ZeptunInterfaceName, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBlock Grid.Row="1" Margin="0,6,0,0" VerticalAlignment="Center" Text="MTU" />
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBox x:Name="txtZeptunMtu" Grid.Row="1" Grid.Column="1" Margin="0,6,0,4"
                                      Text="{Binding ZeptunMtu, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBlock Grid.Row="2" Margin="0,6,0,0" VerticalAlignment="Center" Text="Network Stack" />
-                            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,6,0,4"
+                            <ComboBox x:Name="cmbZeptunStack" Grid.Row="2" Grid.Column="1" Margin="0,6,0,4"
                                       ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack, Mode=TwoWay}" />
 
                             <TextBlock Grid.Row="3" Margin="0,6,0,0" VerticalAlignment="Center" Text="Extra Arguments" />
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBox x:Name="txtExtraArguments" Grid.Row="3" Grid.Column="1" Margin="0,6,0,4"
                                      Text="{Binding ExtraArguments, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
 
-                        <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding ZeptunAutoRoute}" Content="Auto-route system traffic into TUN" Margin="0,0,24,0" />
-                            <CheckBox IsChecked="{Binding ZeptunStrictRoute}" Content="Strict route protection" />
+                        <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                            <CheckBox x:Name="chkZeptunAutoRoute" IsChecked="{Binding ZeptunAutoRoute}" Content="Auto-route system traffic into TUN" Margin="0,2,0,2" />
+                            <CheckBox x:Name="chkZeptunStrictRoute" IsChecked="{Binding ZeptunStrictRoute}" Content="Strict route protection" Margin="0,2,0,2" />
+                            <CheckBox x:Name="chkZeptunDnsHijack" IsChecked="{Binding ZeptunDnsHijack}" Content="Hijack DNS queries (capture port 53)" Margin="0,2,0,2" />
+                            <CheckBox x:Name="chkZeptunFakeIp" IsChecked="{Binding ZeptunFakeIp}" Content="Fake-IP DNS resolver (bypasses DNS filtering)" Margin="0,2,0,2" />
                         </StackPanel>
 
-                        <Button Margin="0,14,0,4" HorizontalAlignment="Left"
+                        <Button x:Name="btnOpenZeptunUrl" Margin="0,14,0,4" HorizontalAlignment="Left"
                                 Command="{Binding OpenZeptunUrlCmd}"
                                 Content="Open Zeptun GitHub Repository (Noisemux/zeptun)"
                                 Style="{StaticResource MaterialDesignOutlinedButton}" />
