@@ -113,7 +113,6 @@
                         x:Name="btnConnect"
                         Classes="ConnectButton"
                         Classes.connected="{Binding IsConnected}"
-                        Command="{Binding ToggleConnectCmd}"
                         ToolTip.Tip="Toggle TUN Connection">
                         <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
                             <Ellipse Width="8" Height="8" IsVisible="{Binding !IsConnected}" Fill="#94A3B8" />
