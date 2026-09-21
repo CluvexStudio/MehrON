@@ -343,7 +343,7 @@ public class TunnelingItem
     public const string CoreSingbox = "Built-in (sing-box)";
     public const string CoreZeptun = "Zeptun (Noisemux/zeptun)";
 
-    public string SelectedCore { get; set; } = CoreZeptun;
+    public string SelectedCore { get; set; } = CoreSingbox;
     public string ZeptunPath { get; set; } = string.Empty;
     public string ZeptunInterfaceName { get; set; } = "zeptun0";
     public int ZeptunMtu { get; set; } = 1500;

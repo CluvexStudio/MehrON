@@ -25,14 +25,14 @@
                 <Border BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12">
                     <StackPanel Spacing="8">
                         <TextBlock FontWeight="SemiBold" Text="Tunneling Engine:" />
-                        <RadioButton x:Name="radZeptun"
-                                     Content="Zeptun (Noisemux/zeptun) — High-Performance Zig TUN (Recommended)"
-                                     GroupName="TunEngineGroup"
-                                     IsChecked="{Binding IsZeptunCore}" />
                         <RadioButton x:Name="radSingbox"
-                                     Content="Built-in (sing-box) — Standard TUN engine"
+                                     Content="Built-in (sing-box) — Standard TUN engine (Default)"
                                      GroupName="TunEngineGroup"
                                      IsChecked="{Binding IsSingboxCore}" />
+                        <RadioButton x:Name="radZeptun"
+                                     Content="Zeptun (Noisemux/zeptun) — High-Performance Zig TUN"
+                                     GroupName="TunEngineGroup"
+                                     IsChecked="{Binding IsZeptunCore}" />
                     </StackPanel>
                 </Border>
 
