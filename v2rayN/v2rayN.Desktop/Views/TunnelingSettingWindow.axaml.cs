@@ -11,7 +11,8 @@ public partial class TunnelingSettingWindow : WindowBase<TunnelingSettingViewMod
 
         this.WhenActivated(disposables =>
         {
-            this.Bind(ViewModel, vm => vm.SelectedCore, v => v.cmbCores.SelectedItem).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.IsZeptunCore, v => v.radZeptun.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.IsSingboxCore, v => v.radSingbox.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunInterfaceName, v => v.txtZeptunInterfaceName.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunStack, v => v.cmbZeptunStack.SelectedItem).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ExtraArguments, v => v.txtExtraArguments.Text).DisposeWith(disposables);

@@ -14,6 +14,9 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial string SelectedCore { get; set; } = CoreZeptunLabel;
     public List<string> Cores { get; } = [CoreZeptunLabel, CoreSingboxLabel];
 
+    [Reactive] public partial bool IsZeptunCore { get; set; } = true;
+    [Reactive] public partial bool IsSingboxCore { get; set; } = false;
+
     [Reactive] public partial bool IsZeptunSelected { get; set; } = true;
 
     [Reactive] public partial string ZeptunInterfaceName { get; set; } = "zeptun0";
@@ -36,8 +39,10 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         _config.TunnelingItem ??= new();
         _settings = JsonUtils.DeepCopy(_config.TunnelingItem);
 
-        SelectedCore = _settings.SelectedCore == CoreSingboxLabel ? CoreSingboxLabel : CoreZeptunLabel;
-        IsZeptunSelected = SelectedCore == CoreZeptunLabel;
+        IsSingboxCore = _settings.SelectedCore == CoreSingboxLabel;
+        IsZeptunCore = !IsSingboxCore;
+        SelectedCore = IsSingboxCore ? CoreSingboxLabel : CoreZeptunLabel;
+        IsZeptunSelected = IsZeptunCore;
 
         ZeptunInterfaceName = string.IsNullOrWhiteSpace(_settings.ZeptunInterfaceName) ? "zeptun0" : _settings.ZeptunInterfaceName;
         ZeptunMtu = (_settings.ZeptunMtu > 0 && _settings.ZeptunMtu != 8500) ? _settings.ZeptunMtu : 1500;
@@ -48,10 +53,26 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         ZeptunFakeIp = _settings.ZeptunFakeIp;
         ExtraArguments = _settings.ExtraArguments;
 
-        this.WhenAnyValue(x => x.SelectedCore)
-            .Subscribe(core =>
+        this.WhenAnyValue(x => x.IsZeptunCore)
+            .Subscribe(isZeptun =>
             {
-                IsZeptunSelected = core == CoreZeptunLabel;
+                if (isZeptun)
+                {
+                    IsSingboxCore = false;
+                    SelectedCore = CoreZeptunLabel;
+                    IsZeptunSelected = true;
+                }
+            });
+
+        this.WhenAnyValue(x => x.IsSingboxCore)
+            .Subscribe(isSingbox =>
+            {
+                if (isSingbox)
+                {
+                    IsZeptunCore = false;
+                    SelectedCore = CoreSingboxLabel;
+                    IsZeptunSelected = false;
+                }
             });
 
         SaveCmd = ReactiveCommand.CreateFromTask(SaveAsync);
@@ -69,7 +90,7 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
             return;
         }
 
-        _settings.SelectedCore = SelectedCore == CoreSingboxLabel ? CoreSingboxLabel : CoreZeptunLabel;
+        _settings.SelectedCore = IsSingboxCore ? CoreSingboxLabel : CoreZeptunLabel;
         _settings.ZeptunInterfaceName = string.IsNullOrWhiteSpace(ZeptunInterfaceName) ? "zeptun0" : ZeptunInterfaceName.Trim();
         _settings.ZeptunMtu = ZeptunMtu;
         _settings.ZeptunStack = string.IsNullOrWhiteSpace(ZeptunStack) ? "userspace" : ZeptunStack.Trim();
