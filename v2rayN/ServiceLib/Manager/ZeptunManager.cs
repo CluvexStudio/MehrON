@@ -75,6 +75,10 @@ public sealed class ZeptunManager
             {
                 await AppManager.Instance.AppExitAsync(true);
             }
+            else
+            {
+                await SafeNotifyAsync(updateFunc, true, "Could not elevate to Administrator automatically. Please restart MehrN manually as Administrator (Right-click MehrN -> Run as administrator).");
+            }
             return false;
         }
 
@@ -86,7 +90,7 @@ public sealed class ZeptunManager
         }
 
         var interfaceName = string.IsNullOrWhiteSpace(item?.ZeptunInterfaceName) ? "zeptun0" : item.ZeptunInterfaceName.Trim();
-        var mtu = item?.ZeptunMtu > 0 ? item.ZeptunMtu : 8500;
+        var mtu = (item?.ZeptunMtu > 0 && item.ZeptunMtu != 8500) ? item.ZeptunMtu : 1500;
         var stack = string.IsNullOrWhiteSpace(item?.ZeptunStack) ? "userspace" : item.ZeptunStack.Trim();
 
         var arguments = $"run --tun {interfaceName} --mtu {mtu} --socks5 127.0.0.1:{socksPort} --stack {stack}";
@@ -94,24 +98,75 @@ public sealed class ZeptunManager
         {
             arguments += " --auto-route";
         }
+        if (item?.ZeptunStrictRoute ?? true)
+        {
+            arguments += " --strict-route";
+        }
 
         if (!string.IsNullOrWhiteSpace(item?.ExtraArguments))
         {
             arguments += $" {item.ExtraArguments.Trim()}";
         }
 
+        var errorLogs = new List<string>();
+        Func<bool, string, Task> capturedUpdateFunc = async (isError, msg) =>
+        {
+            if (!string.IsNullOrWhiteSpace(msg))
+            {
+                lock (errorLogs)
+                {
+                    errorLogs.Add(msg.Trim());
+                    if (errorLogs.Count > 30)
+                    {
+                        errorLogs.RemoveAt(0);
+                    }
+                }
+            }
+
+            if (updateFunc != null)
+            {
+                await updateFunc(isError, msg);
+            }
+        };
+
         var workingDir = Path.GetDirectoryName(exePath) ?? AppDomain.CurrentDomain.BaseDirectory;
 
         try
         {
             await SafeNotifyAsync(updateFunc, false, $"Starting Zeptun TUN engine ({exePath} {arguments})...");
-            _process = new ProcessService(exePath, arguments, workingDir, true, false, null, updateFunc);
+            _process = new ProcessService(exePath, arguments, workingDir, true, false, null, capturedUpdateFunc);
             await _process.StartAsync();
 
-            await Task.Delay(300);
+            for (var i = 0; i < 15; i++)
+            {
+                await Task.Delay(100);
+                if (_process.HasExited)
+                {
+                    break;
+                }
+            }
+
             if (_process.HasExited)
             {
-                throw new InvalidOperationException("The Zeptun process exited unexpectedly shortly after launch. Check permissions or command-line parameters.");
+                await Task.Delay(150);
+                string outputDetails;
+                lock (errorLogs)
+                {
+                    outputDetails = errorLogs.Count > 0 ? string.Join(Environment.NewLine, errorLogs) : string.Empty;
+                }
+
+                var isPermission = outputDetails.Contains("error 5", StringComparison.OrdinalIgnoreCase)
+                    || outputDetails.Contains("PermissionDenied", StringComparison.OrdinalIgnoreCase)
+                    || outputDetails.Contains("cannot open or create adapter", StringComparison.OrdinalIgnoreCase)
+                    || (!Utils.IsAdministrator() && Utils.IsWindows());
+
+                if (isPermission)
+                {
+                    throw new InvalidOperationException($"Zeptun TUN requires Administrator privileges to create network adapters. Please run MehrN as Administrator (Right click -> Run as administrator).\n{outputDetails}");
+                }
+
+                var code = _process.ExitCode;
+                throw new InvalidOperationException($"Zeptun process exited unexpectedly (Exit code: {code}). {(string.IsNullOrWhiteSpace(outputDetails) ? "Check command-line arguments or system logs." : outputDetails)}");
             }
 
             _isRunning = true;
