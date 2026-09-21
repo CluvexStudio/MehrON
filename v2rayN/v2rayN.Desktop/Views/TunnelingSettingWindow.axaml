@@ -22,10 +22,19 @@
                 <TextBlock TextWrapping="Wrap" Opacity="0.8"
                            Text="Select the network TUN engine used when TUN mode is enabled. Choose between the standard built-in core (sing-box) or Zeptun (high-performance userspace tun2socks written in Zig)." />
 
-                <Grid ColumnDefinitions="160,*" ColumnSpacing="12">
-                    <TextBlock VerticalAlignment="Center" FontWeight="Medium" Text="Tunneling Engine" />
-                    <ComboBox x:Name="cmbCores" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
-                </Grid>
+                <Border BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12">
+                    <StackPanel Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Tunneling Engine:" />
+                        <RadioButton x:Name="radZeptun"
+                                     Content="Zeptun (Noisemux/zeptun) — High-Performance Zig TUN (Recommended)"
+                                     GroupName="TunEngineGroup"
+                                     IsChecked="{Binding IsZeptunCore}" />
+                        <RadioButton x:Name="radSingbox"
+                                     Content="Built-in (sing-box) — Standard TUN engine"
+                                     GroupName="TunEngineGroup"
+                                     IsChecked="{Binding IsSingboxCore}" />
+                    </StackPanel>
+                </Border>
 
                 <Border x:Name="borderZeptun" BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12" IsVisible="{Binding IsZeptunSelected}">
                     <StackPanel Spacing="10">

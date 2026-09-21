@@ -104,6 +104,7 @@ public class CoreManager
 
         if (_config.TunModeItem.EnableTun && _config.TunnelingItem?.SelectedCore == TunnelingItem.CoreZeptun)
         {
+            await UpdateFunc(false, "[TUN] Activating Zeptun TUN engine...");
             var socksPort = AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
             await WaitForPort(socksPort);
             await ZeptunManager.Instance.StartAsync(socksPort, node, _updateFunc);

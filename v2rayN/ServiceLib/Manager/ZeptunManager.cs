@@ -150,6 +150,10 @@ public sealed class ZeptunManager
         {
             arguments += " --strict-route";
         }
+        if (!arguments.Contains("--log-level") && !(item?.ExtraArguments?.Contains("--log-level") ?? false))
+        {
+            arguments += " --log-level info";
+        }
         if ((item?.ZeptunDnsHijack ?? true) && !(item?.ExtraArguments?.Contains("--dns-hijack") ?? false))
         {
             arguments += " --dns-hijack";
