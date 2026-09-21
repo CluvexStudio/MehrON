@@ -104,7 +104,6 @@
                         <MenuItem x:Name="menuSniSpoofingSetting" Header="SNI Spoofing Settings" />
                         <MenuItem x:Name="menuMhrSetting" Header="MHR Settings" />
                         <MenuItem x:Name="menuStopMhr" Header="Stop MHR" />
-                        <MenuItem x:Name="menuTunnelingSetting" Header="Tunneling Core Settings" />
                         <Separator />
                         <MenuItem x:Name="menuLcCloudflareScanner" Header="{x:Static resx:ResUI.menuCloudflareScanner}" />
                     </MenuItem>

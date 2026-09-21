@@ -276,10 +276,6 @@
                                     x:Name="menuStopMhr"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="Stop MHR" />
-                                <MenuItem
-                                    x:Name="menuTunnelingSetting"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="Tunneling Core Settings" />
                                 <Separator Margin="-40,5" />
                                 <MenuItem
                                     x:Name="menuLcCloudflareScanner"

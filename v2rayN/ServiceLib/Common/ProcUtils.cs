@@ -55,7 +55,7 @@ public static class ProcUtils
                 UseShellExecute = true,
                 Arguments = Global.RebootAs,
                 WorkingDirectory = Utils.StartupPath(),
-                FileName = Utils.GetExePath(),
+                FileName = Utils.GetExePath().AppendQuotes(),
                 Verb = blAdmin ? "runas" : null,
             };
             return Process.Start(startInfo) != null;

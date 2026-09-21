@@ -40,7 +40,6 @@ public class SimpleViewLocator : IDataTemplate
         RegisterViewFactory<SubEditViewModel, SubEditWindow>();
         RegisterViewFactory<SubSettingViewModel, SubSettingWindow>();
         RegisterViewFactory<ThemeSettingViewModel, ThemeSettingView>();
-        RegisterViewFactory<TunnelingSettingViewModel, TunnelingSettingWindow>();
     }
 
     public static SimpleViewLocator Instance => _instance.Value;

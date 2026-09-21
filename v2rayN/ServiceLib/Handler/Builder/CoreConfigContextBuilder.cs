@@ -42,7 +42,7 @@ public class CoreConfigContextBuilder
             AllProxiesMap = [],
             AppConfig = config,
             FullConfigTemplate = await AppManager.Instance.GetFullConfigTemplateItem(coreType),
-            IsTunEnabled = config.TunModeItem.EnableTun && (config.TunnelingItem?.SelectedCore != TunnelingItem.CoreZeptun),
+            IsTunEnabled = config.TunModeItem.EnableTun,
             SimpleDnsItem = config.SimpleDNSItem,
             ProtectDomainList = [],
             RawDnsItem = await AppManager.Instance.GetDNSItem(coreType),
