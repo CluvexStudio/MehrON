@@ -16,7 +16,6 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
 
     [Reactive] public partial bool IsZeptunSelected { get; set; }
 
-    [Reactive] public partial string ZeptunPath { get; set; } = string.Empty;
     [Reactive] public partial string ZeptunInterfaceName { get; set; } = "zeptun0";
     [Reactive] public partial int ZeptunMtu { get; set; } = 8500;
     [Reactive] public partial string ZeptunStack { get; set; } = "userspace";
@@ -26,12 +25,8 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial bool ZeptunStrictRoute { get; set; } = true;
     [Reactive] public partial string ExtraArguments { get; set; } = string.Empty;
 
-    [Reactive] public partial bool IsZeptunFound { get; set; }
-    [Reactive] public partial string ZeptunStatusText { get; set; } = string.Empty;
-
     public ReactiveCommand<RxVoid, RxVoid> SaveCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> OpenZeptunUrlCmd { get; }
-    public ReactiveCommand<RxVoid, RxVoid> RefreshZeptunStatusCmd { get; }
 
     public TunnelingSettingViewModel()
     {
@@ -42,7 +37,6 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         SelectedCore = _settings.SelectedCore == CoreZeptunLabel ? CoreZeptunLabel : CoreSingboxLabel;
         IsZeptunSelected = SelectedCore == CoreZeptunLabel;
 
-        ZeptunPath = _settings.ZeptunPath;
         ZeptunInterfaceName = string.IsNullOrWhiteSpace(_settings.ZeptunInterfaceName) ? "zeptun0" : _settings.ZeptunInterfaceName;
         ZeptunMtu = _settings.ZeptunMtu > 0 ? _settings.ZeptunMtu : 8500;
         ZeptunStack = string.IsNullOrWhiteSpace(_settings.ZeptunStack) ? "userspace" : _settings.ZeptunStack;
@@ -56,38 +50,11 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
                 IsZeptunSelected = core == CoreZeptunLabel;
             });
 
-        this.WhenAnyValue(x => x.ZeptunPath)
-            .Subscribe(_ => UpdateZeptunStatus());
-
         SaveCmd = ReactiveCommand.CreateFromTask(SaveAsync);
         OpenZeptunUrlCmd = ReactiveCommand.Create(() =>
         {
             ProcUtils.ProcessStart(ZeptunManager.ProjectUrl);
         });
-        RefreshZeptunStatusCmd = ReactiveCommand.Create(UpdateZeptunStatus);
-
-        UpdateZeptunStatus();
-    }
-
-    public void UpdateZeptunStatus()
-    {
-        // Temporarily assign ZeptunPath in item to test detection
-        _settings.ZeptunPath = ZeptunPath?.Trim() ?? string.Empty;
-        var existingPath = _config.TunnelingItem.ZeptunPath;
-        _config.TunnelingItem.ZeptunPath = _settings.ZeptunPath;
-        var foundPath = ZeptunManager.GetZeptunExePath();
-        _config.TunnelingItem.ZeptunPath = existingPath;
-
-        if (!string.IsNullOrEmpty(foundPath) && File.Exists(foundPath))
-        {
-            IsZeptunFound = true;
-            ZeptunStatusText = $"Detected: {Path.GetFileName(foundPath)} ({foundPath})";
-        }
-        else
-        {
-            IsZeptunFound = false;
-            ZeptunStatusText = "Not detected. Place zeptun.exe in bin/zeptun/ or specify its custom path.";
-        }
     }
 
     private async Task SaveAsync()
@@ -99,7 +66,6 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         }
 
         _settings.SelectedCore = SelectedCore == CoreZeptunLabel ? CoreZeptunLabel : CoreSingboxLabel;
-        _settings.ZeptunPath = ZeptunPath?.Trim() ?? string.Empty;
         _settings.ZeptunInterfaceName = string.IsNullOrWhiteSpace(ZeptunInterfaceName) ? "zeptun0" : ZeptunInterfaceName.Trim();
         _settings.ZeptunMtu = ZeptunMtu;
         _settings.ZeptunStack = string.IsNullOrWhiteSpace(ZeptunStack) ? "userspace" : ZeptunStack.Trim();

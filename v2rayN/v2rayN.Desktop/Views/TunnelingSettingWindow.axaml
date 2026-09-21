@@ -33,25 +33,18 @@
                         <TextBlock TextWrapping="Wrap" Opacity="0.8"
                                    Text="Zeptun is a zero-dependency, ultra-fast tun2socks implementation built in Zig with elastic multi-queue workers." />
 
-                        <Grid ColumnDefinitions="140,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Executable Path" />
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ZeptunPath}" />
-                            <Button Grid.Row="0" Grid.Column="2" x:Name="btnBrowseZeptun" Content="..." Width="40" />
+                        <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Interface Name" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ZeptunInterfaceName}" />
 
-                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Status" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap" FontStyle="Italic" Opacity="0.85" Text="{Binding ZeptunStatusText}" />
+                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="MTU" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="576" Maximum="65535" Value="{Binding ZeptunMtu}" />
 
-                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Interface Name" />
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ZeptunInterfaceName}" />
+                            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Network Stack" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack}" />
 
-                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="MTU" />
-                            <NumericUpDown Grid.Row="3" Grid.Column="1" Minimum="576" Maximum="65535" Value="{Binding ZeptunMtu}" />
-
-                            <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="Network Stack" />
-                            <ComboBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack}" />
-
-                            <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="Extra Arguments" />
-                            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding ExtraArguments}" />
+                            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Extra Arguments" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ExtraArguments}" />
                         </Grid>
 
                         <StackPanel Orientation="Horizontal" Spacing="16">
