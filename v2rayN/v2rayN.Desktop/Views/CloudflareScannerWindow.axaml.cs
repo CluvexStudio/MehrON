@@ -16,7 +16,6 @@ public partial class CloudflareScannerWindow : WindowBase<CloudflareScannerViewM
             this.BindCommand(ViewModel, vm => vm.StopScanCmd, v => v.btnStop).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.CopySelectedCmd, v => v.btnCopySelected).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.CopyAllWorkingCmd, v => v.btnCopyAllWorking).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm.ApplyToProfileCmd, v => v.btnApply).DisposeWith(disposables);
 
             ViewModel.SetClipboardDataInteraction.RegisterHandler(async interaction =>
             {

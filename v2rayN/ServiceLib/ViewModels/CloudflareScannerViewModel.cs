@@ -10,7 +10,6 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
     public Interaction<string, RxVoid> SetClipboardDataInteraction { get; } = new();
 
     public BulkObservableCollection<CloudflareIpResultItem> Results { get; } = [];
-    public BulkObservableCollection<ProfileItem> Profiles { get; } = [];
 
     [Reactive]
     public partial int Port { get; set; } = 443;
@@ -39,9 +38,6 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
     public partial CloudflareIpResultItem? SelectedResult { get; set; }
 
     [Reactive]
-    public partial ProfileItem? SelectedProfile { get; set; }
-
-    [Reactive]
     public partial bool IsScanning { get; set; }
 
     [Reactive]
@@ -60,14 +56,11 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
     public ReactiveCommand<RxVoid, RxVoid> StopScanCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> CopySelectedCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> CopyAllWorkingCmd { get; }
-    public ReactiveCommand<RxVoid, RxVoid> ApplyToProfileCmd { get; }
 
     private CancellationTokenSource? _cts;
 
     public CloudflareScannerViewModel()
     {
-        _config = AppManager.Instance.Config;
-
         StartScanCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await StartScanAsync();
@@ -87,25 +80,6 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
         {
             await CopyAllWorkingAsync();
         });
-
-        ApplyToProfileCmd = ReactiveCommand.CreateFromTask(async () =>
-        {
-            await ApplyToProfileAsync();
-        });
-
-        _ = Init();
-    }
-
-    public async Task Init()
-    {
-        var allProfiles = await AppManager.Instance.ProfileItems(string.Empty) ?? [];
-        var validProfiles = allProfiles
-            .Where(p => !p.ConfigType.IsGroupType() && p.ConfigType != EConfigType.Custom)
-            .OrderBy(p => p.Remarks)
-            .ToList();
-
-        Profiles.AddRange(validProfiles);
-        SelectedProfile = Profiles.FirstOrDefault(p => p.IndexId == _config.IndexId) ?? Profiles.FirstOrDefault();
     }
 
     public async Task StartScanAsync()
@@ -218,41 +192,5 @@ public partial class CloudflareScannerViewModel : MyReactiveObject, ICloseable
         }
         await SetClipboardDataInteraction.HandleSafe(string.Join(Environment.NewLine, workingIps));
         NoticeManager.Instance.Enqueue(ResUI.OperationSuccess);
-    }
-
-    private async Task ApplyToProfileAsync()
-    {
-        if (SelectedResult == null || !SelectedResult.IsSuccess)
-        {
-            NoticeManager.Instance.Enqueue(ResUI.TbPleaseSelectIp);
-            return;
-        }
-        if (SelectedProfile == null)
-        {
-            NoticeManager.Instance.Enqueue(ResUI.TbPleaseSelectProfile);
-            return;
-        }
-
-        var originalAddress = SelectedProfile.Address;
-        var transport = SelectedProfile.GetTransportExtra();
-        if (transport.Host.IsNullOrEmpty() && !IPAddress.TryParse(originalAddress, out _))
-        {
-            SelectedProfile.SetTransportExtra(transport with { Host = originalAddress, GrpcAuthority = originalAddress });
-        }
-        if (SelectedProfile.Sni.IsNullOrEmpty() && !IPAddress.TryParse(originalAddress, out _))
-        {
-            SelectedProfile.Sni = originalAddress;
-        }
-
-        SelectedProfile.Address = SelectedResult.Ip;
-
-        if (await ConfigHandler.AddServerCommon(_config, SelectedProfile) == 0)
-        {
-            NoticeManager.Instance.Enqueue(ResUI.TbApplySuccess);
-        }
-        else
-        {
-            NoticeManager.Instance.Enqueue(ResUI.OperationFailed);
-        }
     }
 }
