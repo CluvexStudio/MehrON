@@ -346,7 +346,7 @@ public class TunnelingItem
     public string SelectedCore { get; set; } = CoreSingbox;
     public string ZeptunPath { get; set; } = string.Empty;
     public string ZeptunInterfaceName { get; set; } = "zeptun0";
-    public int ZeptunMtu { get; set; } = 8500;
+    public int ZeptunMtu { get; set; } = 1500;
     public string ZeptunStack { get; set; } = "userspace";
     public bool ZeptunAutoRoute { get; set; } = true;
     public bool ZeptunStrictRoute { get; set; } = true;
