@@ -114,6 +114,12 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                     AppEvents.HasUpdateNotified.Publish(false);
                 }).DisposeWith(disposables);
 
+            ViewModel.ShowYesNoInteraction.RegisterHandler(async interaction =>
+            {
+                var result = await UI.ShowYesNo(interaction.Input);
+                interaction.SetOutput(result == ButtonResult.Yes);
+            }).DisposeWith(disposables);
+
             ViewModel.ReadTextFromClipboardInteraction.RegisterHandler(async interaction =>
             {
                 var result = await AvaUtils.GetClipboardData(this);
