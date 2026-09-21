@@ -35,6 +35,7 @@ public class SimpleViewLocator : IDataTemplate
         RegisterViewFactory<RoutingRuleDetailsViewModel, RoutingRuleDetailsWindow>();
         RegisterViewFactory<RoutingRuleSettingViewModel, RoutingRuleSettingWindow>();
         RegisterViewFactory<RoutingSettingViewModel, RoutingSettingWindow>();
+        RegisterViewFactory<SettingsCenterViewModel, SettingsCenterWindow>();
         RegisterViewFactory<SniSpoofingSettingViewModel, SniSpoofingSettingWindow>();
         RegisterViewFactory<StatusBarViewModel, StatusBarView>();
         RegisterViewFactory<SubEditViewModel, SubEditWindow>();

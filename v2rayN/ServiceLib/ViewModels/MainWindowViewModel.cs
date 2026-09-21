@@ -52,6 +52,7 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> SubGroupUpdateViaProxyCmd { get; }
 
     //Setting
+    public ReactiveCommand<RxVoid, RxVoid> SettingsCenterCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> OptionSettingCmd { get; }
 
     public ReactiveCommand<RxVoid, RxVoid> RoutingSettingCmd { get; }
@@ -210,6 +211,10 @@ public partial class MainWindowViewModel : MyReactiveObject
         });
 
         //Setting
+        SettingsCenterCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await SettingsCenterAsync();
+        });
         OptionSettingCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await OptionSettingAsync();
@@ -657,6 +662,49 @@ public partial class MainWindowViewModel : MyReactiveObject
     #endregion Subscription
 
     #region Setting
+
+    private async Task SettingsCenterAsync()
+    {
+        var hubViewModel = new SettingsCenterViewModel();
+        if (await AppManager.Instance.WindowDialog.ShowDialogAsync(hubViewModel) != true)
+        {
+            return;
+        }
+
+        var changed = hubViewModel.ChangedSectionKeys;
+        if (changed.Count == 0)
+        {
+            return;
+        }
+
+        if (changed.Contains(SettingsCenterViewModel.KeyRouting))
+        {
+            await ConfigHandler.InitBuiltinRouting(_config);
+            RxSchedulers.MainThreadScheduler.Schedule(async () =>
+            {
+                await StatusBarViewModel.RefreshRoutingsMenu();
+            });
+        }
+        if (changed.Contains(SettingsCenterViewModel.KeySub))
+        {
+            await RefreshSubscriptions();
+        }
+        if (changed.Contains(SettingsCenterViewModel.KeyOption))
+        {
+            MainGirdOrientation = _config.UiItem.MainGirdOrientation;
+            RxSchedulers.MainThreadScheduler.Schedule(async () =>
+            {
+                await StatusBarViewModel.InboundDisplayStatus();
+            });
+        }
+        if (changed.Contains(SettingsCenterViewModel.KeyOption)
+            || changed.Contains(SettingsCenterViewModel.KeyRouting)
+            || changed.Contains(SettingsCenterViewModel.KeyDNS)
+            || changed.Contains(SettingsCenterViewModel.KeyTemplate))
+        {
+            await Reload();
+        }
+    }
 
     private async Task OptionSettingAsync()
     {
