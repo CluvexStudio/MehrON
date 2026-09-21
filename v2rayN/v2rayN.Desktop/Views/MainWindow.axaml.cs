@@ -35,8 +35,6 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         this.WhenActivated(disposables =>
         {
-            this.BindCommand(ViewModel, vm => vm.ToggleConnectCmd, v => v.btnNavConnect).DisposeWith(disposables);
-
             //servers
             this.BindCommand(ViewModel, vm => vm.AddVmessServerCmd, v => v.menuAddVmessServer).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.AddVlessServerCmd, v => v.menuAddVlessServer).DisposeWith(disposables);

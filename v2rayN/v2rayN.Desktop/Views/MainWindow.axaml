@@ -22,21 +22,6 @@
         <DockPanel>
             <DockPanel Margin="{StaticResource Margin8}" DockPanel.Dock="Top">
                 <ContentControl x:Name="conTheme" DockPanel.Dock="Right" />
-                <Button
-                    x:Name="btnNavConnect"
-                    DockPanel.Dock="Right"
-                    Margin="8,0"
-                    VerticalAlignment="Center"
-                    Classes="ConnectButton"
-                    Classes.connected="{Binding IsConnected}"
-                    Command="{Binding ToggleConnectCmd}"
-                    ToolTip.Tip="Toggle TUN Connection">
-                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                        <Ellipse Width="8" Height="8" IsVisible="{Binding !IsConnected}" Fill="#94A3B8" />
-                        <Ellipse Width="8" Height="8" IsVisible="{Binding IsConnected}" Fill="#34D399" />
-                        <TextBlock Text="{Binding ConnectButtonText}" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
                 <Border
                     Width="28"
                     Height="28"
