@@ -243,6 +243,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.TAG_NAME }}
+          target_commitish: ${{ github.ref_name }}
           name: MehrN ${{ env.TAG_NAME }}
           body: |
             ## MehrN ${{ env.TAG_NAME }}
