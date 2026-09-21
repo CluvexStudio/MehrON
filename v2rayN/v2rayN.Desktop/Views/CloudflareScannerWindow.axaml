@@ -27,10 +27,14 @@
             BorderThickness="1"
             CornerRadius="6"
             DockPanel.Dock="Bottom">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <!-- Left: Copy Actions -->
+            <DockPanel>
+                <Button
+                    x:Name="btnClose"
+                    Width="100"
+                    Content="{x:Static resx:ResUI.TbCancel}"
+                    DockPanel.Dock="Right"
+                    IsCancel="True" />
                 <StackPanel
-                    Grid.Column="0"
                     VerticalAlignment="Center"
                     Orientation="Horizontal"
                     Spacing="8">
@@ -41,40 +45,7 @@
                         x:Name="btnCopyAllWorking"
                         Content="{x:Static resx:ResUI.TbCopyAllWorking}" />
                 </StackPanel>
-
-                <!-- Center: Server Selection & Apply -->
-                <StackPanel
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="8">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontWeight="Medium"
-                        Text="{x:Static resx:ResUI.menuServers}" />
-                    <ComboBox
-                        Width="220"
-                        DisplayMemberBinding="{Binding Remarks}"
-                        ItemsSource="{Binding Profiles}"
-                        SelectedItem="{Binding SelectedProfile}" />
-                    <Button
-                        x:Name="btnApply"
-                        FontWeight="SemiBold"
-                        Content="{x:Static resx:ResUI.TbApplyToProfile}" />
-                </StackPanel>
-
-                <!-- Right: Cancel / Close -->
-                <Button
-                    x:Name="btnClose"
-                    Grid.Column="2"
-                    Width="100"
-                    Margin="24,0,0,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Content="{x:Static resx:ResUI.TbCancel}"
-                    IsCancel="True" />
-            </Grid>
+            </DockPanel>
         </Border>
 
         <!-- Top Configuration & Controls -->
