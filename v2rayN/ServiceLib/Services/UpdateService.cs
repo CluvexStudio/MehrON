@@ -190,7 +190,35 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
             }
 
             var gitHubReleases = JsonUtils.Deserialize<List<GitHubRelease>>(result);
-            var gitHubRelease = preRelease ? gitHubReleases?.First() : gitHubReleases?.First(r => r.Prerelease == false);
+            GitHubRelease? gitHubRelease;
+            if (type == ECoreType.v2rayN)
+            {
+                if (preRelease)
+                {
+                    // Strictly match releases originating from the Beta branch
+                    gitHubRelease = gitHubReleases?
+                        .Where(r => (r.TagName?.EndsWith("-beta", StringComparison.OrdinalIgnoreCase) == true) ||
+                                    string.Equals(r.TargetCommitish, "Beta", StringComparison.OrdinalIgnoreCase))
+                        .Select(r => new { Release = r, IsValid = SemanticVersion.TryParse(r.TagName, out var v), Version = v })
+                        .Where(x => x.IsValid)
+                        .MaxBy(x => x.Version)?
+                        .Release;
+                }
+                else
+                {
+                    // Match only official stable releases (exclude pre-releases and dev/test tags)
+                    gitHubRelease = gitHubReleases?
+                        .Where(r => !r.Prerelease && !(r.TagName ?? "").Contains('-'))
+                        .Select(r => new { Release = r, IsValid = SemanticVersion.TryParse(r.TagName, out var v), Version = v })
+                        .Where(x => x.IsValid)
+                        .MaxBy(x => x.Version)?
+                        .Release;
+                }
+            }
+            else
+            {
+                gitHubRelease = preRelease ? gitHubReleases?.FirstOrDefault() : gitHubReleases?.FirstOrDefault(r => r.Prerelease == false);
+            }
             tagName = gitHubRelease?.TagName;
             //var body = gitHubRelease?.Body;
 
