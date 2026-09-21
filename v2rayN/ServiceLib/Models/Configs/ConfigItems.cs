@@ -336,21 +336,3 @@ public class MhrItem
     // on every start.
     public string ProfileId { get; set; } = string.Empty;
 }
-
-[Serializable]
-public class TunnelingItem
-{
-    public const string CoreSingbox = "Built-in (sing-box)";
-    public const string CoreZeptun = "Zeptun (Noisemux/zeptun)";
-
-    public string SelectedCore { get; set; } = CoreSingbox;
-    public string ZeptunPath { get; set; } = string.Empty;
-    public string ZeptunInterfaceName { get; set; } = "zeptun0";
-    public int ZeptunMtu { get; set; } = 1500;
-    public string ZeptunStack { get; set; } = "userspace";
-    public bool ZeptunAutoRoute { get; set; } = true;
-    public bool ZeptunStrictRoute { get; set; } = false;
-    public bool ZeptunDnsHijack { get; set; } = true;
-    public bool ZeptunFakeIp { get; set; } = true;
-    public string ExtraArguments { get; set; } = string.Empty;
-}

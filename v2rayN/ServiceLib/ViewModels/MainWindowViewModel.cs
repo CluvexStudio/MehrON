@@ -63,7 +63,6 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> SniSpoofingSettingCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> MhrSettingCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> StopMhrCmd { get; }
-    public ReactiveCommand<RxVoid, RxVoid> TunnelingSettingCmd { get; }
 
     //Presets
     public ReactiveCommand<RxVoid, RxVoid> RegionalPresetDefaultCmd { get; }
@@ -264,15 +263,6 @@ public partial class MainWindowViewModel : MyReactiveObject
         {
             await MhrManager.Instance.StopAndDisableAsync();
             NoticeManager.Instance.Enqueue("MHR stopped and the system proxy was cleared.");
-        });
-        TunnelingSettingCmd = ReactiveCommand.CreateFromTask(async () =>
-        {
-            var viewModel = new TunnelingSettingViewModel();
-            if (await AppManager.Instance.WindowDialog.ShowDialogAsync(viewModel) == true)
-            {
-                NoticeManager.Instance.Enqueue(ResUI.OperationSuccess);
-                await Reload();
-            }
         });
 
         ReloadCmd = ReactiveCommand.CreateFromTask(async () =>

@@ -183,22 +183,6 @@ jobs:
             Copy-Item -Path $mihomoExe.FullName -Destination "$binDir/mihomo/$($mihomoExe.Name)" -Force
           }
 
-          # Download latest Zeptun (v1.0.0)
-          Write-Host "Downloading Zeptun engine (v1.0.0)..."
-          New-Item -ItemType Directory -Path "$binDir/zeptun" -Force | Out-Null
-          $zeptunZip = "zeptun-latest.zip"
-          curl.exe -L -s -o $zeptunZip "https://github.com/Noisemux/zeptun/releases/download/v1.0.0/zeptun-windows-x86_64.zip"
-          Expand-Archive -Path $zeptunZip -DestinationPath "zeptun-extracted" -Force
-          $zeptunExe = Get-ChildItem -Path "zeptun-extracted" -Recurse -Filter "zeptun.exe" | Select-Object -First 1
-          if ($zeptunExe) {
-            Copy-Item -Path $zeptunExe.FullName -Destination "$binDir/zeptun/zeptun.exe" -Force
-            $zeptunDir = $zeptunExe.DirectoryName
-            if (Test-Path "$zeptunDir/wintun.dll") {
-              Copy-Item -Path "$zeptunDir/wintun.dll" -Destination "$binDir/zeptun/" -Force
-            }
-          }
-          Remove-Item -Path $zeptunZip, "zeptun-extracted" -Recurse -Force -ErrorAction SilentlyContinue
-
           # Verify core binaries exist and print versions
           if (-not (Test-Path "$binDir/xray/xray.exe")) {
             throw "xray.exe was not found or copied into bin/xray/"
@@ -208,9 +192,6 @@ jobs:
           }
           if (-not (Test-Path "$binDir/mihomo/mihomo.exe")) {
             throw "mihomo.exe was not found or copied into bin/mihomo/"
-          }
-          if (-not (Test-Path "$binDir/zeptun/zeptun.exe")) {
-            throw "zeptun.exe was not found in bin/zeptun/"
           }
           if (-not (Test-Path "$binDir/sni-spoofing/sni-spoof-rs.exe")) {
             throw "sni-spoof-rs.exe was not found in bin/sni-spoofing/"
@@ -265,7 +246,7 @@ jobs:
             ## MehrN ${{ env.TAG_NAME }}
             Automated build produced by GitHub Actions.
             - Platform: Windows x64 (Self-Contained Portable)
-            - Includes Xray v26.9.13, sing-box v1.14.1, mihomo v1.19.31, Zeptun v1.0.0, and optimized routing rules.
+            - Includes Xray v26.9.13, sing-box v1.14.1, mihomo v1.19.31, and optimized routing rules.
           files: |
             MehrN-windows-64.zip
             MehrN-windows-64-desktop.zip

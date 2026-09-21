@@ -76,7 +76,6 @@ public partial class MainWindow
             this.BindCommand(ViewModel, vm => vm.SniSpoofingSettingCmd, v => v.menuSniSpoofingSetting).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.MhrSettingCmd, v => v.menuMhrSetting).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.StopMhrCmd, v => v.menuStopMhr).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm.TunnelingSettingCmd, v => v.menuTunnelingSetting).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetDefaultCmd, v => v.menuRegionalPresetsDefault).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetRussiaCmd, v => v.menuRegionalPresetsRussia).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetIranCmd, v => v.menuRegionalPresetsIran).DisposeWith(disposables);

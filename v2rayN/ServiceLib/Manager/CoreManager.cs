@@ -91,24 +91,15 @@ public class CoreManager
         await UpdateFunc(false, $"{Utils.GetRuntimeInfo()}");
         await UpdateFunc(false, string.Format(ResUI.StartService, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
 
-        if (Utils.IsWindows() && (mainContext?.IsTunEnabled == true || preContext?.IsTunEnabled == true || (_config.TunModeItem.EnableTun && _config.TunnelingItem?.SelectedCore == TunnelingItem.CoreZeptun)))
+        if (Utils.IsWindows() && (mainContext?.IsTunEnabled == true || preContext?.IsTunEnabled == true))
         {
             await Task.Delay(100);
             await WindowsUtils.RemoveTunDevice();
         }
 
-        await ZeptunManager.Instance.StopAsync();
         await CoreStart(mainContext);
         await WaitForProxyPort(preContext);
         await CoreStartPreService(preContext);
-
-        if (_config.TunModeItem.EnableTun && _config.TunnelingItem?.SelectedCore == TunnelingItem.CoreZeptun)
-        {
-            await UpdateFunc(false, "[TUN] Activating Zeptun TUN engine...");
-            var socksPort = AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
-            await WaitForPort(socksPort);
-            await ZeptunManager.Instance.StartAsync(socksPort, node, _updateFunc);
-        }
 
         AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
 
@@ -184,7 +175,6 @@ public class CoreManager
             }
 
             await SniSpoofingManager.Instance.StopAsync();
-            await ZeptunManager.Instance.StopAsync();
         }
         catch (Exception ex)
         {
@@ -293,67 +283,6 @@ public class CoreManager
                 catch (OperationCanceledException)
                 {
                     Logging.SaveLog($"WaitForProxyPort Timeout waiting for proxy port {port} to be ready.");
-                    return;
-                }
-            }
-            catch
-            {
-                // Ignore other exceptions and continue
-            }
-        }
-    }
-
-    private static async Task WaitForPort(int port)
-    {
-        if (port <= 0)
-        {
-            return;
-        }
-
-        using var rootCts = new CancellationTokenSource(Global.LocalFetch);
-        var rootToken = rootCts.Token;
-
-        ReadOnlyMemory<byte> greeting = new byte[] { 0x05, 0x01, 0x00 };
-        var buf = new byte[2];
-
-        while (!rootToken.IsCancellationRequested)
-        {
-            using var tcp = new TcpClient();
-            using var attemptCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(rootToken, attemptCts.Token);
-            var linkedToken = linkedCts.Token;
-            try
-            {
-                await tcp.ConnectAsync(Global.Loopback, port, linkedToken);
-                var stream = tcp.GetStream();
-
-                await stream.WriteAsync(greeting, linkedToken);
-
-                var read = await stream.ReadAsync(buf.AsMemory(0, 2), linkedToken);
-
-                if (read == 2 && buf[0] == 0x05)
-                {
-                    return;
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                if (!rootToken.IsCancellationRequested)
-                {
-                    continue;
-                }
-                Logging.SaveLog($"WaitForPort Timeout waiting for port {port} to be ready.");
-                return;
-            }
-            catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionRefused)
-            {
-                try
-                {
-                    await Task.Delay(50, rootToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    Logging.SaveLog($"WaitForPort Timeout waiting for port {port} to be ready.");
                     return;
                 }
             }

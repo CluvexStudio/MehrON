@@ -36,7 +36,6 @@ public class SimpleViewLocator : IViewLocator
         Register<SubEditViewModel, SubEditWindow>();
         Register<SubSettingViewModel, SubSettingWindow>();
         Register<ThemeSettingViewModel, ThemeSettingView>();
-        Register<TunnelingSettingViewModel, TunnelingSettingWindow>();
     }
 
     public static SimpleViewLocator Instance => _instance.Value;
