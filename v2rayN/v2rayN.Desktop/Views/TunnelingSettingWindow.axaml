@@ -24,10 +24,10 @@
 
                 <Grid ColumnDefinitions="160,*" ColumnSpacing="12">
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Text="Tunneling Engine" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
+                    <ComboBox x:Name="cmbCores" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
                 </Grid>
 
-                <Border BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12" IsVisible="{Binding IsZeptunSelected}">
+                <Border x:Name="borderZeptun" BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12" IsVisible="{Binding IsZeptunSelected}">
                     <StackPanel Spacing="10">
                         <TextBlock FontWeight="SemiBold" Text="Zeptun Settings (Noisemux/zeptun)" />
                         <TextBlock TextWrapping="Wrap" Opacity="0.8"
@@ -35,24 +35,26 @@
 
                         <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Interface Name" />
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ZeptunInterfaceName}" />
+                            <TextBox x:Name="txtZeptunInterfaceName" Grid.Row="0" Grid.Column="1" Text="{Binding ZeptunInterfaceName}" />
 
                             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="MTU" />
-                            <NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="576" Maximum="65535" Value="{Binding ZeptunMtu}" />
+                            <NumericUpDown x:Name="numZeptunMtu" Grid.Row="1" Grid.Column="1" Minimum="576" Maximum="65535" Value="{Binding ZeptunMtu}" />
 
                             <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Network Stack" />
-                            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack, Mode=TwoWay}" />
+                            <ComboBox x:Name="cmbZeptunStack" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack, Mode=TwoWay}" />
 
                             <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Extra Arguments" />
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ExtraArguments}" />
+                            <TextBox x:Name="txtExtraArguments" Grid.Row="3" Grid.Column="1" Text="{Binding ExtraArguments}" />
                         </Grid>
 
-                        <StackPanel Orientation="Horizontal" Spacing="16">
-                            <CheckBox IsChecked="{Binding ZeptunAutoRoute}" Content="Auto-route system traffic into TUN" />
-                            <CheckBox IsChecked="{Binding ZeptunStrictRoute}" Content="Strict route protection" />
+                        <StackPanel Orientation="Vertical" Spacing="6">
+                            <CheckBox x:Name="chkZeptunAutoRoute" IsChecked="{Binding ZeptunAutoRoute}" Content="Auto-route system traffic into TUN" />
+                            <CheckBox x:Name="chkZeptunStrictRoute" IsChecked="{Binding ZeptunStrictRoute}" Content="Strict route protection" />
+                            <CheckBox x:Name="chkZeptunDnsHijack" IsChecked="{Binding ZeptunDnsHijack}" Content="Hijack DNS queries (capture port 53)" />
+                            <CheckBox x:Name="chkZeptunFakeIp" IsChecked="{Binding ZeptunFakeIp}" Content="Fake-IP DNS resolver (bypasses DNS filtering)" />
                         </StackPanel>
 
-                        <Button HorizontalAlignment="Left"
+                        <Button x:Name="btnOpenZeptunUrl" HorizontalAlignment="Left"
                                 Command="{Binding OpenZeptunUrlCmd}"
                                 Content="Open Zeptun GitHub Repository (Noisemux/zeptun)" />
                     </StackPanel>

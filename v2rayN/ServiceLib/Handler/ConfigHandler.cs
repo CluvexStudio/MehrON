@@ -213,7 +213,7 @@ public static class ConfigHandler
         config.MhrItem.HttpPort = config.MhrItem.HttpPort is > 0 and <= 65535 ? config.MhrItem.HttpPort : 8085;
         config.MhrItem.Socks5Port = config.MhrItem.Socks5Port is > 0 and <= 65535 ? config.MhrItem.Socks5Port : 1080;
         config.TunnelingItem ??= new();
-        config.TunnelingItem.SelectedCore = config.TunnelingItem.SelectedCore is TunnelingItem.CoreZeptun ? TunnelingItem.CoreZeptun : TunnelingItem.CoreSingbox;
+        config.TunnelingItem.SelectedCore = config.TunnelingItem.SelectedCore is TunnelingItem.CoreSingbox ? TunnelingItem.CoreSingbox : TunnelingItem.CoreZeptun;
         config.TunnelingItem.ZeptunPath ??= string.Empty;
         config.TunnelingItem.ZeptunInterfaceName = config.TunnelingItem.ZeptunInterfaceName.IsNullOrEmpty() ? "zeptun0" : config.TunnelingItem.ZeptunInterfaceName;
         config.TunnelingItem.ZeptunMtu = config.TunnelingItem.ZeptunMtu is > 0 and not 8500 ? config.TunnelingItem.ZeptunMtu : 1500;
