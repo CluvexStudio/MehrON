@@ -1,3 +1,4 @@
+using System.Windows.Media;
 using v2rayN.Manager;
 
 namespace v2rayN.Views;
