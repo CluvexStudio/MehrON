@@ -127,7 +127,7 @@ public partial class MainWindow
                         _checkUpdateView ??= new CheckUpdateView();
                         ViewModel.CheckUpdateViewModel.EnableCheckPreReleaseUpdate = preRelease;
                         _checkUpdateView.ViewModel = ViewModel.CheckUpdateViewModel;
-                        ViewHost.Show(_checkUpdateView);
+                        DialogHost.Show(_checkUpdateView, "RootDialog");
                         AppEvents.HasUpdateNotified.Publish(false);
                     }).DisposeWith(disposables);
 
