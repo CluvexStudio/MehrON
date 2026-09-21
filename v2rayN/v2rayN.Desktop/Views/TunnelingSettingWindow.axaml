@@ -24,7 +24,7 @@
 
                 <Grid ColumnDefinitions="160,*" ColumnSpacing="12">
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Text="Tunneling Engine" />
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore}" />
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Cores}" SelectedItem="{Binding SelectedCore, Mode=TwoWay}" />
                 </Grid>
 
                 <Border BorderBrush="{DynamicResource SystemControlHighlightListAccentBrush}" BorderThickness="1" CornerRadius="6" Padding="12" IsVisible="{Binding IsZeptunSelected}">
@@ -41,7 +41,7 @@
                             <NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="576" Maximum="65535" Value="{Binding ZeptunMtu}" />
 
                             <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Network Stack" />
-                            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack}" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack, Mode=TwoWay}" />
 
                             <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Extra Arguments" />
                             <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ExtraArguments}" />

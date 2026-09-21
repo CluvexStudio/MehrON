@@ -22,7 +22,7 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
     public List<string> Stacks { get; } = ["userspace"];
 
     [Reactive] public partial bool ZeptunAutoRoute { get; set; } = true;
-    [Reactive] public partial bool ZeptunStrictRoute { get; set; } = true;
+    [Reactive] public partial bool ZeptunStrictRoute { get; set; } = false;
     [Reactive] public partial string ExtraArguments { get; set; } = string.Empty;
 
     public ReactiveCommand<RxVoid, RxVoid> SaveCmd { get; }
