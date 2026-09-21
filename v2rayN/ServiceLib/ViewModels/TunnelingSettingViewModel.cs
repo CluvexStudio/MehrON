@@ -11,13 +11,13 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
 
     private readonly TunnelingItem _settings;
 
-    [Reactive] public partial string SelectedCore { get; set; } = CoreZeptunLabel;
-    public List<string> Cores { get; } = [CoreZeptunLabel, CoreSingboxLabel];
+    [Reactive] public partial string SelectedCore { get; set; } = CoreSingboxLabel;
+    public List<string> Cores { get; } = [CoreSingboxLabel, CoreZeptunLabel];
 
-    [Reactive] public partial bool IsZeptunCore { get; set; } = true;
-    [Reactive] public partial bool IsSingboxCore { get; set; } = false;
+    [Reactive] public partial bool IsZeptunCore { get; set; } = false;
+    [Reactive] public partial bool IsSingboxCore { get; set; } = true;
 
-    [Reactive] public partial bool IsZeptunSelected { get; set; } = true;
+    [Reactive] public partial bool IsZeptunSelected { get; set; } = false;
 
     [Reactive] public partial string ZeptunInterfaceName { get; set; } = "zeptun0";
     [Reactive] public partial int ZeptunMtu { get; set; } = 1500;
@@ -39,9 +39,9 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
         _config.TunnelingItem ??= new();
         _settings = JsonUtils.DeepCopy(_config.TunnelingItem);
 
-        IsSingboxCore = _settings.SelectedCore == CoreSingboxLabel;
-        IsZeptunCore = !IsSingboxCore;
-        SelectedCore = IsSingboxCore ? CoreSingboxLabel : CoreZeptunLabel;
+        IsZeptunCore = _settings.SelectedCore == CoreZeptunLabel;
+        IsSingboxCore = !IsZeptunCore;
+        SelectedCore = IsZeptunCore ? CoreZeptunLabel : CoreSingboxLabel;
         IsZeptunSelected = IsZeptunCore;
 
         ZeptunInterfaceName = string.IsNullOrWhiteSpace(_settings.ZeptunInterfaceName) ? "zeptun0" : _settings.ZeptunInterfaceName;

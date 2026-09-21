@@ -31,15 +31,15 @@
                 <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,4,0,12">
                     <StackPanel>
                         <TextBlock FontSize="15" FontWeight="SemiBold" Margin="0,0,0,8" Text="Select Tunneling Engine:" />
-                        <RadioButton x:Name="radZeptun"
-                                     Content="Zeptun (Noisemux/zeptun) — High-Performance Zig TUN (Recommended)"
-                                     GroupName="TunEngineGroup"
-                                     IsChecked="{Binding IsZeptunCore}"
-                                     Margin="0,2,0,6" />
                         <RadioButton x:Name="radSingbox"
-                                     Content="Built-in (sing-box) — Standard TUN engine"
+                                     Content="Built-in (sing-box) — Standard TUN engine (Default)"
                                      GroupName="TunEngineGroup"
                                      IsChecked="{Binding IsSingboxCore}"
+                                     Margin="0,2,0,6" />
+                        <RadioButton x:Name="radZeptun"
+                                     Content="Zeptun (Noisemux/zeptun) — High-Performance Zig TUN"
+                                     GroupName="TunEngineGroup"
+                                     IsChecked="{Binding IsZeptunCore}"
                                      Margin="0,2,0,2" />
                     </StackPanel>
                 </Border>

@@ -213,9 +213,9 @@ public static class ConfigHandler
         config.MhrItem.HttpPort = config.MhrItem.HttpPort is > 0 and <= 65535 ? config.MhrItem.HttpPort : 8085;
         config.MhrItem.Socks5Port = config.MhrItem.Socks5Port is > 0 and <= 65535 ? config.MhrItem.Socks5Port : 1080;
         config.TunnelingItem ??= new();
-        if (config.TunnelingItem.SelectedCore.IsNullOrEmpty() || config.TunnelingItem.SelectedCore == TunnelingItem.CoreSingbox)
+        if (config.TunnelingItem.SelectedCore.IsNullOrEmpty())
         {
-            config.TunnelingItem.SelectedCore = TunnelingItem.CoreZeptun;
+            config.TunnelingItem.SelectedCore = TunnelingItem.CoreSingbox;
         }
         config.TunnelingItem.ZeptunPath ??= string.Empty;
         config.TunnelingItem.ZeptunInterfaceName = config.TunnelingItem.ZeptunInterfaceName.IsNullOrEmpty() ? "zeptun0" : config.TunnelingItem.ZeptunInterfaceName;
