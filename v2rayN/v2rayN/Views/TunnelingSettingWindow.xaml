@@ -48,43 +48,28 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Executable Path" />
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,4,8,4"
-                                     Text="{Binding ZeptunPath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Row="0" Grid.Column="2" x:Name="btnBrowseZeptun"
-                                    Content="..." Width="40" Style="{StaticResource DefButton}" />
-
-                            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Status" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,4"
-                                       TextWrapping="Wrap" FontStyle="Italic"
-                                       Text="{Binding ZeptunStatusText}" />
-
-                            <TextBlock Grid.Row="2" Margin="0,6,0,0" VerticalAlignment="Center" Text="Interface Name" />
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBlock Grid.Row="0" Margin="0,4,0,0" VerticalAlignment="Center" Text="Interface Name" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,4,0,4"
                                      Text="{Binding ZeptunInterfaceName, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBlock Grid.Row="3" Margin="0,6,0,0" VerticalAlignment="Center" Text="MTU" />
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBlock Grid.Row="1" Margin="0,6,0,0" VerticalAlignment="Center" Text="MTU" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,6,0,4"
                                      Text="{Binding ZeptunMtu, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBlock Grid.Row="4" Margin="0,6,0,0" VerticalAlignment="Center" Text="Network Stack" />
-                            <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBlock Grid.Row="2" Margin="0,6,0,0" VerticalAlignment="Center" Text="Network Stack" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,6,0,4"
                                       ItemsSource="{Binding Stacks}" SelectedItem="{Binding ZeptunStack}" />
 
-                            <TextBlock Grid.Row="5" Margin="0,6,0,0" VerticalAlignment="Center" Text="Extra Arguments" />
-                            <TextBox Grid.Row="5" Grid.Column="1" Margin="0,6,0,4"
+                            <TextBlock Grid.Row="3" Margin="0,6,0,0" VerticalAlignment="Center" Text="Extra Arguments" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,6,0,4"
                                      Text="{Binding ExtraArguments, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
 

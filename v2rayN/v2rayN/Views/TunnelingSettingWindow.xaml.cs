@@ -9,17 +9,6 @@ public partial class TunnelingSettingWindow : WindowBase<TunnelingSettingViewMod
         InitializeComponent();
         btnCancel.Click += (_, _) => Close();
 
-        btnBrowseZeptun.Click += (_, _) =>
-        {
-            if (UI.OpenFileDialog(out var fileName, "Zeptun Executable|*.exe|All Files|*.*") == true)
-            {
-                if (ViewModel != null)
-                {
-                    ViewModel.ZeptunPath = fileName;
-                }
-            }
-        };
-
         this.WhenActivated(disposables =>
         {
             this.BindCommand(ViewModel, vm => vm.SaveCmd, v => v.btnSave).DisposeWith(disposables);
