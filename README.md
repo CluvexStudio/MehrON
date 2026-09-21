@@ -1,4 +1,4 @@
-# MehrN
+# MehrN.
 
 MehrN is a Windows desktop proxy client created from the PattN / Patterniha codebase, which is based on v2rayN. It provides a graphical interface for importing, organizing, testing, and running supported proxy profiles.
 
