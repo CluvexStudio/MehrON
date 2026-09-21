@@ -212,6 +212,13 @@ public static class ConfigHandler
         config.MhrItem.ProfileId ??= string.Empty;
         config.MhrItem.HttpPort = config.MhrItem.HttpPort is > 0 and <= 65535 ? config.MhrItem.HttpPort : 8085;
         config.MhrItem.Socks5Port = config.MhrItem.Socks5Port is > 0 and <= 65535 ? config.MhrItem.Socks5Port : 1080;
+        config.TunnelingItem ??= new();
+        config.TunnelingItem.SelectedCore = config.TunnelingItem.SelectedCore is TunnelingItem.CoreZeptun ? TunnelingItem.CoreZeptun : TunnelingItem.CoreSingbox;
+        config.TunnelingItem.ZeptunPath ??= string.Empty;
+        config.TunnelingItem.ZeptunInterfaceName = config.TunnelingItem.ZeptunInterfaceName.IsNullOrEmpty() ? "zeptun0" : config.TunnelingItem.ZeptunInterfaceName;
+        config.TunnelingItem.ZeptunMtu = config.TunnelingItem.ZeptunMtu is > 0 ? config.TunnelingItem.ZeptunMtu : 8500;
+        config.TunnelingItem.ZeptunStack = config.TunnelingItem.ZeptunStack is "hybrid" or "system" ? config.TunnelingItem.ZeptunStack : "userspace";
+        config.TunnelingItem.ExtraArguments ??= string.Empty;
         if ((config.Fragment4RayItem.Lengths ?? []).Count == 0)
         {
             config.Fragment4RayItem.Lengths = [config.Fragment4RayItem.Length ?? "50-100"];
@@ -1595,10 +1602,12 @@ public static class ConfigHandler
     {
         ProfileItem? itemSocks = null;
         var enableLegacyProtect = config.TunModeItem.EnableLegacyProtect;
+        var isZeptun = config.TunnelingItem?.SelectedCore == TunnelingItem.CoreZeptun;
         if (node.ConfigType != EConfigType.Custom
             && coreType != ECoreType.sing_box
             && config.TunModeItem.EnableTun
-            && enableLegacyProtect)
+            && enableLegacyProtect
+            && !isZeptun)
         {
             itemSocks = new ProfileItem()
             {
@@ -1612,7 +1621,7 @@ public static class ConfigHandler
             && node.PreSocksPort is > 0 and <= 65535)
         {
             var customPreCoreType = AppManager.Instance.GetCoreType(null, EConfigType.Custom);
-            var preCoreType = (enableLegacyProtect && config.TunModeItem.EnableTun) ? ECoreType.sing_box : customPreCoreType;
+            var preCoreType = (enableLegacyProtect && config.TunModeItem.EnableTun && !isZeptun) ? ECoreType.sing_box : customPreCoreType;
             itemSocks = new ProfileItem()
             {
                 CoreType = preCoreType,

@@ -37,6 +37,7 @@ public class Config
     public HappyEyeballs4RayItem HappyEyeballs4RayItem { get; set; }
     public SniSpoofingItem SniSpoofingItem { get; set; }
     public MhrItem MhrItem { get; set; }
+    public TunnelingItem TunnelingItem { get; set; }
 
     #endregion other entities
 }
