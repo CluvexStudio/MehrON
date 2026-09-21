@@ -91,7 +91,7 @@ public sealed class ZeptunManager
 
         var interfaceName = string.IsNullOrWhiteSpace(item?.ZeptunInterfaceName) ? "zeptun0" : item.ZeptunInterfaceName.Trim();
         var mtu = (item?.ZeptunMtu > 0 && item.ZeptunMtu != 8500) ? item.ZeptunMtu : 1500;
-        var stack = string.IsNullOrWhiteSpace(item?.ZeptunStack) ? "userspace" : item.ZeptunStack.Trim();
+        var stack = (Utils.IsWindows() || string.IsNullOrWhiteSpace(item?.ZeptunStack) || item?.ZeptunStack is "hybrid" or "system") ? "userspace" : item.ZeptunStack.Trim();
 
         var arguments = $"run --tun {interfaceName} --mtu {mtu} --socks5 127.0.0.1:{socksPort} --stack {stack}";
         if (item?.ZeptunAutoRoute ?? true)
