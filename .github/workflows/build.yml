@@ -224,7 +224,6 @@ jobs:
           Compress-Archive -Path "$outDir/*" -DestinationPath $zipPath -Force
           $size = (Get-Item $zipPath).Length / 1MB
           Write-Host ("Created archive: {0} ({1:N2} MB)" -f $zipPath, $size)
-          Copy-Item $zipPath "./MehrN-windows-64-desktop.zip" -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -232,7 +231,6 @@ jobs:
           name: MehrN-windows-64
           path: |
             MehrN-windows-64.zip
-            MehrN-windows-64-desktop.zip
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
@@ -249,6 +247,5 @@ jobs:
             - Includes Xray v26.9.13, sing-box v1.14.1, mihomo v1.19.31, and optimized routing rules.
           files: |
             MehrN-windows-64.zip
-            MehrN-windows-64-desktop.zip
           draft: false
           prerelease: false
