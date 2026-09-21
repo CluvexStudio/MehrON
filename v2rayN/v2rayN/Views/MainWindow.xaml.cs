@@ -34,6 +34,8 @@ public partial class MainWindow
             }
         };
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
+        menuBpbWizard.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
+        menuBpbWizardSetting.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
 

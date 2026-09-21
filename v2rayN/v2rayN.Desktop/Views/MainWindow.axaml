@@ -49,6 +49,8 @@
                         <MenuItem x:Name="menuCloudflareScanner" Header="{x:Static resx:ResUI.menuCloudflareScanner}" />
                         <MenuItem x:Name="menuAddCustomOutboundServer" Header="{x:Static resx:ResUI.menuAddCustomOutboundServer}" />
                         <Separator />
+                        <MenuItem x:Name="menuBpbWizard" Header="BPB Configuration Wizard" />
+                        <Separator />
                         <MenuItem x:Name="menuAddVmessServer" Header="{x:Static resx:ResUI.menuAddVmessServer}" />
                         <MenuItem x:Name="menuAddVlessServer" Header="{x:Static resx:ResUI.menuAddVlessServer}" />
                         <MenuItem x:Name="menuAddShadowsocksServer" Header="{x:Static resx:ResUI.menuAddShadowsocksServer}" />
@@ -75,6 +77,7 @@
                         <MenuItem x:Name="menuRoutingSetting" Header="{x:Static resx:ResUI.menuRoutingSetting}" />
                         <MenuItem x:Name="menuDNSSetting" Header="{x:Static resx:ResUI.menuDNSSetting}" />
                         <MenuItem x:Name="menuFullConfigTemplate" Header="{x:Static resx:ResUI.menuFullConfigTemplate}" />
+                        <MenuItem x:Name="menuBpbWizardSetting" Header="BPB Configuration Wizard" />
                         <MenuItem
                             x:Name="menuGlobalHotkeySetting"
                             Header="{x:Static resx:ResUI.menuGlobalHotkeySetting}"

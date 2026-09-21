@@ -27,6 +27,8 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         menuBetaUpdates.Click += MenuBetaUpdates_Click;
         menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
+        menuBpbWizard.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
+        menuBpbWizardSetting.Click += (s, e) => ProcUtils.ProcessStart("https://wizard.bpb-panel.workers.dev/");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
         menuClose.Click += MenuClose_Click;
