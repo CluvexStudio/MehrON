@@ -217,7 +217,7 @@ public static class ConfigHandler
         config.TunnelingItem.ZeptunPath ??= string.Empty;
         config.TunnelingItem.ZeptunInterfaceName = config.TunnelingItem.ZeptunInterfaceName.IsNullOrEmpty() ? "zeptun0" : config.TunnelingItem.ZeptunInterfaceName;
         config.TunnelingItem.ZeptunMtu = config.TunnelingItem.ZeptunMtu is > 0 and not 8500 ? config.TunnelingItem.ZeptunMtu : 1500;
-        config.TunnelingItem.ZeptunStack = config.TunnelingItem.ZeptunStack is "hybrid" or "system" ? config.TunnelingItem.ZeptunStack : "userspace";
+        config.TunnelingItem.ZeptunStack = "userspace";
         config.TunnelingItem.ExtraArguments ??= string.Empty;
         if ((config.Fragment4RayItem.Lengths ?? []).Count == 0)
         {

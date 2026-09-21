@@ -19,7 +19,7 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial string ZeptunInterfaceName { get; set; } = "zeptun0";
     [Reactive] public partial int ZeptunMtu { get; set; } = 1500;
     [Reactive] public partial string ZeptunStack { get; set; } = "userspace";
-    public List<string> Stacks { get; } = ["userspace", "hybrid", "system"];
+    public List<string> Stacks { get; } = ["userspace"];
 
     [Reactive] public partial bool ZeptunAutoRoute { get; set; } = true;
     [Reactive] public partial bool ZeptunStrictRoute { get; set; } = true;
@@ -39,7 +39,7 @@ public partial class TunnelingSettingViewModel : MyReactiveObject, ICloseable
 
         ZeptunInterfaceName = string.IsNullOrWhiteSpace(_settings.ZeptunInterfaceName) ? "zeptun0" : _settings.ZeptunInterfaceName;
         ZeptunMtu = (_settings.ZeptunMtu > 0 && _settings.ZeptunMtu != 8500) ? _settings.ZeptunMtu : 1500;
-        ZeptunStack = string.IsNullOrWhiteSpace(_settings.ZeptunStack) ? "userspace" : _settings.ZeptunStack;
+        ZeptunStack = "userspace";
         ZeptunAutoRoute = _settings.ZeptunAutoRoute;
         ZeptunStrictRoute = _settings.ZeptunStrictRoute;
         ExtraArguments = _settings.ExtraArguments;
