@@ -255,6 +255,57 @@
   <data name="OperationFailed" xml:space="preserve">
     <value> عملیات انجام نشد، لطفا بررسی کنید و دوباره امتحان کنید</value>
   </data>
+  <data name="OptGroupAppearance" xml:space="preserve">
+    <value>ظاهر</value>
+  </data>
+  <data name="OptGroupFingerprint" xml:space="preserve">
+    <value>اثر انگشت</value>
+  </data>
+  <data name="OptGroupFragment" xml:space="preserve">
+    <value>فرگمنت (پیشرفته)</value>
+  </data>
+  <data name="OptGroupInbound" xml:space="preserve">
+    <value>شنونده ورودی</value>
+  </data>
+  <data name="OptGroupLogging" xml:space="preserve">
+    <value>لاگ</value>
+  </data>
+  <data name="OptGroupMux" xml:space="preserve">
+    <value>مالتی‌پلکس</value>
+  </data>
+  <data name="OptGroupOutboundBind" xml:space="preserve">
+    <value>اتصال خروجی</value>
+  </data>
+  <data name="OptGroupProtocolCores" xml:space="preserve">
+    <value>هسته پروتکل‌ها</value>
+  </data>
+  <data name="OptGroupSingbox" xml:space="preserve">
+    <value>امکانات sing-box</value>
+  </data>
+  <data name="OptGroupSources" xml:space="preserve">
+    <value>منابع به‌روزرسانی (پیشرفته)</value>
+  </data>
+  <data name="OptGroupSpeedTest" xml:space="preserve">
+    <value>تست سرعت</value>
+  </data>
+  <data name="OptGroupStartup" xml:space="preserve">
+    <value>راه‌اندازی و رفتار</value>
+  </data>
+  <data name="OptGroupSysProxy" xml:space="preserve">
+    <value>پروکسی سیستمی</value>
+  </data>
+  <data name="OptGroupSysProxyExceptions" xml:space="preserve">
+    <value>استثناهای پروکسی</value>
+  </data>
+  <data name="OptGroupTunAdvanced" xml:space="preserve">
+    <value>پیشرفته TUN</value>
+  </data>
+  <data name="OptGroupTunBasic" xml:space="preserve">
+    <value>پایه TUN</value>
+  </data>
+  <data name="OptGroupUpdates" xml:space="preserve">
+    <value>به‌روزرسانی و محدودیت‌ها</value>
+  </data>
   <data name="PleaseFillRemarks" xml:space="preserve">
     <value>لطفا ملاحظات را پر کنید</value>
   </data>
