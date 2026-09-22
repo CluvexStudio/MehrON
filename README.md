@@ -34,7 +34,7 @@
 - One-click Windows system proxy control with exceptions and PAC support.
 - Optional TUN mode to route device traffic through the selected profile.
 - Per-subscription update controls in Subscription Settings.
-- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box). **Only in MehrON client**
+- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box). 
 
 ### Cores
 The portable release bundles ready-to-run runtimes — no separate core download needed:
@@ -57,6 +57,9 @@ The portable release bundles ready-to-run runtimes — no separate core download
 > - **MHR:** routes traffic through your own Google Apps Script relay with domain fronting
 >   (`Browser -> Local proxy -> Google front -> Your Apps Script relay -> Target site`);
 >   the network filter only sees a Google-facing connection. Optional Cloudflare / VPS exit node for sites blocking Google IPs.
+
+**Only in MehrON: a combination of advanced censorship circumvention tools such as [SNI Spoofing](https://github.com/patterniha/SNI-Spoofing/tree/main) and [MHR](https://github.com/masterking32/MasterHttpRelayVPN)**
+
 
 > [!TIP]
 > Official portable releases ship with the `bin/` core binaries and up-to-date
