@@ -59,11 +59,11 @@ jobs:
           Write-Host "Resolved Version Tag: $tag"
           "TAG_NAME=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Build & Publish MehrN (WPF)
+      - name: Build & Publish MehrN
         shell: pwsh
         run: |
           $outDir = "./dist/MehrN-windows-64"
-          dotnet publish ./v2rayN/v2rayN/v2rayN.csproj `
+          dotnet publish ./v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj `
             -c Release `
             -r win-x64 `
             --self-contained true `
