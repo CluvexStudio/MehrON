@@ -1,0 +1,155 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.AddAetherServerWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="Aether Server"
+    Width="650"
+    Height="480"
+    x:DataType="vms:AddAetherServerViewModel"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <DockPanel Margin="{StaticResource Margin8}">
+        <StackPanel
+            Margin="{StaticResource Margin4}"
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button
+                x:Name="btnSave"
+                Width="100"
+                Content="{x:Static resx:ResUI.TbConfirm}"
+                IsDefault="True" />
+            <Button
+                x:Name="btnCancel"
+                Width="100"
+                Margin="{StaticResource MarginLr8}"
+                Content="{x:Static resx:ResUI.TbCancel}"
+                IsCancel="True" />
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="{StaticResource Margin8}"
+                    FontWeight="SemiBold"
+                    Text="Aether - Cloudflare WARP / MASQUE Engine" />
+
+                <!-- Remarks -->
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.TbRemarks}" />
+                <TextBox
+                    x:Name="txtRemarks"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="380"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+
+                <!-- Protocol -->
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="Protocol" />
+                <ComboBox
+                    x:Name="cmbProtocol"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="380"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left" />
+
+                <!-- Scan Mode -->
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="Scan Mode" />
+                <ComboBox
+                    x:Name="cmbScanMode"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Width="380"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left" />
+
+                <!-- Noize / Obfuscation -->
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="Obfuscation (Noize)" />
+                <ComboBox
+                    x:Name="cmbNoize"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Width="380"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left" />
+
+                <!-- Custom Peer (Optional) -->
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="Peer Endpoint (Optional)" />
+                <TextBox
+                    x:Name="txtPeer"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Width="380"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Watermark="Auto-scan if empty, or ip:port e.g. 162.159.192.1:443" />
+
+                <!-- Local SOCKS Port -->
+                <TextBlock
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="Local SOCKS Port" />
+                <TextBox
+                    x:Name="txtPort"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Width="160"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+
+                <!-- Display Log -->
+                <TextBlock
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Margin="{StaticResource Margin8}"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resx:ResUI.TbDisplayLog}" />
+                <ToggleSwitch
+                    x:Name="togDisplayLog"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Margin="{StaticResource Margin4}"
+                    HorizontalAlignment="Left" />
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

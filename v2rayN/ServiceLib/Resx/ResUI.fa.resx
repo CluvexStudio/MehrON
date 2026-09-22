@@ -561,6 +561,9 @@
   <data name="menuExport2ShareUrl" xml:space="preserve">
     <value>URL های اشتراک گذاری را به کلیپ بورد صادر کنید</value>
   </data>
+  <data name="menuAddAetherServer" xml:space="preserve">
+    <value>افزودن سرور [Aether]</value>
+  </data>
   <data name="menuAddCustomServer" xml:space="preserve">
     <value>یک سرور پیکربندی سفارشی اضافه شود</value>
   </data>
@@ -778,7 +781,7 @@
     <value>فعال کردن Mux Multiplexing</value>
   </data>
   <data name="TbSettingsN" xml:space="preserve">
-    <value>تنظیمات MehrN</value>
+    <value>تنظیمات MehrON</value>
   </data>
   <data name="TbSettingsPass" xml:space="preserve">
     <value>مجوز احراز هویت</value>
@@ -1831,7 +1834,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
     <value>PreSharedKey</value>
   </data>
   <data name="menuExport2InnerUri" xml:space="preserve">
-    <value>Export MehrN Internal Share Link to Clipboard</value>
+    <value>Export MehrON Internal Share Link to Clipboard</value>
   </data>
   <data name="MsgCheckUpdateHasNewVersion" xml:space="preserve">
     <value>{0} has a new version available: {1}</value>

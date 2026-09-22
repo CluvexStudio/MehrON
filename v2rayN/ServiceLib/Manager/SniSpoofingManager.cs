@@ -95,7 +95,7 @@ public sealed class SniSpoofingManager
 
         if (!Utils.IsAdministrator())
         {
-            await SafeNotifyAsync(updateFunc, true, "SNI Spoofing requires MehrN to run as administrator. Approve the Windows prompt to continue.");
+            await SafeNotifyAsync(updateFunc, true, "SNI Spoofing requires MehrON to run as administrator. Approve the Windows prompt to continue.");
             if (ProcUtils.RebootAsAdmin())
             {
                 await AppManager.Instance.AppExitAsync(true);

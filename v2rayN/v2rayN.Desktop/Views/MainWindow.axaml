@@ -8,13 +8,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
-    Title="MehrN"
+    Title="MehrON"
     Width="1200"
     Height="800"
     MinWidth="600"
     x:DataType="vms:MainWindowViewModel"
     Design.DataContext="{x:Static dd:DesignData.MainWindow}"
-    Icon="/Assets/MehrN.ico"
+    Icon="/Assets/MehrON.ico"
     ShowInTaskbar="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -28,7 +28,7 @@
                     Margin="4,0,8,0"
                     CornerRadius="6"
                     ClipToBounds="True">
-                    <Image Source="/Assets/MehrN-logo.png" Stretch="UniformToFill" />
+                    <Image Source="/Assets/MehrON-logo.png" Stretch="UniformToFill" />
                 </Border>
                 <Menu Margin="8,4">
                     <MenuItem Header="{x:Static resx:ResUI.menuServers}">
@@ -42,6 +42,7 @@
                             InputGesture="Ctrl+S" />
                         <MenuItem x:Name="menuAddServerViaImage" Header="{x:Static resx:ResUI.menuAddServerViaImage}" />
                         <Separator />
+                        <MenuItem x:Name="menuAddAetherServer" Header="{x:Static resx:ResUI.menuAddAetherServer}" />
                         <MenuItem x:Name="menuAddCustomServer" Header="{x:Static resx:ResUI.menuAddCustomServer}" />
                         <MenuItem x:Name="menuAddPolicyGroupServer" Header="{x:Static resx:ResUI.menuAddPolicyGroupServer}" />
                         <MenuItem x:Name="menuAddProxyChainServer" Header="{x:Static resx:ResUI.menuAddProxyChainServer}" />

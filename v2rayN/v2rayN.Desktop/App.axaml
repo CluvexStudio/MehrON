@@ -6,7 +6,7 @@
     xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
     xmlns:semi="https://irihi.tech/semi"
     xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
-    Name="MehrN"
+    Name="MehrON"
     x:DataType="vms:StatusBarViewModel"
     RequestedThemeVariant="Default">
     <Application.Resources>
@@ -36,7 +36,7 @@
         <TrayIcons>
             <TrayIcon
                 Command="{Binding NotifyLeftClickCmd}"
-                Icon="/Assets/MehrN.ico"
+                Icon="/Assets/MehrON.ico"
                 ToolTipText="{Binding RunningServerToolTipText}">
                 <TrayIcon.Menu>
                     <NativeMenu>

@@ -2,7 +2,7 @@ namespace ServiceLib;
 
 public class Global
 {
-    public const string AppName = "MehrN";
+    public const string AppName = "MehrON";
     public const string GithubUrl = "https://github.com";
     public const string GithubApiUrl = "https://api.github.com/repos";
     public const string GeoUrl = "https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/{0}.dat";
@@ -86,7 +86,7 @@ public class Global
     public const int MinFontSize = 8;
     public const int MinFontSizeCount = 13;
     public const string RebootAs = "rebootas";
-    public const string AvaAssets = "avares://MehrN/Assets/";
+    public const string AvaAssets = "avares://MehrON/Assets/";
     public const string LocalAppData = "V2RAYN_LOCAL_APPLICATION_DATA_V2";
     public const string V2RayLocalAsset = "V2RAY_LOCATION_ASSET";
     public const string XrayLocalAsset = "XRAY_LOCATION_ASSET";
@@ -463,7 +463,7 @@ public class Global
         ""
     ];
 
-    // MehrN: values of the Xray outbound targetStrategy; the first one is Xray's default
+    // MehrON: values of the Xray outbound targetStrategy; the first one is Xray's default
     public static readonly List<string> TargetStrategies =
     [
         AsIs,
@@ -683,7 +683,8 @@ public class Global
         { ECoreType.overtls, "ShadowsocksR-Live/overtls" },
         { ECoreType.shadowquic, "spongebob888/shadowquic" },
         { ECoreType.mieru, "enfein/mieru" },
-        { ECoreType.v2rayN, "yastorovsky/MehrN" },
+        { ECoreType.aether, "CluvexStudio/Aether" },
+        { ECoreType.v2rayN, "yastorovsky/MehrON" },
     };
 
     public static readonly List<string> OtherGeoUrls =

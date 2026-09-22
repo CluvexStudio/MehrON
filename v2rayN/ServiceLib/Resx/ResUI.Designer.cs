@@ -781,6 +781,15 @@ namespace ServiceLib.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add [Aether] server.
+        /// </summary>
+        public static string menuAddAetherServer {
+            get {
+                return ResourceManager.GetString("menuAddAetherServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Add a custom configuration 的本地化字符串。
         /// </summary>
         public static string menuAddCustomServer {

@@ -31,7 +31,7 @@ public partial class App : Application
             mainWindow.ViewModel = mainWindowViewModel;
             desktop.MainWindow = mainWindow;
 
-            // An MHR save from a standard session relaunches MehrN elevated. The
+            // An MHR save from a standard session relaunches MehrON elevated. The
             // persisted Enabled setting lets the elevated instance finish the
             // requested start automatically.
             if (Utils.IsWindows() && Utils.IsAdministrator() && AppManager.Instance.Config.MhrItem.Enabled)

@@ -24,7 +24,7 @@ public sealed class MhrManager
         }
         if (Utils.IsWindows() && !Utils.IsAdministrator())
         {
-            await NotifyAsync(updateFunc, true, "MHR requires MehrN to run as administrator. Approve the Windows prompt to continue.");
+            await NotifyAsync(updateFunc, true, "MHR requires MehrON to run as administrator. Approve the Windows prompt to continue.");
             if (ProcUtils.RebootAsAdmin())
             {
                 await AppManager.Instance.AppExitAsync(true);
@@ -128,7 +128,7 @@ public sealed class MhrManager
 
     /// <summary>
     /// Stops the local relay and persists it as disabled, so it cannot be
-    /// silently started again on the next elevated MehrN launch.
+    /// silently started again on the next elevated MehrON launch.
     /// </summary>
     public async Task StopAndDisableAsync()
     {
