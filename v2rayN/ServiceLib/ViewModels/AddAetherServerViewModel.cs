@@ -112,7 +112,7 @@ public partial class AddAetherServerViewModel : MyReactiveObject, ICloseable
         SelectedSource.PreSocksPort = port;
         SelectedSource.DisplayLog = DisplayLog;
         SelectedSource.Port = port;
-        SelectedSource.Address = "127.0.0.1";
+        SelectedSource.Address = PeerEndpoint.IsNotEmpty() ? PeerEndpoint.TrimEx() : Global.Loopback;
 
         var extra = (SelectedSource.GetProtocolExtra() ?? new ProtocolExtraItem()) with
         {
@@ -123,9 +123,7 @@ public partial class AddAetherServerViewModel : MyReactiveObject, ICloseable
         };
         SelectedSource.SetProtocolExtra(extra);
 
-        var result = SelectedSource.IndexId.IsNullOrEmpty()
-            ? await ConfigHandler.AddCustomServer(_config, SelectedSource, false)
-            : await ConfigHandler.EditCustomServer(_config, SelectedSource);
+        var result = await ConfigHandler.AddAetherServer(_config, SelectedSource);
 
         if (result == 0)
         {

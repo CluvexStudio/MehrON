@@ -314,6 +314,9 @@ public static class ConfigHandler
             item.Finalmask = profileItem.Finalmask;
             item.ProtoExtra = profileItem.ProtoExtra;
             item.TransportExtra = profileItem.TransportExtra;
+        if (item.CoreType == ECoreType.aether)
+        {
+            return await AddAetherServer(config, item);
         }
 
         var ret = item.ConfigType switch
@@ -618,6 +621,38 @@ public static class ConfigHandler
 
         await AddServerCommon(config, profileItem, true);
 
+        return 0;
+    }
+
+    /// <summary>
+    /// Add or edit an Aether server
+    /// </summary>
+    public static async Task<int> AddAetherServer(Config config, ProfileItem profileItem)
+    {
+        var item = await AppManager.Instance.GetProfileItem(profileItem.IndexId);
+        if (item is null)
+        {
+            item = profileItem;
+        }
+        else
+        {
+            item.Remarks = profileItem.Remarks;
+            item.Address = profileItem.Address;
+            item.Port = profileItem.Port;
+            item.CoreType = profileItem.CoreType;
+            item.DisplayLog = profileItem.DisplayLog;
+            item.PreSocksPort = profileItem.PreSocksPort;
+            item.ProtoExtra = profileItem.ProtoExtra;
+        }
+
+        item.ConfigType = EConfigType.Custom;
+        item.CoreType = ECoreType.aether;
+        if (item.Address.IsNullOrEmpty())
+        {
+            item.Address = Global.Loopback;
+        }
+
+        await AddServerCommon(config, item, true);
         return 0;
     }
 

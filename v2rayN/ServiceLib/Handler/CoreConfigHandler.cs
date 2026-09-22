@@ -122,7 +122,7 @@ public static class CoreConfigHandler
             else
             {
                 // Write a base identity stub so Aether initializes seamlessly
-                await File.WriteAllTextAsync(fileName, addressFileName.IsNotEmpty() && !addressFileName.StartsWith('-') ? addressFileName : "# Aether Configuration\n");
+                await File.WriteAllTextAsync(fileName, "# Aether Configuration\n");
             }
 
             ret.Msg = string.Format(ResUI.SuccessfulConfiguration, "");

@@ -336,7 +336,7 @@ public sealed class CoreInfoManager
                 {
                     CoreType = ECoreType.aether,
                     CoreExes = [ "aether" ],
-                    Arguments = "--config {0}",
+                    Arguments = "-4",
                     Url = urlAether,
                     ReleaseApiUrl = urlAether.Replace(Global.GithubUrl, Global.GithubApiUrl),
                     DownloadUrlWin64 = urlAether + "/download/{0}/aether-windows-x86_64.zip",
