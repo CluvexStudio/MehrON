@@ -17,6 +17,10 @@
   built from the PattN / Patterniha codebase, based on v2rayN.
 </p>
 
+<p align="center">
+  <strong>English</strong> | <a href="README.fa.md">فارسی</a>
+</p>
+
 ## App screenshot
 
 ![MehrON app screenshot](docs/images/app-screenshot.png)
