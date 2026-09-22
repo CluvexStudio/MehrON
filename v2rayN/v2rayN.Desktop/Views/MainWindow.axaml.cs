@@ -26,7 +26,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         menuBetaUpdates.Click += MenuBetaUpdates_Click;
-        menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrN/releases/latest");
+        menuDownloadRelease.Click += (s, e) => ProcUtils.ProcessStart("https://github.com/yastorovsky/MehrON/releases/latest");
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
         menuClose.Click += MenuClose_Click;

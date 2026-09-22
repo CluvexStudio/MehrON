@@ -61,7 +61,7 @@ public partial class SniSpoofingSettingViewModel : MyReactiveObject, ICloseable
         {
             if (Enabled && Utils.IsWindows() && !Utils.IsAdministrator())
             {
-                NoticeManager.Instance.Enqueue("SNI Spoofing requires administrator rights. Approve the Windows prompt to restart MehrN as administrator.");
+                NoticeManager.Instance.Enqueue("SNI Spoofing requires administrator rights. Approve the Windows prompt to restart MehrON as administrator.");
                 if (ProcUtils.RebootAsAdmin())
                 {
                     await AppManager.Instance.AppExitAsync(true);

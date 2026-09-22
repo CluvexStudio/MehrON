@@ -11,9 +11,9 @@
 		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<CETCompat>false</CETCompat>
-		<AssemblyName>MehrN</AssemblyName>
-		<AssemblyTitle>MehrN</AssemblyTitle>
-		<Product>MehrN</Product>
+		<AssemblyName>MehrON</AssemblyName>
+		<AssemblyTitle>MehrON</AssemblyTitle>
+		<Product>MehrON</Product>
 	</PropertyGroup>
 
 	<ItemGroup>

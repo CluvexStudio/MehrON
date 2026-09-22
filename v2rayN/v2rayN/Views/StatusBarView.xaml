@@ -148,7 +148,7 @@
             x:Name="tbNotify"
             IconSource="/Resources/v2rayN.ico"
             NoLeftClickDelay="True"
-            ToolTipText="MehrN">
+            ToolTipText="MehrON">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Style="{StaticResource DefContextMenu}">
                     <MenuItem

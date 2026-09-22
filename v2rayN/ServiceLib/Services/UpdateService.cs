@@ -370,7 +370,7 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
             //Check for avalonia desktop windows version
             if (File.Exists(Path.Combine(Utils.GetBaseDirectory(), "libHarfBuzzSharp.dll")))
             {
-                if (url != null && !url.Contains("MehrN"))
+                if (url != null && !url.Contains("MehrON"))
                 {
                     return url.Replace(".zip", "-desktop.zip");
                 }
