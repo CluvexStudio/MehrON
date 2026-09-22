@@ -85,6 +85,26 @@ public static class FileUtils
         }
     }
 
+    public static bool IsZipFile(string fileName)
+    {
+        try
+        {
+            using var fs = File.OpenRead(fileName);
+            Span<byte> header = stackalloc byte[4];
+            if (fs.ReadAtLeast(header, 4, false) < 4)
+            {
+                return false;
+            }
+            return header[0] == 0x50 && header[1] == 0x4B
+                && (header[2] == 0x03 || header[2] == 0x05 || header[2] == 0x07);
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            return false;
+        }
+    }
+
     public static bool ZipExtractToFile(string fileName, string toPath, string ignoredName)
     {
         try

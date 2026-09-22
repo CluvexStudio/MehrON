@@ -388,9 +388,20 @@ public partial class CheckUpdateViewModel : MyReactiveObject
             {
                 FileUtils.DecompressFile(fileName, toPath, coreTypeStr);
             }
-            else
+            else if (FileUtils.IsZipFile(fileName))
             {
                 FileUtils.ZipExtractToFile(fileName, toPath, "geo");
+            }
+            else
+            {
+                var coreInfo = item.CoreType is { } ct ? CoreInfoManager.Instance.GetCoreInfo(ct) : null;
+                var exeName = Utils.GetExeName(coreInfo?.CoreExes?.FirstOrDefault() ?? coreTypeStr);
+                if (exeName.IsNullOrEmpty())
+                {
+                    continue;
+                }
+                Directory.CreateDirectory(toPath);
+                File.Copy(fileName, Path.Combine(toPath, exeName), true);
             }
 
             if (Utils.IsNonWindows())
