@@ -13,7 +13,7 @@ public partial class CoreConfigV2rayService
             var inbound = BuildInbound(inboundConf, EInboundProtocol.socks, true);
             var isUsingLocalMixedPort = _node.Address == Global.Loopback && _node.Port == listenPort;
 
-            if (!context.IsTunEnabled || !isUsingLocalMixedPort)
+            if (!context.IsTunInbound || !isUsingLocalMixedPort)
             {
                 _coreConfig.inbounds.Add(inbound);
 
@@ -53,7 +53,7 @@ public partial class CoreConfigV2rayService
                 }
             }
 
-            if (context.IsTunEnabled)
+            if (context.IsTunInbound)
             {
                 if (_config.TunModeItem.Mtu <= 0)
                 {

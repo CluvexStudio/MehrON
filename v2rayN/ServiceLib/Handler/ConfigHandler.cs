@@ -212,6 +212,25 @@ public static class ConfigHandler
         config.MhrItem.ProfileId ??= string.Empty;
         config.MhrItem.HttpPort = config.MhrItem.HttpPort is > 0 and <= 65535 ? config.MhrItem.HttpPort : 8085;
         config.MhrItem.Socks5Port = config.MhrItem.Socks5Port is > 0 and <= 65535 ? config.MhrItem.Socks5Port : 1080;
+        config.TunnelingItem ??= new();
+        config.TunnelingItem.SelectedCore = config.TunnelingItem.SelectedCore.IsNullOrEmpty()
+            || !config.TunnelingItem.SelectedCore.Contains("zeptun", StringComparison.OrdinalIgnoreCase)
+            ? TunnelingItem.CoreSingbox
+            : TunnelingItem.CoreZeptun;
+        config.TunnelingItem.ZeptunPath ??= string.Empty;
+        config.TunnelingItem.ZeptunInterfaceName = config.TunnelingItem.ZeptunInterfaceName.IsNullOrEmpty()
+            ? Global.ZeptunDefaultInterfaceName
+            : config.TunnelingItem.ZeptunInterfaceName;
+        config.TunnelingItem.ZeptunStack = Global.ZeptunStacks.Contains(config.TunnelingItem.ZeptunStack)
+            ? config.TunnelingItem.ZeptunStack
+            : Global.ZeptunStacks.First();
+        config.TunnelingItem.ZeptunUdpMode = Global.ZeptunUdpModes.Contains(config.TunnelingItem.ZeptunUdpMode)
+            ? config.TunnelingItem.ZeptunUdpMode
+            : Global.ZeptunUdpModes.First();
+        config.TunnelingItem.ZeptunLogLevel = Global.ZeptunLogLevels.Contains(config.TunnelingItem.ZeptunLogLevel)
+            ? config.TunnelingItem.ZeptunLogLevel
+            : "warn";
+        config.TunnelingItem.ExtraArguments ??= string.Empty;
         if ((config.Fragment4RayItem.Lengths ?? []).Count == 0)
         {
             config.Fragment4RayItem.Lengths = [config.Fragment4RayItem.Length ?? "50-100"];
@@ -1631,7 +1650,7 @@ public static class ConfigHandler
     public static ProfileItem? GetPreSocksItem(Config config, ProfileItem node, ECoreType coreType)
     {
         ProfileItem? itemSocks = null;
-        var enableLegacyProtect = config.TunModeItem.EnableLegacyProtect;
+        var enableLegacyProtect = config.TunModeItem.EnableLegacyProtect && !ZeptunManager.IsSelectedEngine(config);
         if (node.ConfigType != EConfigType.Custom
             && coreType != ECoreType.sing_box
             && config.TunModeItem.EnableTun

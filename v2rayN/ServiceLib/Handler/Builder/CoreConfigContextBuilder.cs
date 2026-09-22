@@ -43,6 +43,7 @@ public class CoreConfigContextBuilder
             AppConfig = config,
             FullConfigTemplate = await AppManager.Instance.GetFullConfigTemplateItem(coreType),
             IsTunEnabled = config.TunModeItem.EnableTun,
+            IsTunInbound = config.TunModeItem.EnableTun && !ZeptunManager.IsSelectedEngine(config),
             SimpleDnsItem = config.SimpleDNSItem,
             ProtectDomainList = [],
             RawDnsItem = await AppManager.Instance.GetDNSItem(coreType),
@@ -161,6 +162,7 @@ public class CoreConfigContextBuilder
             Context = mainResult.Context with
             {
                 IsTunEnabled = false,
+                IsTunInbound = false,
                 // main core doesn't handle tun directly when pre-socks is used
                 ProtectDomainList = [.. mainResult.Context.ProtectDomainList, .. preResult.Context.ProtectDomainList],
             },

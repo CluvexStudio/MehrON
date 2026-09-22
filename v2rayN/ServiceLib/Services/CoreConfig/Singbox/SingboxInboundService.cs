@@ -11,7 +11,7 @@ public partial class CoreConfigSingboxService
             var isUsingLocalMixedPort = _node.Address == Global.Loopback && _node.Port == listenPort;
             _coreConfig.inbounds = [];
 
-            if (!context.IsTunEnabled || !isUsingLocalMixedPort)
+            if (!context.IsTunInbound || !isUsingLocalMixedPort)
             {
                 var inbound = new Inbound4Sbox()
                 {
@@ -51,7 +51,7 @@ public partial class CoreConfigSingboxService
                 }
             }
 
-            if (context.IsTunEnabled)
+            if (context.IsTunInbound)
             {
                 if (_config.TunModeItem.Mtu <= 0)
                 {

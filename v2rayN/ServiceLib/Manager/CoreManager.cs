@@ -100,6 +100,7 @@ public class CoreManager
         await CoreStart(mainContext);
         await WaitForProxyPort(preContext);
         await CoreStartPreService(preContext);
+        await ZeptunStart(mainContext, preContext);
 
         AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
 
@@ -154,6 +155,8 @@ public class CoreManager
     {
         try
         {
+            await ZeptunManager.Instance.StopAsync();
+
             if (_linuxSudo)
             {
                 await CoreAdminManager.Instance.KillProcessAsLinuxSudo();
@@ -222,6 +225,85 @@ public class CoreManager
     private async Task UpdateFunc(bool notify, string msg)
     {
         await _updateFunc?.Invoke(notify, msg);
+    }
+
+    private async Task ZeptunStart(CoreConfigContext context, CoreConfigContext? preContext)
+    {
+        var coreOwnsTun = context.IsTunInbound || preContext?.IsTunInbound == true;
+        if (coreOwnsTun
+            || context.AppConfig.TunModeItem.EnableTun != true
+            || !ZeptunManager.IsSelectedEngine(context.AppConfig))
+        {
+            return;
+        }
+        if (_processService is null or { HasExited: true })
+        {
+            return;
+        }
+
+        var socksPort = AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
+        await WaitForPort(socksPort);
+        await ZeptunManager.Instance.StartAsync(context, socksPort, _updateFunc);
+    }
+
+    private static async Task WaitForPort(int port)
+    {
+        if (port <= 0)
+        {
+            return;
+        }
+
+        using var rootCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+        var rootToken = rootCts.Token;
+
+        ReadOnlyMemory<byte> greeting = new byte[] { 0x05, 0x01, 0x00 };
+        var buf = new byte[2];
+
+        while (!rootToken.IsCancellationRequested)
+        {
+            using var tcp = new TcpClient();
+            using var attemptCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(rootToken, attemptCts.Token);
+            var linkedToken = linkedCts.Token;
+            try
+            {
+                await tcp.ConnectAsync(Global.Loopback, port, linkedToken);
+                var stream = tcp.GetStream();
+
+                await stream.WriteAsync(greeting, linkedToken);
+
+                var read = await stream.ReadAsync(buf.AsMemory(0, 2), linkedToken);
+
+                if (read == 2 && buf[0] == 0x05)
+                {
+                    return;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                if (!rootToken.IsCancellationRequested)
+                {
+                    continue;
+                }
+                Logging.SaveLog($"WaitForPort Timeout waiting for port {port} to be ready.");
+                return;
+            }
+            catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionRefused)
+            {
+                try
+                {
+                    await Task.Delay(50, rootToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    Logging.SaveLog($"WaitForPort Timeout waiting for port {port} to be ready.");
+                    return;
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 
     private static async Task WaitForProxyPort(CoreConfigContext? preContext)

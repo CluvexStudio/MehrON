@@ -254,6 +254,7 @@ internal static class CoreConfigTestFactory
             AllProxiesMap = new Dictionary<string, ProfileItem> { [node.IndexId] = node },
             FullConfigTemplate = fullConfigTemplate,
             IsTunEnabled = config.TunModeItem.EnableTun,
+            IsTunInbound = config.TunModeItem.EnableTun && !ZeptunManager.IsSelectedEngine(config),
             ProtectDomainList = [],
             HasGlobalIPv6Address = hasGlobalIPv6Address,
         };
@@ -279,6 +280,14 @@ internal static class CoreConfigTestFactory
         var config = CreateConfig(coreType);
         config.TunModeItem.EnableTun = true;
         config.TunModeItem.RouteExcludeAddress = ["10.0.0.1/32", "192.168.1.0/24", "fc00::/7"];
+        return config;
+    }
+
+    public static Config CreateConfigWithZeptunTun(ECoreType coreType)
+    {
+        var config = CreateConfig(coreType);
+        config.TunModeItem.EnableTun = true;
+        config.TunnelingItem = new TunnelingItem { SelectedCore = TunnelingItem.CoreZeptun };
         return config;
     }
 

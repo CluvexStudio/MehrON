@@ -32,6 +32,7 @@ public class CoreConfigSingboxServiceTests
         var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box) with
         {
             IsTunEnabled = true,
+            IsTunInbound = true,
         };
 
         var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
@@ -61,6 +62,7 @@ public class CoreConfigSingboxServiceTests
         var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box) with
         {
             IsTunEnabled = true,
+            IsTunInbound = true,
         };
 
         var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
@@ -97,6 +99,7 @@ public class CoreConfigSingboxServiceTests
         var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box) with
         {
             IsTunEnabled = true,
+            IsTunInbound = true,
         };
 
         var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
@@ -139,6 +142,7 @@ public class CoreConfigSingboxServiceTests
         var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box) with
         {
             IsTunEnabled = true,
+            IsTunInbound = true,
         };
 
         var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
@@ -697,6 +701,7 @@ public class CoreConfigSingboxServiceTests
         var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box) with
         {
             IsTunEnabled = true,
+            IsTunInbound = true,
         };
 
         var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
