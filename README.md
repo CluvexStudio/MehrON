@@ -15,7 +15,8 @@
 <p align="center">
   Windows desktop proxy client with system proxy, TUN mode, and multi-core support
   built from the PattN / Patterniha codebase, based on v2rayN.<br />
-  ⭐ Built-in <strong>SNI spoofing</strong> + <strong>MHR relay</strong> for internet shutdowns and emergency conditions.
+  ⭐ Built-in <strong>SNI spoofing</strong> + <strong>MHR relay</strong> for internet shutdowns and emergency conditions.<br />
+  🪶 Lightweight client with low RAM usage.
 </p>
 
 <p align="center">
@@ -129,6 +130,10 @@ _upstream_mhr_cfw/           MHR-CFW integration source
 > `guiNConfig` folders, logs, or runtime `config.json` files containing
 > credentials. Use placeholders in examples and keep private connection data
 > outside the repository.
+
+## Contributing
+
+Every PR and helping hand is welcome — bug reports, translations, docs, and new ideas.
 
 ## License and acknowledgements
 
