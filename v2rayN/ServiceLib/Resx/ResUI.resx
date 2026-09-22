@@ -510,6 +510,9 @@
   <data name="menuExport2ShareUrl" xml:space="preserve">
     <value>Export Share Link to Clipboard</value>
   </data>
+  <data name="menuAddAetherServer" xml:space="preserve">
+    <value>Add [Aether] server</value>
+  </data>
   <data name="menuAddCustomServer" xml:space="preserve">
     <value>Add a custom configuration</value>
   </data>

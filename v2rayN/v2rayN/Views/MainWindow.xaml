@@ -72,6 +72,10 @@
                                     Header="{x:Static resx:ResUI.menuAddServerViaImage}" />
                                 <Separator Margin="-40,5" />
                                 <MenuItem
+                                    x:Name="menuAddAetherServer"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="{x:Static resx:ResUI.menuAddAetherServer}" />
+                                <MenuItem
                                     x:Name="menuAddCustomServer"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuAddCustomServer}" />

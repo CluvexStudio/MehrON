@@ -33,6 +33,7 @@ public partial class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> AddWireguardServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddAnytlsServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddNaiveServerCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> AddAetherServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddCustomServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddCustomOutboundServerCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> AddPolicyGroupServerCmd { get; }
@@ -148,6 +149,10 @@ public partial class MainWindowViewModel : MyReactiveObject
         AddNaiveServerCmd = ReactiveCommand.CreateFromTask(async () =>
         {
             await AddServerAsync(EConfigType.Naive);
+        });
+        AddAetherServerCmd = ReactiveCommand.CreateFromTask(async () =>
+        {
+            await AddAetherServerAsync();
         });
         AddCustomServerCmd = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -532,6 +537,32 @@ public partial class MainWindowViewModel : MyReactiveObject
             var addServerViewModel = new AddServerViewModel(item);
             ret = await AppManager.Instance.WindowDialog.ShowDialogAsync(addServerViewModel);
         }
+        if (ret == true)
+        {
+            await RefreshServersDispatcherAsync();
+            if (item.IndexId == _config.IndexId)
+            {
+                await Reload();
+            }
+        }
+    }
+
+    public async Task AddAetherServerAsync(ProfileItem? editItem = null)
+    {
+        var item = editItem ?? new ProfileItem
+        {
+            Subid = _config.SubIndexId,
+            ConfigType = EConfigType.Custom,
+            CoreType = ECoreType.aether,
+            IsSub = false,
+            PreSocksPort = 1819,
+            Address = "127.0.0.1",
+            Port = 1819,
+            Remarks = "Aether WARP",
+        };
+
+        var addAetherServerViewModel = new AddAetherServerViewModel(item);
+        var ret = await AppManager.Instance.WindowDialog.ShowDialogAsync(addAetherServerViewModel);
         if (ret == true)
         {
             await RefreshServersDispatcherAsync();

@@ -476,7 +476,12 @@ public partial class ProfilesViewModel : MyReactiveObject
         var eConfigType = item.ConfigType;
 
         bool? ret = false;
-        if (eConfigType is EConfigType.Custom or EConfigType.Outbound)
+        if (item.CoreType == ECoreType.aether)
+        {
+            var addAetherServerViewModel = new AddAetherServerViewModel(item);
+            ret = await AppManager.Instance.WindowDialog.ShowDialogAsync(addAetherServerViewModel);
+        }
+        else if (eConfigType is EConfigType.Custom or EConfigType.Outbound)
         {
             var addServer2ViewModel = new AddServer2ViewModel(item);
             ret = await AppManager.Instance.WindowDialog.ShowDialogAsync(addServer2ViewModel);

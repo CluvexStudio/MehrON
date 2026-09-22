@@ -264,7 +264,7 @@ jobs:
 
             ### ✨ Improvements & Highlights
             - **⚡ Native Architecture**: Unified and refined native Windows runtime for maximum responsiveness and minimal resource usage.
-            - **🌐 Aether Engine Integration**: Added built-in support and distribution for the Aether censorship circumvention core (MASQUE, WireGuard, and pluggable transports).
+            - **🌐 Aether Engine Integration**: Built-in support, dedicated 1-click server window, and distribution for the Aether censorship circumvention core (MASQUE, WireGuard, and pluggable transports).
             - **🧠 Memory & Performance Optimizations**: Active working-set management and dynamic heap tuning for a lightweight background footprint.
             - **🎨 UI Polish & Stability**: Refined interface components, enhanced status indicators, and general stability improvements.
             - **📦 Core Engines & Routing**: Updated high-performance core binaries and latest geo-routing rules.

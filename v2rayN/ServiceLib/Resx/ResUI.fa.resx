@@ -510,6 +510,9 @@
   <data name="menuExport2ShareUrl" xml:space="preserve">
     <value>URL های اشتراک گذاری را به کلیپ بورد صادر کنید</value>
   </data>
+  <data name="menuAddAetherServer" xml:space="preserve">
+    <value>افزودن سرور [Aether]</value>
+  </data>
   <data name="menuAddCustomServer" xml:space="preserve">
     <value>یک سرور پیکربندی سفارشی اضافه شود</value>
   </data>
