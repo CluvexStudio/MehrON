@@ -4,20 +4,59 @@
 
 <h1 align="center">MehrON</h1>
 
-MehrON is a Windows desktop proxy client created from the PattN / Patterniha codebase, which is based on v2rayN. It provides a graphical interface for importing, organizing, testing, and running supported proxy profiles.
+<p align="center">
+  <a href="https://github.com/yastorovsky/MehrON/releases"><img src="https://img.shields.io/github/v/release/yastorovsky/MehrON?include_prereleases&label=download" alt="Release" /></a>
+  <img src="https://img.shields.io/badge/platform-Windows%20x64-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/.NET-10.0-purple" alt=".NET 10" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License" /></a>
+</p>
+
+<p align="center">
+  Windows desktop proxy client with system proxy, TUN mode, and multi-core support —
+  built from the PattN / Patterniha codebase, based on v2rayN.
+</p>
+
+## App screenshot
+
+![MehrON app screenshot](docs/images/app-screenshot.png)
 
 ## Features
 
+### Connection
 - Import and manage subscription links and supported share links.
-- Test profile latency and control the Windows system proxy.
-- Optional TUN mode for routing device traffic through the selected profile.
-- Bundled Xray, sing-box, mihomo, and Aether runtime support in the portable release.
+- One-click Windows system proxy control with exceptions and PAC support.
+- Optional TUN mode to route device traffic through the selected profile.
 - Per-subscription update controls in Subscription Settings.
-- Optional advanced settings for SNI spoofing and MHR integrations.
 
-## Portable release
+### Cores
+The portable release bundles ready-to-run runtimes — no separate core download needed:
 
-The portable Windows package is distributed as `MehrON-windows-64.zip`.
+| Core | Use |
+| ---- | --- |
+| Xray | VLESS / VMess / Trojan / Shadowsocks and more |
+| sing-box | Modern protocols including Hysteria2, TUIC, WireGuard |
+| mihomo | Clash-compatible rule-based routing |
+| Aether | Censorship circumvention (MASQUE, WireGuard, pluggable transports) |
+
+### Routing and DNS
+- Visual routing rules editor with bypass / proxy / direct presets.
+- DNS settings with hijack and FakeIP support.
+- Optional SNI spoofing engine and MHR relay integration.
+
+### Settings for everyone
+- Option settings are grouped by topic (connection, core, system proxy, TUN, appearance…).
+- **Novice mode:** turn off *Show advanced settings* on top of the Option window
+  to hide Fragment, MUX, update sources, and advanced TUN options.
+
+### Test and maintain
+- Profile latency / speed test with configurable endpoints.
+- Server statistics, subscription auto-update, backup and restore.
+- Beta update channel with automatic update checks.
+
+## Quick start (portable release)
+
+The portable Windows package is distributed as `MehrON-windows-64.zip`
+(one archive — no nested zips).
 
 1. Extract the archive to a writable folder.
 2. Run `MehrON.exe`.
@@ -33,24 +72,21 @@ Requirements:
 - Windows
 - .NET SDK 10.0 (see `global.json`)
 
-Build the desktop client from the repository root:
+Build the WPF desktop client from the repository root:
 
 ```powershell
-dotnet build .\v2rayN\v2rayN.Desktop\v2rayN.Desktop.csproj -c Release
+dotnet build .\v2rayN\v2rayN\v2rayN.csproj -c Release
 ```
 
-The output is written to:
+The output is written to `v2rayN\v2rayN\bin\Release\`.
 
-```text
-v2rayN\v2rayN.Desktop\bin\Release\net10.0\MehrON.exe
-```
-
-Runtime binaries are not produced by the .NET build. A portable release must include the required Xray, sing-box, mihomo, and Aether files beneath its `bin` directory.
+Runtime binaries are not produced by the .NET build. A portable release must include the
+required Xray, sing-box, mihomo, and Aether files beneath its `bin` directory.
 
 ## Repository layout
 
 ```text
-v2rayN/                     Main desktop client source
+v2rayN/                      Main desktop client source
 _upstream_sni_spoofing/      SNI spoofing integration source
 _upstream_mhr/               MHR integration source
 _upstream_mhr_cfw/           MHR-CFW integration source
@@ -58,7 +94,7 @@ _upstream_mhr_cfw/           MHR-CFW integration source
 
 ## Security and privacy
 
-Do not commit or publish personal profiles, subscription URLs, generated `guiConfigs` folders, logs, or runtime `config.json` files containing credentials. Use placeholders in examples and keep private connection data outside the repository.
+Do not commit or publish personal profiles, subscription URLs, generated `guiNConfig` folders, logs, or runtime `config.json` files containing credentials. Use placeholders in examples and keep private connection data outside the repository.
 
 ## License and acknowledgements
 
