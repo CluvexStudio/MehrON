@@ -106,6 +106,7 @@ public class UIItem
     public List<WindowSizeItem> WindowSizeItem { get; set; }
     public bool HideColumnIpInfo { get; set; }
     public bool ShowBottomLog { get; set; } = true;
+    public bool ShowAdvancedSettings { get; set; } = true;
 }
 
 [Serializable]

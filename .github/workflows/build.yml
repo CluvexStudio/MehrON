@@ -249,7 +249,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MehrON-windows-64
-          path: MehrON-windows-64.zip
+          path: ./dist/MehrON-windows-64
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
