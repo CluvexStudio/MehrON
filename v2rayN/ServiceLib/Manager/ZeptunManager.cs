@@ -181,6 +181,7 @@ public sealed class ZeptunManager
                 {
                     details = string.Join(Environment.NewLine, recentOutput);
                 }
+                Logging.SaveLog($"{_tag} exited immediately: {details}");
                 throw new Exception(details.IsNullOrEmpty() ? ResUI.MsgZeptunStartFailed : details);
             }
 
@@ -463,6 +464,7 @@ public sealed class ZeptunManager
 
     private static async Task Notify(Func<bool, string, Task>? updateFunc, bool isError, string message)
     {
+        Logging.SaveLog($"{_tag} {message}");
         if (updateFunc != null)
         {
             await updateFunc(isError, message + Environment.NewLine);

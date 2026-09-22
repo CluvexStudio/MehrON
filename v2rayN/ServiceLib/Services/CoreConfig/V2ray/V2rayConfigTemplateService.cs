@@ -244,8 +244,13 @@ public partial class CoreConfigV2rayService
         }
         if (mark == 0 && bindInterface.IsNullOrEmpty())
         {
+            Logging.SaveLog($"{_tag} external TUN is active but no interface could be detected; the core's own traffic may loop back into the tunnel");
             return;
         }
+
+        Logging.SaveLog(mark != 0
+            ? $"{_tag} external TUN protect: fwmark {mark}"
+            : $"{_tag} external TUN protect: bind interface {bindInterface}");
 
         foreach (var outbound in _coreConfig.outbounds ?? [])
         {

@@ -154,6 +154,7 @@ public partial class CoreConfigSingboxService
         if (Utils.IsLinux())
         {
             _coreConfig.route.default_mark = ZeptunManager.Fwmark;
+            Logging.SaveLog($"{_tag} external TUN protect: default_mark {ZeptunManager.Fwmark}");
             return;
         }
 
@@ -164,9 +165,11 @@ public partial class CoreConfigSingboxService
         }
         if (bindInterface.IsNullOrEmpty())
         {
+            Logging.SaveLog($"{_tag} external TUN is active but no interface could be detected; the core's own traffic may loop back into the tunnel");
             return;
         }
 
+        Logging.SaveLog($"{_tag} external TUN protect: default_interface {bindInterface}");
         _coreConfig.route.auto_detect_interface = false;
         _coreConfig.route.default_interface = bindInterface;
     }

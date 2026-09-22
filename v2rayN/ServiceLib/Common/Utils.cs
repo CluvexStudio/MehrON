@@ -864,6 +864,7 @@ public class Utils
 
             if (usable.Count == 0)
             {
+                Logging.SaveLog($"{nameof(GetDefaultInterfaceName)}: no usable interface found");
                 return null;
             }
 
@@ -874,17 +875,23 @@ public class Utils
                     .Any(ua => ua.Address.Equals(localAddress)));
                 if (matched != null)
                 {
+                    Logging.SaveLog($"{nameof(GetDefaultInterfaceName)}: {matched.Name} (source address {localAddress})");
                     return matched.Name;
                 }
             }
 
-            return usable
+            var byGateway = usable
                 .Where(ni => ni.GetIPProperties().GatewayAddresses
                     .Any(g => g.Address != null
                               && !g.Address.Equals(IPAddress.Any)
                               && !g.Address.Equals(IPAddress.IPv6Any)))
                 .Select(ni => ni.Name)
                 .FirstOrDefault();
+
+            Logging.SaveLog(byGateway.IsNullOrEmpty()
+                ? $"{nameof(GetDefaultInterfaceName)}: no interface with a gateway among [{string.Join(", ", usable.Select(ni => ni.Name))}]"
+                : $"{nameof(GetDefaultInterfaceName)}: {byGateway} (by gateway)");
+            return byGateway;
         }
         catch (Exception ex)
         {
