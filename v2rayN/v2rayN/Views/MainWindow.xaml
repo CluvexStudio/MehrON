@@ -191,6 +191,11 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                                 <MenuItem
+                                    x:Name="menuSettingsCenter"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="{x:Static resx:ResUI.menuSettingsCenter}" />
+                                <Separator Margin="-40,5" />
+                                <MenuItem
                                     x:Name="menuOptionSetting"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuOptionSetting}" />

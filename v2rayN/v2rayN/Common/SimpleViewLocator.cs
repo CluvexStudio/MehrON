@@ -31,6 +31,7 @@ public class SimpleViewLocator : IViewLocator
         Register<RoutingRuleDetailsViewModel, RoutingRuleDetailsWindow>();
         Register<RoutingRuleSettingViewModel, RoutingRuleSettingWindow>();
         Register<RoutingSettingViewModel, RoutingSettingWindow>();
+        Register<SettingsCenterViewModel, SettingsCenterWindow>();
         Register<SniSpoofingSettingViewModel, SniSpoofingSettingWindow>();
         Register<StatusBarViewModel, StatusBarView>();
         Register<SubEditViewModel, SubEditWindow>();
