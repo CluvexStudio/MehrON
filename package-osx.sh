@@ -27,6 +27,10 @@ mkdir -p "$OutputPath/bin/srss"
 wget -nv -O "$OutputPath/bin/srss/geosite-category-ir.srs" "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geosite-category-ir.srs"
 wget -nv -O "$OutputPath/bin/srss/geoip-ir.srs" "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geoip-ir.srs"
 
+mkdir -p "$OutputPath/bin/zeptun"
+wget -nv -O "$OutputPath/bin/zeptun/zeptun" "https://github.com/Noisemux/zeptun/releases/latest/download/zeptun-darwin-universal" || echo "[!] zeptun download failed (skipped)"
+[ -f "$OutputPath/bin/zeptun/zeptun" ] && chmod +x "$OutputPath/bin/zeptun/zeptun"
+
 PackagePath="v2rayN-Package-${Arch}"
 mkdir -p "$PackagePath/PattN.app/Contents/Resources"
 cp -rf "$OutputPath" "$PackagePath/PattN.app/Contents/MacOS"

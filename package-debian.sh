@@ -471,6 +471,32 @@ populate_assets_netcore_mode() {
   download_geo_assets "$outroot" || echo "[!] Geo rules download failed (skipped)"
 }
 
+zeptun_asset_for_rid() {
+  case "$1" in
+    linux-x64|linux-amd64|linux-64)   echo "zeptun-linux-x86_64" ;;
+    linux-arm64)                      echo "zeptun-linux-arm64" ;;
+    linux-riscv64)                    echo "zeptun-linux-riscv64" ;;
+    linux-loongarch64|linux-loong64)  echo "zeptun-linux-loong64" ;;
+    osx-x64|osx-arm64|osx-universal)  echo "zeptun-darwin-universal" ;;
+    *) return 1 ;;
+  esac
+}
+
+download_zeptun() {
+  local outdir="$1"
+  local rid="$2"
+  local asset=""
+  local url=""
+
+  asset="$(zeptun_asset_for_rid "$rid")" || { echo "[zeptun] Unsupported RID: $rid"; return 1; }
+  url="https://github.com/Noisemux/zeptun/releases/latest/download/${asset}"
+
+  mkdir -p "$outdir"
+  echo "[+] Download zeptun: $url"
+  curl -fL "$url" -o "$outdir/zeptun" || { rm -f "$outdir/zeptun"; return 1; }
+  chmod 755 "$outdir/zeptun"
+}
+
 stage_runtime_assets() {
   local outroot="$1"
   local rid="$2"
@@ -492,6 +518,7 @@ stage_runtime_assets() {
     echo "[*] --netcore specified: use separate core + rules."
     populate_assets_netcore_mode "$outroot" "$rid"
   fi
+  download_zeptun "$outroot/bin/zeptun" "$rid" || echo "[!] zeptun download failed (skipped)"
 }
 
 describe_target() {
