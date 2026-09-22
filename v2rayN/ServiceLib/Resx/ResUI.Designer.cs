@@ -2444,6 +2444,159 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("OperationFailed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Appearance 的本地化字符串。
+        /// </summary>
+        public static string OptGroupAppearance {
+            get {
+                return ResourceManager.GetString("OptGroupAppearance", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Fingerprint 的本地化字符串。
+        /// </summary>
+        public static string OptGroupFingerprint {
+            get {
+                return ResourceManager.GetString("OptGroupFingerprint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Fragment (advanced) 的本地化字符串。
+        /// </summary>
+        public static string OptGroupFragment {
+            get {
+                return ResourceManager.GetString("OptGroupFragment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Inbound listening 的本地化字符串。
+        /// </summary>
+        public static string OptGroupInbound {
+            get {
+                return ResourceManager.GetString("OptGroupInbound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Logging 的本地化字符串。
+        /// </summary>
+        public static string OptGroupLogging {
+            get {
+                return ResourceManager.GetString("OptGroupLogging", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 MUX 的本地化字符串。
+        /// </summary>
+        public static string OptGroupMux {
+            get {
+                return ResourceManager.GetString("OptGroupMux", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Outbound binding 的本地化字符串。
+        /// </summary>
+        public static string OptGroupOutboundBind {
+            get {
+                return ResourceManager.GetString("OptGroupOutboundBind", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Protocol cores 的本地化字符串。
+        /// </summary>
+        public static string OptGroupProtocolCores {
+            get {
+                return ResourceManager.GetString("OptGroupProtocolCores", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 sing-box extras 的本地化字符串。
+        /// </summary>
+        public static string OptGroupSingbox {
+            get {
+                return ResourceManager.GetString("OptGroupSingbox", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Update sources (advanced) 的本地化字符串。
+        /// </summary>
+        public static string OptGroupSources {
+            get {
+                return ResourceManager.GetString("OptGroupSources", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Speed test 的本地化字符串。
+        /// </summary>
+        public static string OptGroupSpeedTest {
+            get {
+                return ResourceManager.GetString("OptGroupSpeedTest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Startup and behavior 的本地化字符串。
+        /// </summary>
+        public static string OptGroupStartup {
+            get {
+                return ResourceManager.GetString("OptGroupStartup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 System proxy 的本地化字符串。
+        /// </summary>
+        public static string OptGroupSysProxy {
+            get {
+                return ResourceManager.GetString("OptGroupSysProxy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Proxy exceptions 的本地化字符串。
+        /// </summary>
+        public static string OptGroupSysProxyExceptions {
+            get {
+                return ResourceManager.GetString("OptGroupSysProxyExceptions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 TUN advanced 的本地化字符串。
+        /// </summary>
+        public static string OptGroupTunAdvanced {
+            get {
+                return ResourceManager.GetString("OptGroupTunAdvanced", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 TUN basic 的本地化字符串。
+        /// </summary>
+        public static string OptGroupTunBasic {
+            get {
+                return ResourceManager.GetString("OptGroupTunBasic", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Updates and limits 的本地化字符串。
+        /// </summary>
+        public static string OptGroupUpdates {
+            get {
+                return ResourceManager.GetString("OptGroupUpdates", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Operation successful 的本地化字符串。
