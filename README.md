@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="https://github.com/yastorovsky/MehrON/releases"><img src="https://img.shields.io/github/v/release/yastorovsky/MehrON?include_prereleases&label=download" alt="Release" /></a>
+  <a href="https://github.com/yastorovsky/MehrON/releases"><img src="https://img.shields.io/github/downloads/yastorovsky/MehrON/total?label=downloads" alt="Downloads" /></a>
   <img src="https://img.shields.io/badge/platform-Windows%20x64-blue" alt="Platform" />
   <img src="https://img.shields.io/badge/.NET-10.0-purple" alt=".NET 10" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="License" /></a>
@@ -33,10 +34,15 @@ The portable release bundles ready-to-run runtimes — no separate core download
 
 | Core | Use |
 | ---- | --- |
-| Xray | VLESS / VMess / Trojan / Shadowsocks and more |
+| Xray | VLESS / VMess / Trojan / Shadowsocks, including Reality and XTLS |
 | sing-box | Modern protocols including Hysteria2, TUIC, WireGuard |
-| mihomo | Clash-compatible rule-based routing |
+| mihomo | Clash Meta–compatible rule-based routing |
 | Aether | Censorship circumvention (MASQUE, WireGuard, pluggable transports) |
+
+> [!TIP]
+> Official portable releases ship with the `bin/` core binaries and up-to-date
+> `geoip.dat` / `geosite.dat` routing databases already in place — no extra
+> downloads are needed before first connect.
 
 ### Routing and DNS
 - Visual routing rules editor with bypass / proxy / direct presets.
@@ -63,6 +69,10 @@ The portable Windows package is distributed as `MehrON-windows-64.zip`
 3. Accept the Windows administrator prompt when using TUN mode or other features that require elevated permissions.
 4. Import a profile or add a subscription link.
 
+> [!IMPORTANT]
+> TUN mode installs a virtual network adapter and needs administrator rights.
+> If you only use the system proxy mode, elevation is not required.
+
 The release intentionally contains no saved profiles, subscriptions, logs, or generated runtime configuration files.
 
 ## Build from source
@@ -80,8 +90,10 @@ dotnet build .\v2rayN\v2rayN\v2rayN.csproj -c Release
 
 The output is written to `v2rayN\v2rayN\bin\Release\`.
 
-Runtime binaries are not produced by the .NET build. A portable release must include the
-required Xray, sing-box, mihomo, and Aether files beneath its `bin` directory.
+> [!NOTE]
+> Runtime binaries are not produced by the .NET build. A portable release must
+> include the required Xray, sing-box, mihomo, and Aether files beneath its
+> `bin` directory before it can run standalone.
 
 ## Repository layout
 
@@ -94,7 +106,11 @@ _upstream_mhr_cfw/           MHR-CFW integration source
 
 ## Security and privacy
 
-Do not commit or publish personal profiles, subscription URLs, generated `guiNConfig` folders, logs, or runtime `config.json` files containing credentials. Use placeholders in examples and keep private connection data outside the repository.
+> [!WARNING]
+> Do not commit or publish personal profiles, subscription URLs, generated
+> `guiNConfig` folders, logs, or runtime `config.json` files containing
+> credentials. Use placeholders in examples and keep private connection data
+> outside the repository.
 
 ## License and acknowledgements
 
