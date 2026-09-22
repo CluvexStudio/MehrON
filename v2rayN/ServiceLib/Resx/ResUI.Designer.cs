@@ -5942,5 +5942,14 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbSettingsZeptunDnsUpstream", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 A Zeptun process from an earlier run is still holding the tunnel (pid {0}); stopping it. 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunStaleProcess {
+            get {
+                return ResourceManager.GetString("MsgZeptunStaleProcess", resourceCulture);
+            }
+        }
     }
 }

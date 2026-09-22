@@ -1980,4 +1980,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbSettingsZeptunDnsUpstream" xml:space="preserve">
     <value>سرور DNS بالادست زپتان</value>
   </data>
+  <data name="MsgZeptunStaleProcess" xml:space="preserve">
+    <value>یک پروسهٔ زپتان از اجرای قبلی هنوز تونل را در دست دارد (pid {0})؛ متوقف می‌شود.</value>
+  </data>
 </root>

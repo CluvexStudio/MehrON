@@ -112,6 +112,8 @@ public sealed class ZeptunManager
             await Utils.SetLinuxChmod(exePath);
         }
 
+        await KillStaleProcessesAsync(exePath, updateFunc);
+
         var arguments = await BuildArgumentsAsync(context, item, socksPort, updateFunc);
 
         var recentOutput = new List<string>();
@@ -406,6 +408,52 @@ public sealed class ZeptunManager
             Logging.SaveLog($"{_tag} resolve {host}", ex);
             return [];
         }
+    }
+
+    private static async Task KillStaleProcessesAsync(string exePath, Func<bool, string, Task>? updateFunc)
+    {
+        if (!Utils.IsLinux())
+        {
+            return;
+        }
+
+        foreach (var pid in FindProcessIds(exePath))
+        {
+            await Notify(updateFunc, false, string.Format(ResUI.MsgZeptunStaleProcess, pid));
+            await CoreAdminManager.Instance.KillPidAsLinuxSudo(pid);
+        }
+    }
+
+    private static List<int> FindProcessIds(string exePath)
+    {
+        var pids = new List<int>();
+        try
+        {
+            foreach (var dir in Directory.EnumerateDirectories("/proc"))
+            {
+                var name = Path.GetFileName(dir);
+                if (!int.TryParse(name, out var pid) || pid == Environment.ProcessId)
+                {
+                    continue;
+                }
+                try
+                {
+                    var cmdline = File.ReadAllText(Path.Combine(dir, "cmdline")).Replace('\0', ' ');
+                    if (cmdline.Contains(exePath, StringComparison.Ordinal))
+                    {
+                        pids.Add(pid);
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+        }
+        return pids;
     }
 
     private static string ToHostPrefix(IPAddress ip)

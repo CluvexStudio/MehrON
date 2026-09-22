@@ -2106,4 +2106,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbSettingsZeptunDnsUpstream" xml:space="preserve">
     <value>Zeptun DNS upstream</value>
   </data>
+  <data name="MsgZeptunStaleProcess" xml:space="preserve">
+    <value>A Zeptun process from an earlier run is still holding the tunnel (pid {0}); stopping it.</value>
+  </data>
 </root>
