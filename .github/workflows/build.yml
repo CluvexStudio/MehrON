@@ -268,6 +268,26 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Resolve Version
+        id: version_step
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            tag="${{ github.ref_name }}"
+          elif [ -n "${{ inputs.release_tag }}" ]; then
+            tag="${{ inputs.release_tag }}"
+            [[ "$tag" == v* ]] || tag="v$tag"
+          else
+            v=$(grep -oPm1 "(?<=<Version>)[^<]+" ./v2rayN/Directory.Build.props)
+            ref="${{ github.ref_name }}"
+            if [ "$ref" = "Beta" ] && [[ "$v" != *"-beta"* ]]; then
+              tag="v$v-beta"
+            else
+              tag="v$v"
+            fi
+          fi
+          echo "Resolved Version Tag: $tag"
+          echo "TAG_NAME=$tag" >> $GITHUB_ENV
+
       - name: Build & Publish MehrON Desktop (Linux)
         run: |
           outDir="./dist/MehrON-linux-64"
@@ -384,6 +404,75 @@ jobs:
           curl -fsSL "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geosite-category-ir.srs" -o "$binDir/srss/geosite-category-ir.srs" || true
           curl -fsSL "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geoip-ir.srs" -o "$binDir/srss/geoip-ir.srs" || true
 
+      - name: Build Debian (.deb) Package
+        run: |
+          cleanVer="${TAG_NAME#v}"
+          cleanVer="${cleanVer%-beta}"
+          debRoot="./deb-staging"
+          rm -rf "$debRoot"
+          mkdir -p "$debRoot/DEBIAN"
+          mkdir -p "$debRoot/opt/MehrON"
+          mkdir -p "$debRoot/usr/bin"
+          mkdir -p "$debRoot/usr/share/applications"
+          mkdir -p "$debRoot/usr/share/pixmaps"
+          mkdir -p "$debRoot/usr/share/icons/hicolor/512x512/apps"
+
+          # Control file
+          cat <<EOF > "$debRoot/DEBIAN/control"
+Package: mehron
+Version: ${cleanVer}
+Section: net
+Priority: optional
+Architecture: amd64
+Maintainer: MehrON Contributors <https://github.com/yastorovsky/MehrON>
+Description: MehrON is a fast and modern GUI proxy client.
+ Cross-platform desktop proxy client supporting Xray, sing-box, mihomo, and Aether.
+EOF
+
+          # Copy application payload to /opt/MehrON
+          cp -rf ./dist/MehrON-linux-64/* "$debRoot/opt/MehrON/"
+
+          # Desktop launcher
+          cat <<EOF > "$debRoot/usr/share/applications/MehrON.desktop"
+[Desktop Entry]
+Name=MehrON
+Comment=MehrON Proxy Client
+Exec=/opt/MehrON/MehrON %u
+Icon=MehrON
+Terminal=false
+Type=Application
+Categories=Network;Proxy;
+StartupNotify=true
+StartupWMClass=MehrON
+EOF
+
+          # CLI Wrapper
+          cat <<'EOF' > "$debRoot/usr/bin/MehrON"
+#!/bin/bash
+exec /opt/MehrON/MehrON "$@"
+EOF
+          chmod 755 "$debRoot/usr/bin/MehrON"
+          chmod 644 "$debRoot/usr/share/applications/MehrON.desktop"
+
+          # Icons
+          if [ -f "./v2rayN/v2rayN.Desktop/Assets/MehrON-logo.png" ]; then
+            cp -f "./v2rayN/v2rayN.Desktop/Assets/MehrON-logo.png" "$debRoot/usr/share/pixmaps/MehrON.png"
+            cp -f "./v2rayN/v2rayN.Desktop/Assets/MehrON-logo.png" "$debRoot/usr/share/icons/hicolor/512x512/apps/MehrON.png"
+          fi
+
+          # Fix permissions
+          chmod -R u=rwX,go=rX "$debRoot"
+          chmod 755 "$debRoot/DEBIAN"
+          chmod 755 "$debRoot/opt/MehrON/MehrON"
+          chmod 755 "$debRoot/opt/MehrON/AmazTool" || true
+          find "$debRoot/opt/MehrON/bin" -type f -exec chmod 755 {} + || true
+
+          # Build package
+          dpkg-deb --build --root-owner-group "$debRoot" "./MehrON-linux-amd64.deb"
+          cp -f "./MehrON-linux-amd64.deb" "./dist/MehrON-linux-64/MehrON-linux-amd64.deb"
+          cp -f "./MehrON-linux-amd64.deb" "./dist/MehrON-linux-64/MehrON-linux-64.deb"
+          echo "Built Debian package: MehrON-linux-amd64.deb ($(du -h MehrON-linux-amd64.deb | cut -f1))"
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -438,6 +527,14 @@ jobs:
           (cd ./dist/MehrON-windows-64 && zip -q -r ../../MehrON-windows-64.zip .)
           echo "Windows package: MehrON-windows-64.zip ($(du -h MehrON-windows-64.zip | cut -f1))"
 
+          # Extract .deb package before zipping linux directory
+          if [ -f "./dist/MehrON-linux-64/MehrON-linux-amd64.deb" ]; then
+            cp -f "./dist/MehrON-linux-64/MehrON-linux-amd64.deb" "./MehrON-linux-amd64.deb"
+            cp -f "./dist/MehrON-linux-64/MehrON-linux-64.deb" "./MehrON-linux-64.deb"
+            rm -f "./dist/MehrON-linux-64/MehrON-linux-amd64.deb" "./dist/MehrON-linux-64/MehrON-linux-64.deb"
+            echo "Extracted Debian package: MehrON-linux-amd64.deb ($(du -h MehrON-linux-amd64.deb | cut -f1))"
+          fi
+
           # Fix Linux permissions and package tar.gz & zip
           chmod +x ./dist/MehrON-linux-64/MehrON || true
           chmod +x ./dist/MehrON-linux-64/AmazTool || true
@@ -458,17 +555,19 @@ jobs:
 
             ### ✨ Improvements & Highlights
             - **⚡ Native Architecture**: Unified and refined native runtime for Windows and Linux (Ubuntu / Debian).
-            - **🐧 Linux (Ubuntu x64) Support**: Native cross-platform desktop client release with bundled Linux cores.
+            - **🐧 Linux (Ubuntu / Debian x64) Support**: Native cross-platform desktop client release with bundled Linux cores, portable archives, and official .deb package.
             - **🌐 Aether Engine Integration**: Built-in support, dedicated 1-click server window, and distribution for the Aether censorship circumvention core (MASQUE, WireGuard, and pluggable transports).
             - **🧠 Memory & Performance Optimizations**: Active working-set management and dynamic heap tuning for a lightweight background footprint.
             - **🎨 UI Polish & Stability**: Refined interface components, enhanced status indicators, and general stability improvements.
             - **📦 Core Engines & Routing**: Updated high-performance core binaries and latest geo-routing rules.
 
             ---
-            *Platforms: Windows x64 (Portable), Linux x64 (Ubuntu / Debian)*
+            *Platforms: Windows x64 (Portable), Linux x64 (Ubuntu / Debian .deb & portable)*
           files: |
             MehrON-windows-64.zip
             MehrON-linux-64.tar.gz
             MehrON-linux-64.zip
+            MehrON-linux-amd64.deb
+            MehrON-linux-64.deb
           draft: false
           prerelease: ${{ github.ref_name == 'Beta' }}

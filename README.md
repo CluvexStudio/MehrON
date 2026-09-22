@@ -26,9 +26,20 @@ The portable Windows package is distributed as `MehrON-windows-64.zip`.
 4. Import a profile or add a subscription link.
 
 ### Linux (Ubuntu / Debian x64)
-The portable Linux package is distributed as `MehrON-linux-64.tar.gz` and `MehrON-linux-64.zip`.
 
-1. Extract the archive: `tar -xzf MehrON-linux-64.tar.gz`
+**Option 1: Debian package (`.deb` installer):**
+1. Download `MehrON-linux-amd64.deb` (or `MehrON-linux-64.deb`).
+2. Install via terminal or double-click:
+   ```bash
+   sudo apt install ./MehrON-linux-amd64.deb
+   ```
+3. Launch `MehrON` from the applications menu or run `MehrON` in terminal.
+
+**Option 2: Portable archive (`.tar.gz` / `.zip`):**
+1. Download and extract the archive:
+   ```bash
+   tar -xzf MehrON-linux-64.tar.gz
+   ```
 2. Run `./MehrON` (or `sudo ./MehrON` when using TUN mode).
 3. Import a profile or add a subscription link.
 
