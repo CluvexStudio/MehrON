@@ -418,39 +418,39 @@ jobs:
           mkdir -p "$debRoot/usr/share/icons/hicolor/512x512/apps"
 
           # Control file
-          cat <<EOF > "$debRoot/DEBIAN/control"
-Package: mehron
-Version: ${cleanVer}
-Section: net
-Priority: optional
-Architecture: amd64
-Maintainer: MehrON Contributors <https://github.com/yastorovsky/MehrON>
-Description: MehrON is a fast and modern GUI proxy client.
- Cross-platform desktop proxy client supporting Xray, sing-box, mihomo, and Aether.
-EOF
+          printf '%s\n' \
+            "Package: mehron" \
+            "Version: ${cleanVer}" \
+            "Section: net" \
+            "Priority: optional" \
+            "Architecture: amd64" \
+            "Maintainer: MehrON Contributors <https://github.com/yastorovsky/MehrON>" \
+            "Description: MehrON is a fast and modern GUI proxy client." \
+            " Cross-platform desktop proxy client supporting Xray, sing-box, mihomo, and Aether." \
+            > "$debRoot/DEBIAN/control"
 
           # Copy application payload to /opt/MehrON
           cp -rf ./dist/MehrON-linux-64/* "$debRoot/opt/MehrON/"
 
           # Desktop launcher
-          cat <<EOF > "$debRoot/usr/share/applications/MehrON.desktop"
-[Desktop Entry]
-Name=MehrON
-Comment=MehrON Proxy Client
-Exec=/opt/MehrON/MehrON %u
-Icon=MehrON
-Terminal=false
-Type=Application
-Categories=Network;Proxy;
-StartupNotify=true
-StartupWMClass=MehrON
-EOF
+          printf '%s\n' \
+            "[Desktop Entry]" \
+            "Name=MehrON" \
+            "Comment=MehrON Proxy Client" \
+            "Exec=/opt/MehrON/MehrON %u" \
+            "Icon=MehrON" \
+            "Terminal=false" \
+            "Type=Application" \
+            "Categories=Network;Proxy;" \
+            "StartupNotify=true" \
+            "StartupWMClass=MehrON" \
+            > "$debRoot/usr/share/applications/MehrON.desktop"
 
           # CLI Wrapper
-          cat <<'EOF' > "$debRoot/usr/bin/MehrON"
-#!/bin/bash
-exec /opt/MehrON/MehrON "$@"
-EOF
+          printf '%s\n' \
+            '#!/bin/bash' \
+            'exec /opt/MehrON/MehrON "$@"' \
+            > "$debRoot/usr/bin/MehrON"
           chmod 755 "$debRoot/usr/bin/MehrON"
           chmod 644 "$debRoot/usr/share/applications/MehrON.desktop"
 
