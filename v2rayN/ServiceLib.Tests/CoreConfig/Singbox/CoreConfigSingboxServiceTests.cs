@@ -48,6 +48,31 @@ public class CoreConfigSingboxServiceTests
     }
 
     [Test]
+    public async Task GenerateClientConfigContent_ZeptunEngine_ShouldNotBuildTunInbound()
+    {
+        var config = CoreConfigTestFactory.CreateConfigWithZeptunTun(ECoreType.sing_box);
+        CoreConfigTestFactory.BindAppManagerConfig(config);
+
+        var node = CoreConfigTestFactory.CreateVmessNode(ECoreType.sing_box);
+        var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.sing_box);
+
+        var result = new CoreConfigSingboxService(context).GenerateClientConfigContent();
+
+        await result.Success.Should().BeTrue().Because($"ret msg: {result.Msg}");
+        var cfg = JsonUtils.Deserialize<SingboxConfig>(result.Data!.ToString())!;
+
+        var hasTunInbound = cfg.inbounds.Any(i => i.type == "tun");
+        await hasTunInbound.Should().BeFalse();
+        await cfg.inbounds.Should().Contain(i =>
+            i.type == nameof(EInboundProtocol.mixed)
+            && i.listen_port == AppManager.Instance.GetLocalPort(EInboundProtocol.socks));
+
+        var isProtected = cfg.route.default_mark == ZeptunManager.Fwmark
+                          || cfg.route.default_interface.IsNotEmpty();
+        await isProtected.Should().BeTrue();
+    }
+
+    [Test]
     public async Task GenerateClientConfigContent_TunEnabled_ShouldKeepEmbeddedTunRules()
     {
         // The embedded tun rules reject local-network noise (NetBIOS/mDNS, multicast).

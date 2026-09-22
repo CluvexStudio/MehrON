@@ -523,6 +523,8 @@ public class AccountsItem4Ray
 
 public class Sockopt4Ray
 {
+    public int? mark { get; set; }
+
     public string? domainStrategy { get; set; }
 
     public string? dialerProxy { get; set; }

@@ -170,6 +170,7 @@ public partial class CoreConfigSingboxService(CoreConfigContext context)
 
             ApplyOutboundBindInterface();
             ApplyOutboundSendThrough();
+            ApplyExternalTunProtect();
             ret.Success = true;
             ret.Data = ApplyCustomOutboundReplace();
             return ret;
@@ -230,6 +231,7 @@ public partial class CoreConfigSingboxService(CoreConfigContext context)
             });
             ApplyOutboundBindInterface();
             ApplyOutboundSendThrough();
+            ApplyExternalTunProtect();
 
             ret.Msg = string.Format(ResUI.SuccessfulConfiguration, "");
             ret.Success = true;

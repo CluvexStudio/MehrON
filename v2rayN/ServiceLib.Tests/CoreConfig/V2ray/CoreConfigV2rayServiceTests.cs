@@ -715,6 +715,52 @@ public class CoreConfigV2rayServiceTests
     }
 
     [Test]
+    public async Task GenerateClientConfigContent_ZeptunEngine_ShouldNotBuildTunInbound()
+    {
+        var config = CoreConfigTestFactory.CreateConfigWithZeptunTun(ECoreType.Xray);
+        CoreConfigTestFactory.BindAppManagerConfig(config);
+
+        var node = CoreConfigTestFactory.CreateVmessNode(ECoreType.Xray, "n-main", "main");
+        var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.Xray);
+
+        var result = new CoreConfigV2rayService(context).GenerateClientConfigContent();
+
+        await result.Success.Should().BeTrue().Because($"ret msg: {result.Msg}");
+        var cfg = JsonUtils.Deserialize<V2rayConfig>(result.Data!.ToString())!;
+
+        var hasTunInbound = cfg.inbounds.Any(i => i.protocol == "tun");
+        await hasTunInbound.Should().BeFalse();
+        await cfg.inbounds.Should().Contain(i =>
+            i.tag == nameof(EInboundProtocol.socks)
+            && i.port == AppManager.Instance.GetLocalPort(EInboundProtocol.socks));
+    }
+
+    [Test]
+    public async Task GenerateClientConfigContent_ZeptunEngine_ShouldProtectOutboundsFromTun()
+    {
+        var config = CoreConfigTestFactory.CreateConfigWithZeptunTun(ECoreType.Xray);
+        CoreConfigTestFactory.BindAppManagerConfig(config);
+
+        var node = CoreConfigTestFactory.CreateVmessNode(ECoreType.Xray, "n-main", "main");
+        var context = CoreConfigTestFactory.CreateContext(config, node, ECoreType.Xray);
+
+        var result = new CoreConfigV2rayService(context).GenerateClientConfigContent();
+
+        await result.Success.Should().BeTrue().Because($"ret msg: {result.Msg}");
+        var cfg = JsonUtils.Deserialize<V2rayConfig>(result.Data!.ToString())!;
+
+        foreach (var tag in new[] { Global.ProxyTag, Global.DirectTag })
+        {
+            var outbound = cfg.outbounds.FirstOrDefault(o => o.tag == tag);
+            await outbound.Should().NotBeNull();
+            var sockopt = outbound!.streamSettings?.sockopt;
+            await sockopt.Should().NotBeNull();
+            var isProtected = sockopt!.mark == ZeptunManager.Fwmark || sockopt.Interface.IsNotEmpty();
+            await isProtected.Should().BeTrue();
+        }
+    }
+
+    [Test]
     public async Task GenerateClientConfigContent_TunRouteExcludeAddress_ShouldSkipIPv6RangesWithoutGlobalIPv6()
     {
         var config = CoreConfigTestFactory.CreateConfigWithTunRouteExcludeAddress(ECoreType.Xray);
