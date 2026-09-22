@@ -27,11 +27,11 @@ public partial class AddAetherServerViewModel : MyReactiveObject, ICloseable
 
     public List<string> Protocols { get; } =
     [
+        "WARP-in-WARP (gool)",
+        "WireGuard",
         "MASQUE (QUIC / HTTP-3)",
         "MASQUE over TCP (HTTP/2)",
-        "MASQUE-in-MASQUE (MIM)",
-        "WireGuard",
-        "WARP-in-WARP (gool)"
+        "MASQUE-in-MASQUE (MIM)"
     ];
 
     public List<string> ScanModes { get; } =
@@ -81,8 +81,8 @@ public partial class AddAetherServerViewModel : MyReactiveObject, ICloseable
         "masque-h2" => "MASQUE over TCP (HTTP/2)",
         "mim" => "MASQUE-in-MASQUE (MIM)",
         "wg" => "WireGuard",
-        "gool" => "WARP-in-WARP (gool)",
-        _ => "MASQUE (QUIC / HTTP-3)",
+        "masque" => "MASQUE (QUIC / HTTP-3)",
+        _ => "WARP-in-WARP (gool)",
     };
 
     private static string ProtocolToCode(string name) => name switch

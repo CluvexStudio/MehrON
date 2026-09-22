@@ -230,12 +230,8 @@ public class CoreManager
         {
             return;
         }
-        if (!preContext.IsTunEnabled)
-        {
-            return;
-        }
 
-        using var rootCts = new CancellationTokenSource(Global.LocalFetch);
+        using var rootCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
         var rootToken = rootCts.Token;
 
         var port = preContext.Node.Port;
