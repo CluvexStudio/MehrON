@@ -106,6 +106,7 @@ public sealed class CoreInfoManager
                 lst.Add(ECoreType.mihomo);
                 lst.Add(ECoreType.sing_box);
                 lst.Add(ECoreType.aether);
+                lst.Add(ECoreType.zeptun);
             }
         }
 
@@ -121,6 +122,7 @@ public sealed class CoreInfoManager
             ECoreType.mihomo => true,
             ECoreType.sing_box => true,
             ECoreType.aether => true,
+            ECoreType.zeptun => true,
             _ => false,
         };
     }
@@ -142,6 +144,7 @@ public sealed class CoreInfoManager
         var urlMihomo = GetCoreUrl(ECoreType.mihomo);
         var urlSingbox = GetCoreUrl(ECoreType.sing_box);
         var urlAether = GetCoreUrl(ECoreType.aether);
+        var urlZeptun = GetCoreUrl(ECoreType.zeptun);
 
         _coreInfo =
         [
@@ -346,6 +349,25 @@ public sealed class CoreInfoManager
                     DownloadUrlOSXArm64 = urlAether + "/download/{0}/aether-macos-arm64.tar.gz",
                     Match = "aether",
                     VersionArg = "--version",
+                },
+
+                new CoreInfo
+                {
+                    CoreType = ECoreType.zeptun,
+                    CoreExes = [ "zeptun" ],
+                    Arguments = "run",
+                    Url = urlZeptun,
+                    ReleaseApiUrl = urlZeptun.Replace(Global.GithubUrl, Global.GithubApiUrl),
+                    DownloadUrlWin64 = urlZeptun + "/download/{0}/zeptun-windows-x86_64.zip",
+                    DownloadUrlWinArm64 = urlZeptun + "/download/{0}/zeptun-windows-arm64.zip",
+                    DownloadUrlLinux64 = urlZeptun + "/download/{0}/zeptun-linux-x86_64",
+                    DownloadUrlLinuxArm64 = urlZeptun + "/download/{0}/zeptun-linux-arm64",
+                    DownloadUrlLinuxRiscV64 = urlZeptun + "/download/{0}/zeptun-linux-riscv64",
+                    DownloadUrlLinuxLoong64 = urlZeptun + "/download/{0}/zeptun-linux-loong64",
+                    DownloadUrlOSX64 = urlZeptun + "/download/{0}/zeptun-darwin-universal",
+                    DownloadUrlOSXArm64 = urlZeptun + "/download/{0}/zeptun-darwin-universal",
+                    Match = "zeptun",
+                    VersionArg = "version",
                 },
         ];
     }
