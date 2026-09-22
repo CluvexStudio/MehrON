@@ -14,7 +14,8 @@
 
 <p align="center">
   Windows desktop proxy client with system proxy, TUN mode, and multi-core support —
-  built from the PattN / Patterniha codebase, based on v2rayN.
+  built from the PattN / Patterniha codebase, based on v2rayN.<br />
+  ⭐ Built-in <strong>SNI spoofing</strong> + <strong>MHR relay</strong> for internet shutdowns and emergency conditions.
 </p>
 
 <p align="center">
@@ -42,6 +43,18 @@ The portable release bundles ready-to-run runtimes — no separate core download
 | sing-box | Modern protocols including Hysteria2, TUIC, WireGuard |
 | mihomo | Clash Meta–compatible rule-based routing |
 | Aether | Censorship circumvention (MASQUE, WireGuard, pluggable transports) |
+| 🔥 SNI Spoofing | DPI bypass with IP/TCP-header manipulation — no server needed |
+| 🛟 MHR Relay | Domain-fronted relay via Google Apps Script — only a free Google account needed |
+
+> [!IMPORTANT]
+> **🛡️ Shutdown & emergency ready:** SNI Spoofing and MHR are built for
+> heavily filtered networks, throttling, and partial / full internet shutdowns —
+> when normal profiles and servers stop working, these modes can keep you connected.
+>
+> - **SNI Spoofing:** bypasses DPI by manipulating IP/TCP headers. No subscription or VPS required.
+> - **MHR:** routes traffic through your own Google Apps Script relay with domain fronting
+>   (`Browser -> Local proxy -> Google front -> Your Apps Script relay -> Target site`);
+>   the network filter only sees a Google-facing connection. Optional Cloudflare / VPS exit node for sites blocking Google IPs.
 
 > [!TIP]
 > Official portable releases ship with the `bin/` core binaries and up-to-date
@@ -51,7 +64,7 @@ The portable release bundles ready-to-run runtimes — no separate core download
 ### Routing and DNS
 - Visual routing rules editor with bypass / proxy / direct presets.
 - DNS settings with hijack and FakeIP support.
-- Optional SNI spoofing engine and MHR relay integration.
+- SNI spoofing engine and MHR relay are configured from the Cores section above.
 
 ### Settings for everyone
 - Option settings are grouped by topic (connection, core, system proxy, TUN, appearance…).
