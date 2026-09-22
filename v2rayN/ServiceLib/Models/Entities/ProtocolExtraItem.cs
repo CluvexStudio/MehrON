@@ -55,4 +55,10 @@ public record ProtocolExtraItem
 
     // custom outbound
     public bool? IsSingboxEndpoint { get; init; }
+
+    // aether
+    public string? AetherProtocol { get; init; }
+    public string? AetherScan { get; init; }
+    public string? AetherNoize { get; init; }
+    public string? AetherPeer { get; init; }
 }

@@ -191,7 +191,7 @@ public class CoreManager
         var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
 
         var displayLog = node.ConfigType != EConfigType.Custom || node.DisplayLog;
-        var proc = await RunProcess(coreInfo, Global.CoreConfigFileName, displayLog, true, context.IsTunEnabled);
+        var proc = await RunProcess(coreInfo, Global.CoreConfigFileName, displayLog, true, context.IsTunEnabled, node);
         if (proc is null)
         {
             return;
@@ -230,12 +230,8 @@ public class CoreManager
         {
             return;
         }
-        if (!preContext.IsTunEnabled)
-        {
-            return;
-        }
 
-        using var rootCts = new CancellationTokenSource(Global.LocalFetch);
+        using var rootCts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
         var rootToken = rootCts.Token;
 
         var port = preContext.Node.Port;
@@ -310,7 +306,7 @@ public class CoreManager
             && isNonWindows;
     }
 
-    private async Task<ProcessService?> RunProcess(CoreInfo? coreInfo, string configPath, bool displayLog, bool mayNeedSudo, bool isTunLaunch = false)
+    private async Task<ProcessService?> RunProcess(CoreInfo? coreInfo, string configPath, bool displayLog, bool mayNeedSudo, bool isTunLaunch = false, ProfileItem? node = null)
     {
         var fileName = CoreInfoManager.Instance.GetCoreExecFile(coreInfo, out var msg);
         if (fileName.IsNullOrEmpty())
@@ -329,7 +325,7 @@ public class CoreManager
                 return await CoreAdminManager.Instance.RunProcessAsLinuxSudo(fileName, coreInfo, configPath);
             }
 
-            return await RunProcessNormal(fileName, coreInfo, configPath, displayLog);
+            return await RunProcessNormal(fileName, coreInfo, configPath, displayLog, node);
         }
         catch (Exception ex)
         {
@@ -339,7 +335,7 @@ public class CoreManager
         }
     }
 
-    private async Task<ProcessService?> RunProcessNormal(string fileName, CoreInfo? coreInfo, string configPath, bool displayLog)
+    private async Task<ProcessService?> RunProcessNormal(string fileName, CoreInfo? coreInfo, string configPath, bool displayLog, ProfileItem? node = null)
     {
         var environmentVars = new Dictionary<string, string>();
         foreach (var kv in coreInfo.Environment)
@@ -347,9 +343,74 @@ public class CoreManager
             environmentVars[kv.Key] = string.Format(kv.Value, coreInfo.AbsolutePath ? Utils.GetBinConfigPath(configPath).AppendQuotes() : configPath);
         }
 
+        var arguments = string.Format(coreInfo.Arguments, coreInfo.AbsolutePath ? Utils.GetBinConfigPath(configPath).AppendQuotes() : configPath);
+
+        if (coreInfo.CoreType == ECoreType.aether && node != null)
+        {
+            var extra = node.GetProtocolExtra();
+            var argsList = new List<string>();
+
+            switch (extra?.AetherProtocol)
+            {
+                case "masque-h2":
+                    argsList.Add("--masque --h2");
+                    break;
+                case "mim":
+                    argsList.Add("--mim");
+                    break;
+                case "wg":
+                    argsList.Add("--wg");
+                    break;
+                case "gool":
+                    argsList.Add("--gool");
+                    break;
+                case "masque":
+                default:
+                    argsList.Add("--masque");
+                    break;
+            }
+
+            if (extra?.AetherScan.IsNullOrEmpty() == false)
+            {
+                argsList.Add($"--scan {extra.AetherScan}");
+            }
+            if (extra?.AetherNoize.IsNullOrEmpty() == false)
+            {
+                argsList.Add($"--noize {extra.AetherNoize}");
+            }
+            if (extra?.AetherPeer.IsNullOrEmpty() == false)
+            {
+                argsList.Add($"--peer {extra.AetherPeer}");
+            }
+
+            var socksPort = node.PreSocksPort is > 0 and <= 65535 ? node.PreSocksPort.Value : 1819;
+            argsList.Add($"--bind 127.0.0.1:{socksPort}");
+
+            arguments = $"{arguments} {string.Join(" ", argsList)}";
+
+            if (extra?.AetherProtocol.IsNullOrEmpty() == false)
+            {
+                environmentVars["AETHER_PROTOCOL"] = extra.AetherProtocol;
+            }
+            if (extra?.AetherScan.IsNullOrEmpty() == false)
+            {
+                environmentVars["AETHER_SCAN"] = extra.AetherScan;
+            }
+            if (extra?.AetherNoize.IsNullOrEmpty() == false)
+            {
+                environmentVars["AETHER_NOIZE"] = extra.AetherNoize;
+            }
+            if (extra?.AetherPeer.IsNullOrEmpty() == false)
+            {
+                environmentVars["AETHER_PEER"] = extra.AetherPeer;
+            }
+            environmentVars["AETHER_BIND"] = $"127.0.0.1:{socksPort}";
+            environmentVars["AETHER_SOCKS"] = socksPort.ToString();
+        }
+
         var procService = new ProcessService(
             fileName: fileName,
-            arguments: string.Format(coreInfo.Arguments, coreInfo.AbsolutePath ? Utils.GetBinConfigPath(configPath).AppendQuotes() : configPath),
+            arguments: arguments,
             workingDirectory: Utils.GetBinConfigPath(),
             displayLog: displayLog,
             redirectInput: false,

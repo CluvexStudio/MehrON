@@ -1,4 +1,4 @@
-name: Build and Release MehrN
+name: Build and Release MehrON
 
 on:
   push:
@@ -59,10 +59,10 @@ jobs:
           Write-Host "Resolved Version Tag: $tag"
           "TAG_NAME=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Build & Publish MehrN
+      - name: Build & Publish MehrON
         shell: pwsh
         run: |
-          $outDir = "./dist/MehrN-windows-64"
+          $outDir = "./dist/MehrON-windows-64"
           dotnet publish ./v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj `
             -c Release `
             -r win-x64 `
@@ -84,8 +84,8 @@ jobs:
           # Remove debug symbols if any
           Get-ChildItem -Path $outDir -Filter "*.pdb" -Recurse | Remove-Item -Force
 
-          if (-not (Test-Path "$outDir/MehrN.exe")) {
-            throw "MehrN.exe was not built or found in $outDir"
+          if (-not (Test-Path "$outDir/MehrON.exe")) {
+            throw "MehrON.exe was not built or found in $outDir"
           }
           if (-not (Test-Path "$outDir/AmazTool.exe")) {
             throw "AmazTool.exe was not built or found in $outDir"
@@ -94,7 +94,7 @@ jobs:
       - name: Bundle Core Binaries
         shell: pwsh
         run: |
-          $outDir = "./dist/MehrN-windows-64"
+          $outDir = "./dist/MehrON-windows-64"
           $binDir = "$outDir/bin"
           New-Item -ItemType Directory -Path "$binDir/xray" -Force | Out-Null
           New-Item -ItemType Directory -Path "$binDir/sing_box" -Force | Out-Null
@@ -185,6 +185,20 @@ jobs:
             Copy-Item -Path $mihomoExe.FullName -Destination "$binDir/mihomo/$($mihomoExe.Name)" -Force
           }
 
+          # Download latest Aether
+          Write-Host "Downloading latest Aether..."
+          $aetherZip = "aether-latest.zip"
+          curl.exe -L -s -o $aetherZip "https://github.com/CluvexStudio/Aether/releases/latest/download/aether-windows-x86_64.zip"
+          Expand-Archive -Path $aetherZip -DestinationPath "aether-extracted" -Force
+          $aetherExe = Get-ChildItem -Path "aether-extracted" -Recurse -Filter "aether.exe" | Select-Object -First 1
+          if ($aetherExe) {
+            New-Item -ItemType Directory -Path "$binDir/aether" -Force | Out-Null
+            Copy-Item -Path $aetherExe.FullName -Destination "$binDir/aether/aether.exe" -Force
+            if (Test-Path "$($aetherExe.DirectoryName)/pt") {
+              Copy-Item -Path "$($aetherExe.DirectoryName)/pt" -Destination "$binDir/aether/" -Recurse -Force
+            }
+          }
+
           # Verify core binaries exist and print versions
           if (-not (Test-Path "$binDir/xray/xray.exe")) {
             throw "xray.exe was not found or copied into bin/xray/"
@@ -194,6 +208,9 @@ jobs:
           }
           if (-not (Test-Path "$binDir/mihomo/mihomo.exe")) {
             throw "mihomo.exe was not found or copied into bin/mihomo/"
+          }
+          if (-not (Test-Path "$binDir/aether/aether.exe")) {
+            throw "aether.exe was not found or copied into bin/aether/"
           }
           if (-not (Test-Path "$binDir/sni-spoofing/sni-spoof-rs.exe")) {
             throw "sni-spoof-rs.exe was not found in bin/sni-spoofing/"
@@ -206,6 +223,7 @@ jobs:
           & "$binDir/xray/xray.exe" version
           & "$binDir/sing_box/sing-box.exe" version
           & "$binDir/mihomo/mihomo.exe" -v
+          & "$binDir/aether/aether.exe" --version
 
           # Download official rules containing gfw, geolocation-!cn, etc.
           Write-Host "Downloading geo rules..."
@@ -215,13 +233,13 @@ jobs:
           Copy-Item -Path "$binDir/geoip.dat" -Destination "$binDir/xray/" -Force
 
           # Cleanup download artifacts
-          Remove-Item -Path $coreZip, "core-extracted", $xrayZip, "xray-extracted", $singZip, "sing-extracted", $mihomoZip, "mihomo-extracted" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path $coreZip, "core-extracted", $xrayZip, "xray-extracted", $singZip, "sing-extracted", $mihomoZip, "mihomo-extracted", $aetherZip, "aether-extracted" -Recurse -Force -ErrorAction SilentlyContinue
 
       - name: Package Zip Archive
         shell: pwsh
         run: |
-          $outDir = "./dist/MehrN-windows-64"
-          $zipPath = "./MehrN-windows-64.zip"
+          $outDir = "./dist/MehrON-windows-64"
+          $zipPath = "./MehrON-windows-64.zip"
           if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
           Compress-Archive -Path "$outDir/*" -DestinationPath $zipPath -Force
           $size = (Get-Item $zipPath).Length / 1MB
@@ -230,8 +248,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MehrN-windows-64
-          path: MehrN-windows-64.zip
+          name: MehrON-windows-64
+          path: MehrON-windows-64.zip
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
@@ -242,16 +260,17 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           target_commitish: ${{ github.ref_name }}
           body: |
-            ## MehrN ${{ env.TAG_NAME }}
+            ## MehrON ${{ env.TAG_NAME }}
 
             ### ✨ Improvements & Highlights
             - **⚡ Native Architecture**: Unified and refined native Windows runtime for maximum responsiveness and minimal resource usage.
+            - **🌐 Aether Engine Integration**: Built-in support, dedicated 1-click server window, and distribution for the Aether censorship circumvention core (MASQUE, WireGuard, and pluggable transports).
             - **🧠 Memory & Performance Optimizations**: Active working-set management and dynamic heap tuning for a lightweight background footprint.
             - **🎨 UI Polish & Stability**: Refined interface components, enhanced status indicators, and general stability improvements.
             - **📦 Core Engines & Routing**: Updated high-performance core binaries and latest geo-routing rules.
 
             ---
             *Platform: Windows x64 (Portable)*
-          files: MehrN-windows-64.zip
+          files: MehrON-windows-64.zip
           draft: false
           prerelease: ${{ github.ref_name == 'Beta' }}

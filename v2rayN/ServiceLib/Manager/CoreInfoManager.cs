@@ -105,6 +105,7 @@ public sealed class CoreInfoManager
                 lst.Add(ECoreType.Xray);
                 lst.Add(ECoreType.mihomo);
                 lst.Add(ECoreType.sing_box);
+                lst.Add(ECoreType.aether);
             }
         }
 
@@ -119,6 +120,7 @@ public sealed class CoreInfoManager
             ECoreType.Xray => true,
             ECoreType.mihomo => true,
             ECoreType.sing_box => true,
+            ECoreType.aether => true,
             _ => false,
         };
     }
@@ -139,6 +141,7 @@ public sealed class CoreInfoManager
         var urlXray = GetCoreUrl(ECoreType.Xray);
         var urlMihomo = GetCoreUrl(ECoreType.mihomo);
         var urlSingbox = GetCoreUrl(ECoreType.sing_box);
+        var urlAether = GetCoreUrl(ECoreType.aether);
 
         _coreInfo =
         [
@@ -147,14 +150,14 @@ public sealed class CoreInfoManager
                     CoreType = ECoreType.v2rayN,
                     Url = GetCoreUrl(ECoreType.v2rayN),
                     ReleaseApiUrl = urlN.Replace(Global.GithubUrl, Global.GithubApiUrl),
-                    DownloadUrlWin64 = urlN + "/download/{0}/MehrN-windows-64.zip",
-                    DownloadUrlWinArm64 = urlN + "/download/{0}/MehrN-windows-arm64.zip",
-                    DownloadUrlLinux64 = urlN + "/download/{0}/MehrN-linux-64.zip",
-                    DownloadUrlLinuxArm64 = urlN + "/download/{0}/MehrN-linux-arm64.zip",
-                    DownloadUrlLinuxRiscV64 = urlN + "/download/{0}/MehrN-linux-riscv64.zip",
-                    DownloadUrlLinuxLoong64 = urlN + "/download/{0}/MehrN-linux-loong64.zip",
-                    DownloadUrlOSX64 = urlN + "/download/{0}/MehrN-macos-64.zip",
-                    DownloadUrlOSXArm64 = urlN + "/download/{0}/MehrN-macos-arm64.zip",
+                    DownloadUrlWin64 = urlN + "/download/{0}/MehrON-windows-64.zip",
+                    DownloadUrlWinArm64 = urlN + "/download/{0}/MehrON-windows-arm64.zip",
+                    DownloadUrlLinux64 = urlN + "/download/{0}/MehrON-linux-64.zip",
+                    DownloadUrlLinuxArm64 = urlN + "/download/{0}/MehrON-linux-arm64.zip",
+                    DownloadUrlLinuxRiscV64 = urlN + "/download/{0}/MehrON-linux-riscv64.zip",
+                    DownloadUrlLinuxLoong64 = urlN + "/download/{0}/MehrON-linux-loong64.zip",
+                    DownloadUrlOSX64 = urlN + "/download/{0}/MehrON-macos-64.zip",
+                    DownloadUrlOSXArm64 = urlN + "/download/{0}/MehrON-macos-arm64.zip",
                 },
 
                 new CoreInfo
@@ -327,6 +330,22 @@ public sealed class CoreInfoManager
                     {
                         { "MIERU_CONFIG_JSON_FILE", "{0}" },
                     },
+                },
+
+                new CoreInfo
+                {
+                    CoreType = ECoreType.aether,
+                    CoreExes = [ "aether" ],
+                    Arguments = "-4",
+                    Url = urlAether,
+                    ReleaseApiUrl = urlAether.Replace(Global.GithubUrl, Global.GithubApiUrl),
+                    DownloadUrlWin64 = urlAether + "/download/{0}/aether-windows-x86_64.zip",
+                    DownloadUrlLinux64 = urlAether + "/download/{0}/aether-linux-x86_64.tar.gz",
+                    DownloadUrlLinuxArm64 = urlAether + "/download/{0}/aether-linux-arm64.tar.gz",
+                    DownloadUrlOSX64 = urlAether + "/download/{0}/aether-macos-x86_64.tar.gz",
+                    DownloadUrlOSXArm64 = urlAether + "/download/{0}/aether-macos-arm64.tar.gz",
+                    Match = "aether",
+                    VersionArg = "--version",
                 },
         ];
     }

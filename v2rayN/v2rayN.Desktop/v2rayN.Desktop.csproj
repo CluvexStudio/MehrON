@@ -5,11 +5,11 @@
 		<ApplicationIcon>Assets\v2rayN.ico</ApplicationIcon>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-		<AssemblyName>MehrN</AssemblyName>
+		<AssemblyName>MehrON</AssemblyName>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<CETCompat>false</CETCompat>
-		<AssemblyTitle>MehrN</AssemblyTitle>
-		<Product>MehrN</Product>
+		<AssemblyTitle>MehrON</AssemblyTitle>
+		<Product>MehrON</Product>
 		<ApplicationManifest>..\v2rayN\app.manifest</ApplicationManifest>
 	</PropertyGroup>
 

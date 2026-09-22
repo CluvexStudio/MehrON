@@ -18,6 +18,7 @@ public static class CoreConfigHandler
             result = node.CoreType switch
             {
                 ECoreType.mihomo => await new CoreConfigClashService(config, context.IsTunEnabled).GenerateClientCustomConfig(node, fileName),
+                ECoreType.aether => await GenerateClientAetherConfig(node, fileName),
                 _ => await GenerateClientCustomConfig(node, fileName)
             };
         }
@@ -81,6 +82,52 @@ public static class CoreConfigHandler
             ret.Msg = string.Format(ResUI.SuccessfulConfiguration, "");
             ret.Success = true;
             return await Task.FromResult(ret);
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            ret.Msg = ResUI.FailedGenDefaultConfiguration;
+            return ret;
+        }
+    }
+
+    private static async Task<RetResult> GenerateClientAetherConfig(ProfileItem node, string? fileName)
+    {
+        var ret = new RetResult();
+        try
+        {
+            if (node == null || fileName is null)
+            {
+                ret.Msg = ResUI.CheckServerSettings;
+                return ret;
+            }
+
+            if (File.Exists(fileName))
+            {
+                File.SetAttributes(fileName, FileAttributes.Normal);
+                File.Delete(fileName);
+            }
+
+            var addressFileName = node.Address;
+            if (addressFileName.IsNotEmpty() && !File.Exists(addressFileName))
+            {
+                addressFileName = Utils.GetConfigPath(addressFileName);
+            }
+
+            if (File.Exists(addressFileName))
+            {
+                File.Copy(addressFileName, fileName);
+                File.SetAttributes(fileName, FileAttributes.Normal);
+            }
+            else
+            {
+                // Write a base identity stub so Aether initializes seamlessly
+                await File.WriteAllTextAsync(fileName, "# Aether Configuration\n");
+            }
+
+            ret.Msg = string.Format(ResUI.SuccessfulConfiguration, "");
+            ret.Success = true;
+            return ret;
         }
         catch (Exception ex)
         {

@@ -1,7 +1,7 @@
 <Project>
 
     <PropertyGroup>
-        <Version>7.25.38</Version>
+        <Version>7.25.43</Version>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -13,8 +13,8 @@
         <GarbageCollectionAdaptation>1</GarbageCollectionAdaptation>
         <Nullable>annotations</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Authors>MehrN Contributors</Authors>
-        <Company>MehrN Contributors</Company>
+        <Authors>MehrON Contributors</Authors>
+        <Company>MehrON Contributors</Company>
         <PackageLicenseExpression>GPL-3.0</PackageLicenseExpression>
         <Copyright>Copyright © 2017-$([System.DateTime]::UtcNow.Year) $(Authors)</Copyright>
         <InvariantGlobalization>false</InvariantGlobalization>

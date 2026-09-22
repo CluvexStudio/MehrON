@@ -31,6 +31,7 @@ public class CoreManagerTests
     [Test]
     [Arguments(ECoreType.v2fly)]
     [Arguments(ECoreType.hysteria)]
+    [Arguments(ECoreType.aether)]
     [Arguments(null)]
     public async Task ShouldRunAsSudo_UnsupportedCoreType_ShouldNotElevate(ECoreType? coreType)
     {
