@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  Windows desktop proxy client with system proxy, TUN mode, and multi-core support —
+  Windows desktop proxy client with system proxy, TUN mode, and multi-core support
   built from the PattN / Patterniha codebase, based on v2rayN.<br />
   ⭐ Built-in <strong>SNI spoofing</strong> + <strong>MHR relay</strong> for internet shutdowns and emergency conditions.
 </p>
@@ -33,7 +33,7 @@
 - One-click Windows system proxy control with exceptions and PAC support.
 - Optional TUN mode to route device traffic through the selected profile.
 - Per-subscription update controls in Subscription Settings.
-- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together — pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box).
+- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box).
 
 ### Cores
 The portable release bundles ready-to-run runtimes — no separate core download needed:
@@ -44,8 +44,8 @@ The portable release bundles ready-to-run runtimes — no separate core download
 | sing-box | Modern protocols including Hysteria2, TUIC, WireGuard |
 | mihomo | Clash Meta–compatible rule-based routing |
 | Aether | Censorship circumvention (MASQUE, WireGuard, pluggable transports) |
-| 🔥 SNI Spoofing | DPI bypass with IP/TCP-header manipulation — no server needed |
-| 🛟 MHR Relay | Domain-fronted relay via Google Apps Script — only a free Google account needed |
+| 🔥 SNI Spoofing | DPI bypass with IP/TCP-header manipulation no server needed |
+| 🛟 MHR Relay | Domain-fronted relay via Google Apps Script only a free Google account needed |
 
 > [!IMPORTANT]
 > **🛡️ Shutdown & emergency ready:** SNI Spoofing and MHR are built for
