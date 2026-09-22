@@ -34,6 +34,21 @@
                 IsCancel="True" />
         </StackPanel>
 
+        <StackPanel
+            Margin="{StaticResource Margin4}"
+            HorizontalAlignment="Left"
+            DockPanel.Dock="Top"
+            Orientation="Horizontal">
+            <TextBlock
+                Margin="{StaticResource Margin4}"
+                VerticalAlignment="Center"
+                Text="{x:Static resx:ResUI.OptShowAdvanced}" />
+            <ToggleSwitch
+                x:Name="togShowAdvancedSettings"
+                Margin="{StaticResource Margin4}"
+                HorizontalAlignment="Left" />
+        </StackPanel>
+
         <TabControl HorizontalContentAlignment="Stretch">
             <TabItem Header="{x:Static resx:ResUI.TbSettingsCore}">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">
@@ -349,7 +364,8 @@
                         Grid.ColumnSpan="3"
                         Margin="{StaticResource Margin4}"
                         Header="{x:Static resx:ResUI.OptGroupFragment}"
-                        Tag="Advanced">
+                        Tag="Advanced"
+                        IsVisible="{Binding ShowAdvancedSettings}">
                         <Grid
                             Margin="{StaticResource Margin4}"
                             ColumnDefinitions="Auto,Auto,*"
@@ -559,7 +575,8 @@
                         Grid.ColumnSpan="3"
                         Margin="{StaticResource Margin4}"
                         Header="{x:Static resx:ResUI.OptGroupMux}"
-                        Tag="Advanced">
+                        Tag="Advanced"
+                        IsVisible="{Binding ShowAdvancedSettings}">
                         <Grid
                             Margin="{StaticResource Margin4}"
                             ColumnDefinitions="Auto,Auto,*"
@@ -1004,7 +1021,8 @@
                         Grid.ColumnSpan="3"
                         Margin="{StaticResource Margin4}"
                         Header="{x:Static resx:ResUI.OptGroupSources}"
-                        Tag="Advanced">
+                        Tag="Advanced"
+                        IsVisible="{Binding ShowAdvancedSettings}">
                         <Grid
                             Margin="{StaticResource Margin4}"
                             ColumnDefinitions="Auto,Auto,*"
@@ -1271,7 +1289,8 @@
                         <GroupBox
                             Margin="{StaticResource Margin4}"
                             Header="{x:Static resx:ResUI.OptGroupTunAdvanced}"
-                            Tag="Advanced">
+                            Tag="Advanced"
+                            IsVisible="{Binding ShowAdvancedSettings}">
                             <Grid
                                 Margin="{StaticResource Margin4}"
                                 ColumnDefinitions="Auto,Auto,Auto"

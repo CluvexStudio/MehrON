@@ -306,6 +306,9 @@
   <data name="OptGroupUpdates" xml:space="preserve">
     <value>Updates and limits</value>
   </data>
+  <data name="OptShowAdvanced" xml:space="preserve">
+    <value>Show advanced settings</value>
+  </data>
   <data name="PleaseFillRemarks" xml:space="preserve">
     <value>Please fill Remarks</value>
   </data>

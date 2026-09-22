@@ -2597,6 +2597,15 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("OptGroupUpdates", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Show advanced settings 的本地化字符串。
+        /// </summary>
+        public static string OptShowAdvanced {
+            get {
+                return ResourceManager.GetString("OptShowAdvanced", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Operation successful 的本地化字符串。

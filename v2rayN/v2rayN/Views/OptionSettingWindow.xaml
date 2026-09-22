@@ -22,6 +22,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel Margin="{StaticResource Margin8}">
@@ -43,6 +44,22 @@
                 Content="{x:Static resx:ResUI.TbCancel}"
                 IsCancel="true"
                 Style="{StaticResource DefButton}" />
+        </StackPanel>
+
+        <StackPanel
+            Margin="{StaticResource Margin4}"
+            HorizontalAlignment="Left"
+            DockPanel.Dock="Top"
+            Orientation="Horizontal">
+            <TextBlock
+                Margin="{StaticResource Margin8}"
+                VerticalAlignment="Center"
+                Style="{StaticResource ToolbarTextBlock}"
+                Text="{x:Static resx:ResUI.OptShowAdvanced}" />
+            <ToggleButton
+                x:Name="togShowAdvancedSettings"
+                Margin="{StaticResource Margin8}"
+                HorizontalAlignment="Left" />
         </StackPanel>
 
         <TabControl HorizontalContentAlignment="Left">
@@ -453,7 +470,8 @@
                             Grid.ColumnSpan="3"
                             Margin="{StaticResource Margin4}"
                             Header="{x:Static resx:ResUI.OptGroupFragment}"
-                            Tag="Advanced">
+                            Tag="Advanced"
+                            Visibility="{Binding ShowAdvancedSettings, Converter={StaticResource BoolToVisConverter}}">
                             <Grid Margin="{StaticResource Margin4}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -669,7 +687,8 @@
                             Grid.ColumnSpan="3"
                             Margin="{StaticResource Margin4}"
                             Header="{x:Static resx:ResUI.OptGroupMux}"
-                            Tag="Advanced">
+                            Tag="Advanced"
+                            Visibility="{Binding ShowAdvancedSettings, Converter={StaticResource BoolToVisConverter}}">
                             <Grid Margin="{StaticResource Margin4}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -1337,7 +1356,8 @@
                             Grid.ColumnSpan="3"
                             Margin="{StaticResource Margin4}"
                             Header="{x:Static resx:ResUI.OptGroupSources}"
-                            Tag="Advanced">
+                            Tag="Advanced"
+                            Visibility="{Binding ShowAdvancedSettings, Converter={StaticResource BoolToVisConverter}}">
                             <Grid Margin="{StaticResource Margin4}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -1612,7 +1632,8 @@
                         <GroupBox
                             Margin="{StaticResource Margin4}"
                             Header="{x:Static resx:ResUI.OptGroupTunAdvanced}"
-                            Tag="Advanced">
+                            Tag="Advanced"
+                            Visibility="{Binding ShowAdvancedSettings, Converter={StaticResource BoolToVisConverter}}">
                             <Grid Margin="{StaticResource Margin4}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

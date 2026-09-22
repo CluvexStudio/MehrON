@@ -306,6 +306,9 @@
   <data name="OptGroupUpdates" xml:space="preserve">
     <value>به‌روزرسانی و محدودیت‌ها</value>
   </data>
+  <data name="OptShowAdvanced" xml:space="preserve">
+    <value>نمایش تنظیمات پیشرفته</value>
+  </data>
   <data name="PleaseFillRemarks" xml:space="preserve">
     <value>لطفا ملاحظات را پر کنید</value>
   </data>
