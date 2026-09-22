@@ -349,7 +349,8 @@ public class TunnelingItem
     public string ZeptunInterfaceName { get; set; } = "zeptun0";
     public string ZeptunStack { get; set; } = "userspace";
     public string ZeptunUdpMode { get; set; } = "udp";
-    public bool ZeptunDnsHijack { get; set; } = false;
+    public bool ZeptunDnsHijack { get; set; } = true;
+    public string ZeptunDnsUpstream { get; set; } = "1.1.1.1:53";
     public bool ZeptunFakeIp { get; set; } = false;
     public string ZeptunLogLevel { get; set; } = "warn";
     public string ExtraArguments { get; set; } = string.Empty;

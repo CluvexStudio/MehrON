@@ -1676,6 +1676,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -1914,6 +1915,22 @@
                                 <TextBox
                                     x:Name="txtZeptunExtraArgs"
                                     Grid.Row="13"
+                                    Grid.Column="1"
+                                    Width="300"
+                                    Margin="{StaticResource Margin8}"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource DefTextBox}" />
+                            
+                                <TextBlock
+                                    Grid.Row="14"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin8}"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource ToolbarTextBlock}"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunDnsUpstream}" />
+                                <TextBox
+                                    x:Name="txtZeptunDnsUpstream"
+                                    Grid.Row="14"
                                     Grid.Column="1"
                                     Width="300"
                                     Margin="{StaticResource Margin8}"

@@ -1977,4 +1977,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbSettingsZeptunExtraArgs" xml:space="preserve">
     <value>آرگومان‌های اضافی زپتان</value>
   </data>
+  <data name="TbSettingsZeptunDnsUpstream" xml:space="preserve">
+    <value>سرور DNS بالادست زپتان</value>
+  </data>
 </root>

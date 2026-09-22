@@ -2103,4 +2103,7 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbSettingsZeptunExtraArgs" xml:space="preserve">
     <value>Zeptun extra arguments</value>
   </data>
+  <data name="TbSettingsZeptunDnsUpstream" xml:space="preserve">
+    <value>Zeptun DNS upstream</value>
+  </data>
 </root>

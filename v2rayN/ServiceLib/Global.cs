@@ -620,6 +620,7 @@ public class Global
 
     public const string ZeptunCoreName = "zeptun";
     public const string ZeptunDefaultInterfaceName = "zeptun0";
+    public const string ZeptunDefaultDnsUpstream = "1.1.1.1:53";
     public const string ZeptunProjectUrl = "https://github.com/Noisemux/zeptun";
 
     public static readonly List<string> ZeptunStacks =

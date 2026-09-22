@@ -5933,5 +5933,14 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbSettingsZeptunExtraArgs", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Zeptun DNS upstream 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunDnsUpstream {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunDnsUpstream", resourceCulture);
+            }
+        }
     }
 }

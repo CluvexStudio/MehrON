@@ -230,6 +230,9 @@ public static class ConfigHandler
         config.TunnelingItem.ZeptunLogLevel = Global.ZeptunLogLevels.Contains(config.TunnelingItem.ZeptunLogLevel)
             ? config.TunnelingItem.ZeptunLogLevel
             : "warn";
+        config.TunnelingItem.ZeptunDnsUpstream = config.TunnelingItem.ZeptunDnsUpstream.IsNullOrEmpty()
+            ? Global.ZeptunDefaultDnsUpstream
+            : config.TunnelingItem.ZeptunDnsUpstream;
         config.TunnelingItem.ExtraArguments ??= string.Empty;
         if ((config.Fragment4RayItem.Lengths ?? []).Count == 0)
         {

@@ -278,7 +278,8 @@ public sealed class ZeptunManager
         }
         if (item.ZeptunDnsHijack)
         {
-            args.Append(" --dns-hijack");
+            var upstream = item.ZeptunDnsUpstream.TrimEx().NullIfEmpty() ?? Global.ZeptunDefaultDnsUpstream;
+            args.Append($" --dns-hijack --dns-upstream {upstream}");
         }
         if (item.ZeptunFakeIp)
         {

@@ -107,6 +107,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial string ZeptunStack { get; set; }
     [Reactive] public partial string ZeptunUdpMode { get; set; }
     [Reactive] public partial bool ZeptunDnsHijack { get; set; }
+    [Reactive] public partial string ZeptunDnsUpstream { get; set; }
     [Reactive] public partial bool ZeptunFakeIp { get; set; }
     [Reactive] public partial string ZeptunLogLevel { get; set; }
     [Reactive] public partial string ZeptunExtraArgs { get; set; }
@@ -242,6 +243,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         ZeptunStack = _config.TunnelingItem.ZeptunStack;
         ZeptunUdpMode = _config.TunnelingItem.ZeptunUdpMode;
         ZeptunDnsHijack = _config.TunnelingItem.ZeptunDnsHijack;
+        ZeptunDnsUpstream = _config.TunnelingItem.ZeptunDnsUpstream;
         ZeptunFakeIp = _config.TunnelingItem.ZeptunFakeIp;
         ZeptunLogLevel = _config.TunnelingItem.ZeptunLogLevel;
         ZeptunExtraArgs = _config.TunnelingItem.ExtraArguments;
@@ -422,6 +424,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         _config.TunnelingItem.ZeptunStack = ZeptunStack;
         _config.TunnelingItem.ZeptunUdpMode = ZeptunUdpMode;
         _config.TunnelingItem.ZeptunDnsHijack = ZeptunDnsHijack;
+        _config.TunnelingItem.ZeptunDnsUpstream = ZeptunDnsUpstream.TrimEx().NullIfEmpty() ?? Global.ZeptunDefaultDnsUpstream;
         _config.TunnelingItem.ZeptunFakeIp = ZeptunFakeIp;
         _config.TunnelingItem.ZeptunLogLevel = ZeptunLogLevel;
         _config.TunnelingItem.ExtraArguments = ZeptunExtraArgs.TrimEx();

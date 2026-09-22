@@ -142,6 +142,7 @@ public partial class OptionSettingWindow
             this.Bind(ViewModel, vm => vm.ZeptunStack, v => v.cmbZeptunStack.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunUdpMode, v => v.cmbZeptunUdpMode.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunDnsHijack, v => v.togZeptunDnsHijack.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunDnsUpstream, v => v.txtZeptunDnsUpstream.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunFakeIp, v => v.togZeptunFakeIp.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunLogLevel, v => v.cmbZeptunLogLevel.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.ZeptunExtraArgs, v => v.txtZeptunExtraArgs.Text).DisposeWith(disposables);
