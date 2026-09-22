@@ -231,7 +231,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MehrN-windows-64
-          path: MehrN-windows-64.zip
+          path: ./dist/MehrN-windows-64
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
