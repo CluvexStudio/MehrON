@@ -2058,4 +2058,49 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbPleaseSelectProfile" xml:space="preserve">
     <value>Please select a server profile</value>
   </data>
+  <data name="MsgZeptunNotFound" xml:space="preserve">
+    <value>Zeptun executable was not found. Download it from {0} and put it in bin/zeptun/, or set its path in TUN settings.</value>
+  </data>
+  <data name="MsgZeptunNeedAdministrator" xml:space="preserve">
+    <value>Zeptun TUN needs administrator or root privileges.</value>
+  </data>
+  <data name="MsgZeptunStartFailed" xml:space="preserve">
+    <value>Failed to start the Zeptun TUN engine.</value>
+  </data>
+  <data name="MsgZeptunStarted" xml:space="preserve">
+    <value>Zeptun TUN engine started (SOCKS5 127.0.0.1:{0}).</value>
+  </data>
+  <data name="MsgZeptunExcludeTruncated" xml:space="preserve">
+    <value>Zeptun accepts at most {1} excluded routes, {0} were requested; the extra entries were dropped.</value>
+  </data>
+  <data name="TbSettingsTunEngine" xml:space="preserve">
+    <value>TUN engine</value>
+  </data>
+  <data name="TbSettingsTunEngineTip" xml:space="preserve">
+    <value>Zeptun is an external userspace engine and needs its own executable in bin/zeptun/.</value>
+  </data>
+  <data name="TbSettingsZeptunPath" xml:space="preserve">
+    <value>Zeptun path</value>
+  </data>
+  <data name="TbSettingsZeptunInterfaceName" xml:space="preserve">
+    <value>Zeptun interface name</value>
+  </data>
+  <data name="TbSettingsZeptunStack" xml:space="preserve">
+    <value>Zeptun stack</value>
+  </data>
+  <data name="TbSettingsZeptunUdpMode" xml:space="preserve">
+    <value>Zeptun UDP mode</value>
+  </data>
+  <data name="TbSettingsZeptunDnsHijack" xml:space="preserve">
+    <value>Zeptun DNS hijack</value>
+  </data>
+  <data name="TbSettingsZeptunFakeIp" xml:space="preserve">
+    <value>Zeptun Fake-IP</value>
+  </data>
+  <data name="TbSettingsZeptunLogLevel" xml:space="preserve">
+    <value>Zeptun log level</value>
+  </data>
+  <data name="TbSettingsZeptunExtraArgs" xml:space="preserve">
+    <value>Zeptun extra arguments</value>
+  </data>
 </root>

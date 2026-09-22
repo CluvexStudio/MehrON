@@ -5798,5 +5798,140 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("TbPleaseSelectProfile", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Zeptun executable was not found. Download it from {0} and put it in bin/zeptun/, or set its path in TUN settings. 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunNotFound {
+            get {
+                return ResourceManager.GetString("MsgZeptunNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun TUN needs administrator or root privileges. 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunNeedAdministrator {
+            get {
+                return ResourceManager.GetString("MsgZeptunNeedAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to start the Zeptun TUN engine. 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunStartFailed {
+            get {
+                return ResourceManager.GetString("MsgZeptunStartFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun TUN engine started (SOCKS5 127.0.0.1:{0}). 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunStarted {
+            get {
+                return ResourceManager.GetString("MsgZeptunStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun accepts at most {1} excluded routes, {0} were requested; the extra entries were dropped. 的本地化字符串。
+        /// </summary>
+        public static string MsgZeptunExcludeTruncated {
+            get {
+                return ResourceManager.GetString("MsgZeptunExcludeTruncated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 TUN engine 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsTunEngine {
+            get {
+                return ResourceManager.GetString("TbSettingsTunEngine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun is an external userspace engine and needs its own executable in bin/zeptun/. 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsTunEngineTip {
+            get {
+                return ResourceManager.GetString("TbSettingsTunEngineTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun path 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunPath {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun interface name 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunInterfaceName {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunInterfaceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun stack 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunStack {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunStack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun UDP mode 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunUdpMode {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunUdpMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun DNS hijack 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunDnsHijack {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunDnsHijack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun Fake-IP 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunFakeIp {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunFakeIp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun log level 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunLogLevel {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunLogLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zeptun extra arguments 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsZeptunExtraArgs {
+            get {
+                return ResourceManager.GetString("TbSettingsZeptunExtraArgs", resourceCulture);
+            }
+        }
     }
 }

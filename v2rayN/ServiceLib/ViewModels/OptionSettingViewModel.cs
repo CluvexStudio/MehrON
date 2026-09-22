@@ -101,6 +101,15 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial string TunRouteExcludeAddress { get; set; }
     [Reactive] public partial string TunIPv4Address { get; set; }
     [Reactive] public partial string TunIPv6Address { get; set; }
+    [Reactive] public partial string TunEngine { get; set; }
+    [Reactive] public partial string ZeptunPath { get; set; }
+    [Reactive] public partial string ZeptunInterfaceName { get; set; }
+    [Reactive] public partial string ZeptunStack { get; set; }
+    [Reactive] public partial string ZeptunUdpMode { get; set; }
+    [Reactive] public partial bool ZeptunDnsHijack { get; set; }
+    [Reactive] public partial bool ZeptunFakeIp { get; set; }
+    [Reactive] public partial string ZeptunLogLevel { get; set; }
+    [Reactive] public partial string ZeptunExtraArgs { get; set; }
 
     #endregion Tun mode
 
@@ -226,6 +235,16 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         TunRouteExcludeAddress = Utils.List2String(_config.TunModeItem.RouteExcludeAddress, true);
         TunIPv4Address = _config.TunModeItem.IPv4Address;
         TunIPv6Address = _config.TunModeItem.IPv6Address;
+        _config.TunnelingItem ??= new();
+        TunEngine = _config.TunnelingItem.SelectedCore;
+        ZeptunPath = _config.TunnelingItem.ZeptunPath;
+        ZeptunInterfaceName = _config.TunnelingItem.ZeptunInterfaceName;
+        ZeptunStack = _config.TunnelingItem.ZeptunStack;
+        ZeptunUdpMode = _config.TunnelingItem.ZeptunUdpMode;
+        ZeptunDnsHijack = _config.TunnelingItem.ZeptunDnsHijack;
+        ZeptunFakeIp = _config.TunnelingItem.ZeptunFakeIp;
+        ZeptunLogLevel = _config.TunnelingItem.ZeptunLogLevel;
+        ZeptunExtraArgs = _config.TunnelingItem.ExtraArguments;
 
         #endregion Tun mode
 
@@ -396,6 +415,16 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         _config.TunModeItem.RouteExcludeAddress = Utils.String2List(TunRouteExcludeAddress);
         _config.TunModeItem.IPv4Address = TunIPv4Address;
         _config.TunModeItem.IPv6Address = TunIPv6Address;
+        _config.TunnelingItem ??= new();
+        _config.TunnelingItem.SelectedCore = TunEngine == TunnelingItem.CoreZeptun ? TunnelingItem.CoreZeptun : TunnelingItem.CoreSingbox;
+        _config.TunnelingItem.ZeptunPath = ZeptunPath.TrimEx();
+        _config.TunnelingItem.ZeptunInterfaceName = ZeptunInterfaceName.TrimEx().NullIfEmpty() ?? Global.ZeptunDefaultInterfaceName;
+        _config.TunnelingItem.ZeptunStack = ZeptunStack;
+        _config.TunnelingItem.ZeptunUdpMode = ZeptunUdpMode;
+        _config.TunnelingItem.ZeptunDnsHijack = ZeptunDnsHijack;
+        _config.TunnelingItem.ZeptunFakeIp = ZeptunFakeIp;
+        _config.TunnelingItem.ZeptunLogLevel = ZeptunLogLevel;
+        _config.TunnelingItem.ExtraArguments = ZeptunExtraArgs.TrimEx();
 
         //coreType
         await SaveCoreType();

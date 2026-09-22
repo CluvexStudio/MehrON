@@ -35,6 +35,10 @@ public partial class OptionSettingWindow : WindowBase<OptionSettingViewModel>
         cmbStack.ItemsSource = Global.TunStacks;
         cmbIcmpRoutingPolicy.ItemsSource = Global.TunIcmpRoutingPolicies;
         cmbIpv4Address.ItemsSource = Global.TunIPv4Address;
+        cmbTunEngine.ItemsSource = Global.TunEngines;
+        cmbZeptunStack.ItemsSource = Global.ZeptunStacks;
+        cmbZeptunUdpMode.ItemsSource = Global.ZeptunUdpModes;
+        cmbZeptunLogLevel.ItemsSource = Global.ZeptunLogLevels;
         cmbIpv6Address.ItemsSource = Global.TunIPv6Address;
         cmbFragmentPackets.ItemsSource = Global.FragmentPacketsOptions;
 
@@ -136,6 +140,15 @@ public partial class OptionSettingWindow : WindowBase<OptionSettingViewModel>
             this.Bind(ViewModel, vm => vm.TunEnableLegacyProtect, v => v.togEnableLegacyProtect.IsChecked).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.TunRouteExcludeAddress, v => v.txtRouteExcludeAddress.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.TunIPv4Address, v => v.cmbIpv4Address.SelectedValue).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.TunEngine, v => v.cmbTunEngine.SelectedValue).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunPath, v => v.txtZeptunPath.Text).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunInterfaceName, v => v.txtZeptunInterfaceName.Text).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunStack, v => v.cmbZeptunStack.SelectedValue).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunUdpMode, v => v.cmbZeptunUdpMode.SelectedValue).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunDnsHijack, v => v.togZeptunDnsHijack.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunFakeIp, v => v.togZeptunFakeIp.IsChecked).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunLogLevel, v => v.cmbZeptunLogLevel.SelectedValue).DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.ZeptunExtraArgs, v => v.txtZeptunExtraArgs.Text).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.TunIPv6Address, v => v.cmbIpv6Address.SelectedValue).DisposeWith(disposables);
 
             this.Bind(ViewModel, vm => vm.CoreType1, v => v.cmbCoreType1.SelectedValue).DisposeWith(disposables);

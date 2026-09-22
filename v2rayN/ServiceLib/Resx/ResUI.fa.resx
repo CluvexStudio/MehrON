@@ -1932,4 +1932,49 @@ The "Get Certificate" action may fail if a self-signed certificate is used or if
   <data name="TbPleaseSelectProfile" xml:space="preserve">
     <value>لطفاً یک سرور را انتخاب کنید</value>
   </data>
+  <data name="MsgZeptunNotFound" xml:space="preserve">
+    <value>فایل اجرایی Zeptun پیدا نشد. آن را از {0} دانلود کنید و در پوشه bin/zeptun/ قرار دهید، یا مسیر آن را در تنظیمات TUN وارد کنید.</value>
+  </data>
+  <data name="MsgZeptunNeedAdministrator" xml:space="preserve">
+    <value>حالت TUN با Zeptun به دسترسی مدیر یا روت نیاز دارد.</value>
+  </data>
+  <data name="MsgZeptunStartFailed" xml:space="preserve">
+    <value>راه‌اندازی موتور TUN زپتان ناموفق بود.</value>
+  </data>
+  <data name="MsgZeptunStarted" xml:space="preserve">
+    <value>موتور TUN زپتان اجرا شد (SOCKS5 127.0.0.1:{0}).</value>
+  </data>
+  <data name="MsgZeptunExcludeTruncated" xml:space="preserve">
+    <value>زپتان حداکثر {1} مسیر مستثنا را می‌پذیرد ولی {0} مورد تعریف شده است؛ موارد اضافی حذف شدند.</value>
+  </data>
+  <data name="TbSettingsTunEngine" xml:space="preserve">
+    <value>موتور TUN</value>
+  </data>
+  <data name="TbSettingsTunEngineTip" xml:space="preserve">
+    <value>زپتان یک موتور مستقل در فضای کاربر است و به فایل اجرایی خودش در bin/zeptun/ نیاز دارد.</value>
+  </data>
+  <data name="TbSettingsZeptunPath" xml:space="preserve">
+    <value>مسیر Zeptun</value>
+  </data>
+  <data name="TbSettingsZeptunInterfaceName" xml:space="preserve">
+    <value>نام اینترفیس Zeptun</value>
+  </data>
+  <data name="TbSettingsZeptunStack" xml:space="preserve">
+    <value>استک Zeptun</value>
+  </data>
+  <data name="TbSettingsZeptunUdpMode" xml:space="preserve">
+    <value>حالت UDP زپتان</value>
+  </data>
+  <data name="TbSettingsZeptunDnsHijack" xml:space="preserve">
+    <value>تصاحب DNS توسط زپتان</value>
+  </data>
+  <data name="TbSettingsZeptunFakeIp" xml:space="preserve">
+    <value>Fake-IP زپتان</value>
+  </data>
+  <data name="TbSettingsZeptunLogLevel" xml:space="preserve">
+    <value>سطح لاگ زپتان</value>
+  </data>
+  <data name="TbSettingsZeptunExtraArgs" xml:space="preserve">
+    <value>آرگومان‌های اضافی زپتان</value>
+  </data>
 </root>

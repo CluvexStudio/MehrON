@@ -1227,57 +1227,79 @@
                             <Grid
                                 Margin="{StaticResource Margin4}"
                                 ColumnDefinitions="Auto,Auto,Auto"
-                                RowDefinitions="Auto,Auto,Auto,Auto">
+                                RowDefinitions="Auto,Auto,Auto,Auto,Auto">
 
                                 <TextBlock
                                     Grid.Row="0"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsTunEngine}" />
+                                <ComboBox
+                                    x:Name="cmbTunEngine"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsTunEngineTip}"
+                                    TextWrapping="Wrap" />
+
+
+                                <TextBlock
+                                    Grid.Row="1"
                                     Grid.Column="0"
                                     Margin="{StaticResource Margin4}"
                                     VerticalAlignment="Center"
                                     Text="{x:Static resx:ResUI.TbSettingsTunAutoRoute}" />
                                 <ToggleSwitch
                                     x:Name="togAutoRoute"
-                                    Grid.Row="0"
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     Margin="{StaticResource Margin4}"
                                     HorizontalAlignment="Left" />
 
                                 <TextBlock
-                                    Grid.Row="1"
+                                    Grid.Row="2"
                                     Grid.Column="0"
                                     Margin="{StaticResource Margin4}"
                                     VerticalAlignment="Center"
                                     Text="{x:Static resx:ResUI.TbSettingsTunStrictRoute}" />
                                 <ToggleSwitch
                                     x:Name="togStrictRoute"
-                                    Grid.Row="1"
+                                    Grid.Row="2"
                                     Grid.Column="1"
                                     Margin="{StaticResource Margin4}"
                                     HorizontalAlignment="Left" />
 
                                 <TextBlock
-                                    Grid.Row="2"
+                                    Grid.Row="3"
                                     Grid.Column="0"
                                     Margin="{StaticResource Margin4}"
                                     VerticalAlignment="Center"
                                     Text="{x:Static resx:ResUI.TbSettingsTunStack}" />
                                 <ComboBox
                                     x:Name="cmbStack"
-                                    Grid.Row="2"
+                                    Grid.Row="3"
                                     Grid.Column="1"
                                     Width="200"
                                     Margin="{StaticResource Margin4}"
                                     HorizontalAlignment="Left" />
 
                                 <TextBlock
-                                    Grid.Row="3"
+                                    Grid.Row="4"
                                     Grid.Column="0"
                                     Margin="{StaticResource Margin4}"
                                     VerticalAlignment="Center"
                                     Text="{x:Static resx:ResUI.TbMtu}" />
                                 <ComboBox
                                     x:Name="cmbMtu"
-                                    Grid.Row="3"
+                                    Grid.Row="4"
                                     Grid.Column="1"
                                     Width="200"
                                     Margin="{StaticResource Margin4}"
@@ -1294,7 +1316,7 @@
                             <Grid
                                 Margin="{StaticResource Margin4}"
                                 ColumnDefinitions="Auto,Auto,Auto"
-                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
 
                                 <TextBlock
                                     Grid.Row="0"
@@ -1393,6 +1415,116 @@
                             Width="200"
                             Margin="{StaticResource Margin4}"
                             HorizontalAlignment="Left" />
+                            
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunPath}" />
+                                <TextBox
+                                    x:Name="txtZeptunPath"
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Width="300"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunInterfaceName}" />
+                                <TextBox
+                                    x:Name="txtZeptunInterfaceName"
+                                    Grid.Row="7"
+                                    Grid.Column="1"
+                                    Width="300"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="8"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunStack}" />
+                                <ComboBox
+                                    x:Name="cmbZeptunStack"
+                                    Grid.Row="8"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="9"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunUdpMode}" />
+                                <ComboBox
+                                    x:Name="cmbZeptunUdpMode"
+                                    Grid.Row="9"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="10"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunDnsHijack}" />
+                                <ToggleSwitch
+                                    x:Name="togZeptunDnsHijack"
+                                    Grid.Row="10"
+                                    Grid.Column="1"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="11"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunFakeIp}" />
+                                <ToggleSwitch
+                                    x:Name="togZeptunFakeIp"
+                                    Grid.Row="11"
+                                    Grid.Column="1"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="12"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunLogLevel}" />
+                                <ComboBox
+                                    x:Name="cmbZeptunLogLevel"
+                                    Grid.Row="12"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Grid.Row="13"
+                                    Grid.Column="0"
+                                    Margin="{StaticResource Margin4}"
+                                    VerticalAlignment="Center"
+                                    Text="{x:Static resx:ResUI.TbSettingsZeptunExtraArgs}" />
+                                <TextBox
+                                    x:Name="txtZeptunExtraArgs"
+                                    Grid.Row="13"
+                                    Grid.Column="1"
+                                    Width="300"
+                                    Margin="{StaticResource Margin4}"
+                                    HorizontalAlignment="Left" />
                             </Grid>
                         </GroupBox>
                     </StackPanel>
