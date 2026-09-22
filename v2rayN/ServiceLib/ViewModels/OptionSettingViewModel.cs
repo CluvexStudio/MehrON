@@ -66,6 +66,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
     [Reactive] public partial string RoutingRulesSourceUrl { get; set; }
     [Reactive] public partial string IPAPIUrl { get; set; }
     [Reactive] public partial string RootCertProvider { get; set; }
+    [Reactive] public partial bool ShowAdvancedSettings { get; set; }
 
     #endregion UI
 
@@ -199,6 +200,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         RoutingRulesSourceUrl = _config.ConstItem.RouteRulesTemplateSourceUrl;
         IPAPIUrl = _config.SpeedTestItem.IPAPIUrl;
         RootCertProvider = _config.GuiItem.RootCertProvider;
+        ShowAdvancedSettings = _config.UiItem.ShowAdvancedSettings;
 
         #endregion UI
 
@@ -374,6 +376,7 @@ public partial class OptionSettingViewModel : MyReactiveObject, ICloseable
         _config.ConstItem.RouteRulesTemplateSourceUrl = RoutingRulesSourceUrl;
         _config.SpeedTestItem.IPAPIUrl = IPAPIUrl;
         _config.GuiItem.RootCertProvider = RootCertProvider;
+        _config.UiItem.ShowAdvancedSettings = ShowAdvancedSettings;
 
         //systemProxy
         _config.SystemProxyItem.SystemProxyExceptions = SystemProxyExceptions;
