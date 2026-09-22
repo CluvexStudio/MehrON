@@ -252,8 +252,202 @@ jobs:
           path: ./dist/MehrON-windows-64
           if-no-files-found: error
 
+  build-linux:
+    name: Build Linux x64
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build & Publish MehrON Desktop (Linux)
+        run: |
+          outDir="./dist/MehrON-linux-64"
+          mkdir -p "$outDir"
+          dotnet publish ./v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj \
+            -c Release \
+            -r linux-x64 \
+            --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:DebugType=none \
+            -p:DebugSymbols=false \
+            -o "$outDir"
+
+          dotnet publish ./v2rayN/AmazTool/AmazTool.csproj \
+            -c Release \
+            -r linux-x64 \
+            --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:DebugType=none \
+            -p:DebugSymbols=false \
+            -o "$outDir"
+
+          # Remove debug symbols if any
+          find "$outDir" -name "*.pdb" -type f -delete
+
+          if [ ! -f "$outDir/MehrON" ]; then
+            echo "MehrON was not built or found in $outDir" >&2
+            exit 1
+          fi
+          if [ ! -f "$outDir/AmazTool" ]; then
+            echo "AmazTool was not built or found in $outDir" >&2
+            exit 1
+          fi
+
+          chmod +x "$outDir/MehrON"
+          chmod +x "$outDir/AmazTool"
+
+      - name: Bundle Linux Core Binaries
+        run: |
+          outDir="./dist/MehrON-linux-64"
+          binDir="$outDir/bin"
+          mkdir -p "$binDir/xray" "$binDir/sing_box" "$binDir/mihomo" "$binDir/aether"
+
+          # Download latest Xray-core (Linux 64)
+          echo "Downloading latest Xray-core..."
+          curl -fsSL "https://github.com/patterniha/Xray-core/releases/latest/download/Xray-linux-64.zip" -o xray-linux.zip
+          unzip -q xray-linux.zip -d xray-extracted
+          cp -f xray-extracted/xray "$binDir/xray/xray"
+          chmod +x "$binDir/xray/xray"
+          [ -f xray-extracted/geosite.dat ] && cp -f xray-extracted/geosite.dat "$binDir/"
+          [ -f xray-extracted/geoip.dat ] && cp -f xray-extracted/geoip.dat "$binDir/"
+          [ -f xray-extracted/geosite.dat ] && cp -f xray-extracted/geosite.dat "$binDir/xray/"
+          [ -f xray-extracted/geoip.dat ] && cp -f xray-extracted/geoip.dat "$binDir/xray/"
+          rm -rf xray-linux.zip xray-extracted
+
+          # Download latest sing-box (Linux amd64)
+          echo "Downloading latest sing-box..."
+          curl -fsSL "https://github.com/SagerNet/sing-box/releases/download/v1.14.1/sing-box-1.14.1-linux-amd64.tar.gz" -o sing-box.tar.gz
+          mkdir -p sing-extracted
+          tar -xzf sing-box.tar.gz -C sing-extracted
+          singExe=$(find sing-extracted -type f -name "sing-box" | head -n 1)
+          if [ -n "$singExe" ]; then
+            cp -f "$singExe" "$binDir/sing_box/sing-box"
+            chmod +x "$binDir/sing_box/sing-box"
+          fi
+          rm -rf sing-box.tar.gz sing-extracted
+
+          # Download latest mihomo (Linux amd64)
+          echo "Downloading latest mihomo..."
+          curl -fsSL "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.31/mihomo-linux-amd64-compatible-v1.19.31.gz" -o mihomo.gz
+          gzip -d mihomo.gz
+          cp -f mihomo "$binDir/mihomo/mihomo"
+          chmod +x "$binDir/mihomo/mihomo"
+          rm -f mihomo
+
+          # Download latest Aether (Linux x86_64)
+          echo "Downloading latest Aether..."
+          curl -fsSL "https://github.com/CluvexStudio/Aether/releases/latest/download/aether-linux-x86_64.tar.gz" -o aether.tar.gz
+          mkdir -p aether-extracted
+          tar -xzf aether.tar.gz -C aether-extracted
+          aetherExe=$(find aether-extracted -type f -name "aether" | head -n 1)
+          if [ -n "$aetherExe" ]; then
+            cp -f "$aetherExe" "$binDir/aether/aether"
+            chmod +x "$binDir/aether/aether"
+            aetherDir=$(dirname "$aetherExe")
+            if [ -d "$aetherDir/pt" ]; then
+              cp -rf "$aetherDir/pt" "$binDir/aether/"
+              find "$binDir/aether/pt" -type f -exec chmod +x {} + || true
+            fi
+          fi
+          rm -rf aether.tar.gz aether-extracted
+
+          # Verify bundled core versions
+          if [ ! -f "$binDir/xray/xray" ]; then echo "xray was not found!" >&2; exit 1; fi
+          if [ ! -f "$binDir/sing_box/sing-box" ]; then echo "sing-box was not found!" >&2; exit 1; fi
+          if [ ! -f "$binDir/mihomo/mihomo" ]; then echo "mihomo was not found!" >&2; exit 1; fi
+          if [ ! -f "$binDir/aether/aether" ]; then echo "aether was not found!" >&2; exit 1; fi
+
+          echo "Verifying bundled core versions:"
+          "$binDir/xray/xray" version
+          "$binDir/sing_box/sing-box" version
+          "$binDir/mihomo/mihomo" -v
+          "$binDir/aether/aether" --version
+
+          # Download official geo rules
+          echo "Downloading geo rules..."
+          curl -fsSL "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" -o "$binDir/geosite.dat"
+          curl -fsSL "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" -o "$binDir/geoip.dat"
+          cp -f "$binDir/geosite.dat" "$binDir/xray/"
+          cp -f "$binDir/geoip.dat" "$binDir/xray/"
+
+          # Download Iran sing-box srs rules
+          mkdir -p "$binDir/srss"
+          curl -fsSL "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geosite-category-ir.srs" -o "$binDir/srss/geosite-category-ir.srs" || true
+          curl -fsSL "https://raw.githubusercontent.com/chocolate4u/Iran-sing-box-rules/rule-set/geoip-ir.srs" -o "$binDir/srss/geoip-ir.srs" || true
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MehrON-linux-64
+          path: ./dist/MehrON-linux-64
+          if-no-files-found: error
+
+  publish-release:
+    name: Publish Release
+    needs: [build-windows, build-linux]
+    if: github.ref_type == 'tag' || inputs.create_release == true || github.ref_name == 'main' || github.ref_name == 'Beta'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve Version
+        id: version_step
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            tag="${{ github.ref_name }}"
+          elif [ -n "${{ inputs.release_tag }}" ]; then
+            tag="${{ inputs.release_tag }}"
+            [[ "$tag" == v* ]] || tag="v$tag"
+          else
+            v=$(grep -oPm1 "(?<=<Version>)[^<]+" ./v2rayN/Directory.Build.props)
+            ref="${{ github.ref_name }}"
+            if [ "$ref" = "Beta" ] && [[ "$v" != *"-beta"* ]]; then
+              tag="v$v-beta"
+            else
+              tag="v$v"
+            fi
+          fi
+          echo "Resolved Version Tag: $tag"
+          echo "TAG_NAME=$tag" >> $GITHUB_ENV
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MehrON-windows-64
+          path: ./dist/MehrON-windows-64
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MehrON-linux-64
+          path: ./dist/MehrON-linux-64
+
+      - name: Package Release Archives
+        run: |
+          # Package Windows Zip
+          (cd ./dist/MehrON-windows-64 && zip -q -r ../../MehrON-windows-64.zip .)
+          echo "Windows package: MehrON-windows-64.zip ($(du -h MehrON-windows-64.zip | cut -f1))"
+
+          # Fix Linux permissions and package tar.gz & zip
+          chmod +x ./dist/MehrON-linux-64/MehrON || true
+          chmod +x ./dist/MehrON-linux-64/AmazTool || true
+          find ./dist/MehrON-linux-64/bin -type f -exec chmod +x {} + || true
+          tar -czf ./MehrON-linux-64.tar.gz -C ./dist/MehrON-linux-64 .
+          (cd ./dist/MehrON-linux-64 && zip -q -r ../../MehrON-linux-64.zip .)
+          echo "Linux package: MehrON-linux-64.tar.gz ($(du -h MehrON-linux-64.tar.gz | cut -f1))"
+          echo "Linux package: MehrON-linux-64.zip ($(du -h MehrON-linux-64.zip | cut -f1))"
+
       - name: Create or Update GitHub Release
-        if: github.ref_type == 'tag' || inputs.create_release == true || github.ref_name == 'main' || github.ref_name == 'Beta'
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -263,14 +457,18 @@ jobs:
             ## MehrON ${{ env.TAG_NAME }}
 
             ### ✨ Improvements & Highlights
-            - **⚡ Native Architecture**: Unified and refined native Windows runtime for maximum responsiveness and minimal resource usage.
+            - **⚡ Native Architecture**: Unified and refined native runtime for Windows and Linux (Ubuntu / Debian).
+            - **🐧 Linux (Ubuntu x64) Support**: Native cross-platform desktop client release with bundled Linux cores.
             - **🌐 Aether Engine Integration**: Built-in support, dedicated 1-click server window, and distribution for the Aether censorship circumvention core (MASQUE, WireGuard, and pluggable transports).
             - **🧠 Memory & Performance Optimizations**: Active working-set management and dynamic heap tuning for a lightweight background footprint.
             - **🎨 UI Polish & Stability**: Refined interface components, enhanced status indicators, and general stability improvements.
             - **📦 Core Engines & Routing**: Updated high-performance core binaries and latest geo-routing rules.
 
             ---
-            *Platform: Windows x64 (Portable)*
-          files: MehrON-windows-64.zip
+            *Platforms: Windows x64 (Portable), Linux x64 (Ubuntu / Debian)*
+          files: |
+            MehrON-windows-64.zip
+            MehrON-linux-64.tar.gz
+            MehrON-linux-64.zip
           draft: false
           prerelease: ${{ github.ref_name == 'Beta' }}

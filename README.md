@@ -17,12 +17,20 @@ MehrON is a Windows desktop proxy client created from the PattN / Patterniha cod
 
 ## Portable release
 
+### Windows (x64)
 The portable Windows package is distributed as `MehrON-windows-64.zip`.
 
 1. Extract the archive to a writable folder.
 2. Run `MehrON.exe`.
 3. Accept the Windows administrator prompt when using TUN mode or other features that require elevated permissions.
 4. Import a profile or add a subscription link.
+
+### Linux (Ubuntu / Debian x64)
+The portable Linux package is distributed as `MehrON-linux-64.tar.gz` and `MehrON-linux-64.zip`.
+
+1. Extract the archive: `tar -xzf MehrON-linux-64.tar.gz`
+2. Run `./MehrON` (or `sudo ./MehrON` when using TUN mode).
+3. Import a profile or add a subscription link.
 
 The release intentionally contains no saved profiles, subscriptions, logs, or generated runtime configuration files.
 
