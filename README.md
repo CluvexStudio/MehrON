@@ -33,7 +33,7 @@
 - One-click Windows system proxy control with exceptions and PAC support.
 - Optional TUN mode to route device traffic through the selected profile.
 - Per-subscription update controls in Subscription Settings.
-- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box).
+- ⛓️ **Proxy Chain (Double Tunneling):** chain two configs together pick a middle (entry) server and an exit server and the app routes traffic `local -> middle -> exit` entirely client-side, no server-side setup needed (Xray / sing-box). **Only in MehrON client**
 
 ### Cores
 The portable release bundles ready-to-run runtimes — no separate core download needed:
