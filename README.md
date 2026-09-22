@@ -1,4 +1,8 @@
-# MehrON
+<p align="center">
+  <img src="v2rayN/v2rayN.Desktop/Assets/MehrON-logo.png" width="160" height="160" alt="MehrON Logo" />
+</p>
+
+<h1 align="center">MehrON</h1>
 
 MehrON is a Windows desktop proxy client created from the PattN / Patterniha codebase, which is based on v2rayN. It provides a graphical interface for importing, organizing, testing, and running supported proxy profiles.
 
