@@ -241,8 +241,17 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.TAG_NAME }}
           target_commitish: ${{ github.ref_name }}
-          name: MehrN ${{ env.TAG_NAME }}
-          generate_release_notes: true
+          body: |
+            ## MehrN ${{ env.TAG_NAME }}
+
+            ### ✨ Improvements & Highlights
+            - **⚡ Native Architecture**: Unified and refined native Windows runtime for maximum responsiveness and minimal resource usage.
+            - **🧠 Memory & Performance Optimizations**: Active working-set management and dynamic heap tuning for a lightweight background footprint.
+            - **🎨 UI Polish & Stability**: Refined interface components, enhanced status indicators, and general stability improvements.
+            - **📦 Core Engines & Routing**: Updated high-performance core binaries and latest geo-routing rules.
+
+            ---
+            *Platform: Windows x64 (Portable)*
           files: MehrN-windows-64.zip
           draft: false
           prerelease: ${{ github.ref_name == 'Beta' }}
