@@ -309,6 +309,7 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
                 case ECoreType.Xray:
                 case ECoreType.v2fly_v5:
                 case ECoreType.mihomo:
+                case ECoreType.aether:
                     {
                         curVersion = await GetCoreVersion(type, cancellationToken);
                         message = string.Format(ResUI.IsLatestCore, type, curVersion.ToStandardVersionString("v"));
