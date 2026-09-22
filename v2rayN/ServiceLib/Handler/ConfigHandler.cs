@@ -314,6 +314,8 @@ public static class ConfigHandler
             item.Finalmask = profileItem.Finalmask;
             item.ProtoExtra = profileItem.ProtoExtra;
             item.TransportExtra = profileItem.TransportExtra;
+        }
+
         if (item.CoreType == ECoreType.aether)
         {
             return await AddAetherServer(config, item);
